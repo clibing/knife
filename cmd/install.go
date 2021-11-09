@@ -17,7 +17,9 @@ package cmd
 
 import (
 	"fmt"
+	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -37,11 +39,32 @@ knife install
 knife install -p /usr/local/bin
 .`,
 	Run: func(cmd *cobra.Command, args []string) {
-		uri := filepath.Join(path, "knife")
-		err:=os.Remove(uri)
+		binPath, err := exec.LookPath(os.Args[0])
 		if err != nil {
-			fmt.Errorf("failed to uninstall file: %s: %s", uri, err)
+			fmt.Errorf("failed to get bin file info: %s: %s", os.Args[0], err)
+			return
 		}
+
+		currentFile, err := os.Open(binPath)
+		if err != nil {
+			fmt.Errorf("failed to get bin file info: %s: %s", binPath, err)
+			return
+		}
+		defer func() { _ = currentFile.Close() }()
+
+		installFile, err := os.OpenFile(filepath.Join(path, "knife"), os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0755)
+		if err != nil {
+			fmt.Errorf("failed to create bin file: %s: %s", filepath.Join(path, "knife"), err)
+			return
+		}
+		defer func() { _ = installFile.Close() }()
+
+		_, err = io.Copy(installFile, currentFile)
+		if err != nil {
+			fmt.Errorf("failed to copy file: %s: %s", filepath.Join(path, "knife"), err)
+			return
+		}
+		fmt.Println("install success")
 	},
 }
 
@@ -53,7 +76,7 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// installCmd.PersistentFlags().String("foo", "", "A help for foo")
-	installCmd.PersistentFlags().StringVarP(&path, "path", "p", "/usr/local/bin", "卸载的目录，window需要指定目录")
+	installCmd.PersistentFlags().StringVarP(&path, "path", "p", "/usr/local/bin", "安装目录，window需要指定目录")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:

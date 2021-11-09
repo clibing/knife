@@ -34,15 +34,14 @@ var rootCmd = &cobra.Command{
 1. 时间格式化工具，实现提取当前系统的戳毫秒(13位), 接收一个时间戳按照指定的格式进行格式化。
 2. URL编码解码
 3. 加密计算， 默认接收字符串计算，支持计算指定的文件
-4. 提取印象Auth中的UserId
-5. xml,json,yml 互转与美化
-6. 定时器cron表达式
-7. 图片生成 从Base64生成文件，根据文件生成Base64
-8. 证书pem生成器
-10. 二维码生成器
-11. IP查询，支持本机ip、出口ip等
-12. markdown处理，支持从HTML转Markdown
-13. 正则表达式
+4. xml,json,yml 互转与美化
+5. 定时器cron表达式
+6. 图片生成 从Base64生成文件，根据文件生成Base64
+7. 证书pem生成器
+8. 二维码生成器
+9. IP查询，支持本机ip、出口ip等
+10. markdown处理，支持从HTML转Markdown
+11. 正则表达式
 `,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
