@@ -23,12 +23,12 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
-
 	"github.com/spf13/cobra"
+	"io/ioutil"
 )
 
 var (
-	action string
+	action,sourceFile string
 	direct bool
 )
 
@@ -47,63 +47,74 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, content := range args {
-			switch action {
-			// md5
-			case "md5":
-				{
-					h := md5.New()
-					h.Write([]byte(content))
-					value := hex.EncodeToString(h.Sum(nil))
-					fmt.Println("source: ", content)
-					fmt.Println("md5   : ", value)
-				}
-				break
-			case "sha1":
-				{
-					s := sha1.New()
-					s.Write([]byte(content))
-					value := hex.EncodeToString(s.Sum(nil))
-					fmt.Println("source: ", content)
-					fmt.Println("sha1  : ", value)
-				}
-				break
-			case "sha256":
-				{
-					s := sha256.New()
-					s.Write([]byte(content))
-					value := hex.EncodeToString(s.Sum(nil))
-					fmt.Println("source: ", content)
-					fmt.Println("sha256: ", value)
-				}
-				break
-			case "sha512":
-				{
-					s := sha512.New()
-					s.Write([]byte(content))
-					value := hex.EncodeToString(s.Sum(nil))
-					fmt.Println("source: ", content)
-					fmt.Println("sha512: ", value)
-				}
-				break
-			case "base64":
-				{
-					// 加密
-					if direct == false {
-						v := base64.StdEncoding.EncodeToString([]byte(content))
-						fmt.Println("source: ", content)
-						fmt.Println("base64: ", v)
-					} else {
-						v, _ := base64.StdEncoding.DecodeString(content)
-						fmt.Println("base64: ", content)
-						fmt.Println("source: ", string(v))
-					}
-				}
-				break
-			default:
-				fmt.Println("暂不支持的加密方法, ", action)
+			sign(action, []byte(content))
+		}
+		if sourceFile != "" {
+			value , err := ioutil.ReadFile(sourceFile)
+			if err != nil {
+				fmt.Println("sign file error, ", err)
 			}
+			sign(action, value)
 		}
 	},
+}
+
+func sign(signType string, content []byte){
+	switch signType{
+	// md5
+	case "md5":
+		{
+			h := md5.New()
+			h.Write(content)
+			value := hex.EncodeToString(h.Sum(nil))
+			fmt.Println("source: ", string(content))
+			fmt.Println("md5   : ", value)
+		}
+		break
+	case "sha1":
+		{
+			s := sha1.New()
+			s.Write(content)
+			value := hex.EncodeToString(s.Sum(nil))
+			fmt.Println("source: ", string(content))
+			fmt.Println("sha1  : ", value)
+		}
+		break
+	case "sha256":
+		{
+			s := sha256.New()
+			s.Write(content)
+			value := hex.EncodeToString(s.Sum(nil))
+			fmt.Println("source: ", string(content))
+			fmt.Println("sha256: ", value)
+		}
+		break
+	case "sha512":
+		{
+			s := sha512.New()
+			s.Write(content)
+			value := hex.EncodeToString(s.Sum(nil))
+			fmt.Println("source: ", string(content))
+			fmt.Println("sha512: ", value)
+		}
+		break
+	case "base64":
+		{
+			// 加密
+			if direct == false {
+				v := base64.StdEncoding.EncodeToString(content)
+				fmt.Println("source: ", string(content))
+				fmt.Println("base64: ", v)
+			} else {
+				v, _ := base64.StdEncoding.DecodeString(string(content))
+				fmt.Println("base64: ", string(content))
+				fmt.Println("source: ", string(v))
+			}
+		}
+		break
+	default:
+		fmt.Println("暂不支持的加密方法, ", action)
+	}
 }
 
 func init() {
@@ -116,6 +127,8 @@ func init() {
 	// signCmd.PersistentFlags().String("foo", "", "A help for foo")
 	signCmd.Flags().StringVarP(&action, "type", "t", "", "选择加密方法")
 	signCmd.Flags().BoolVarP(&direct, "direct", "d", false, "加密或者解密,支持部分可逆的算法, 默认加密")
+
+	signCmd.Flags().StringVarP(&sourceFile, "sourceFile", "s", "", "选择计算的加密文件")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:

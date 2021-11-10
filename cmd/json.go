@@ -17,15 +17,21 @@ package cmd
 
 import (
 	"bufio"
+	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/tidwall/pretty"
+	"github.com/basgys/goxml2json"
+	"github.com/ghodss/yaml"
+	"vimagination.zapto.org/json2xml"
 	"os"
 	"strings"
 )
 
 var (
 	prefix, indent string
+	xmlToJson, jsonToXml, jsonToYml, ymlToJson bool
 )
 
 // jsonCmd represents the json command
@@ -53,6 +59,57 @@ jq: https://github.com/stedolan/jq.git
 使用:
 echo '{"id":1,"name":"clibing"}' | jq.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if xmlToJson {
+			for _, xml := range args {
+				json, err := xml2json.Convert(strings.NewReader(xml))
+				if err != nil {
+					fmt.Errorf("xml to json error, %s", err)
+					return
+				}
+				fmt.Println(json.String())
+			}
+			return
+		}
+
+		if jsonToXml {
+			for _, v := range args {
+				var buf strings.Builder
+				x := xml.NewEncoder(&buf)
+				if err := json2xml.Convert(json.NewDecoder(strings.NewReader(v)), x); err != nil {
+					fmt.Errorf("json to xml error, %s", err)
+					continue
+				}
+				x.Flush()
+				output := buf.String()
+				fmt.Println(output)
+			}
+			return
+		}
+
+		if jsonToYml {
+			for _, j := range args {
+				y, err := yaml.JSONToYAML([]byte(j))
+				if err != nil {
+					fmt.Printf("err: %v\n", err)
+					continue
+				}
+				fmt.Println(string(y))
+			}
+			return
+		}
+
+		if ymlToJson {
+			for _, y := range args {
+				j2, err := yaml.YAMLToJSON([]byte(y))
+				if err != nil {
+					fmt.Printf("err: %v\n", err)
+					return
+				}
+				fmt.Println(string(j2))
+			}
+			return
+		}
+
 		option := &pretty.Options{Width: 80, Prefix: prefix, Indent: indent, SortKeys: false}
 		for _, json := range args {
 			fmt.Printf("%s\n", pretty.PrettyOptions([]byte(json), option))
@@ -82,6 +139,10 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	jsonCmd.Flags().StringVarP(&indent, "indent", "i", "\t", "json格式化缩进标记，默认制表符")
 	jsonCmd.Flags().StringVarP(&prefix, "prefix", "p", "", "json格式化前缀")
+	jsonCmd.Flags().BoolVarP(&xmlToJson, "xmlToJson", "x", false, "xml to json, 默认 false")
+	jsonCmd.Flags().BoolVarP(&jsonToXml, "jsonToXml", "j", false, "json to xml, 默认 false")
+	jsonCmd.Flags().BoolVarP(&jsonToYml, "jsonToYml", "y", false, "json to yml, 默认 false")
+	jsonCmd.Flags().BoolVarP(&ymlToJson, "ymlToJson", "s", false, "yml to xml, 默认 false")
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
