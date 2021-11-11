@@ -8,10 +8,14 @@ git clone github.com/clibing/knife
 
 ### 安装
 
-./knife install 
+下载二进制包，执行安装命令即可
+
+以macos为例
+
+./knife_darwin_amd64 install 
 
 
-### 更多
+### 查看帮助
 
 knife -h
 
@@ -37,3 +41,4 @@ knife -h
 * [x] 9.IP查询，支持本机ip、出口ip等
 * [x] 10.markdown处理，支持从HTML转Markdown
 * [x] 11.正则表达式
+

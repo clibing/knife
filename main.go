@@ -15,8 +15,16 @@ limitations under the License.
 */
 package main
 
-import "github.com/knife/cmd"
+import (
+	"github.com/knife/cmd"
+)
+
+var (
+	version   string
+	buildDate string
+	commitID  string
+)
 
 func main() {
-	cmd.Execute()
+	cmd.Execute(version, buildDate, commitID)
 }

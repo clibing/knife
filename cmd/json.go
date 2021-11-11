@@ -20,13 +20,13 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
-	"github.com/spf13/cobra"
-	"github.com/tidwall/pretty"
 	"github.com/basgys/goxml2json"
 	"github.com/ghodss/yaml"
-	"vimagination.zapto.org/json2xml"
+	"github.com/spf13/cobra"
+	"github.com/tidwall/pretty"
 	"os"
 	"strings"
+	"vimagination.zapto.org/json2xml"
 )
 
 var (
