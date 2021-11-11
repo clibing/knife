@@ -22,8 +22,9 @@ import (
 	"image/color"
 )
 var (
-	size int
+	size,level int
 	name string
+	disableBorder bool
 )
 // qrcodeCmd represents the qrcode command
 var qrcodeCmd = &cobra.Command{
@@ -38,9 +39,25 @@ knife qrcode -s 128 -n image "admin"
 		if len(args) != 1 {
 			fmt.Errorf("请输入二维码的内容")
 		}
-		err := qrcode.WriteColorFile(args[0], qrcode.Medium, size, color.Black, color.White, name+".png")
+		recoveryLevel := qrcode.Medium
+		if level == 2 {
+			recoveryLevel = qrcode.High
+		}else if level == 3 {
+			recoveryLevel = qrcode.Highest
+		}
+
+		q, err := qrcode.New(args[0], recoveryLevel)
 		if err != nil {
-			fmt.Errorf("create qrcode error: %s", err)
+			fmt.Errorf("创建二维码基础参数异常 %s", err)
+			return
+		}
+		q.BackgroundColor = color.White
+		q.ForegroundColor = color.Black
+		q.DisableBorder = disableBorder
+
+		err = q.WriteFile(size, name)
+		if err != nil {
+			fmt.Errorf("生成二维码异常 %s", err)
 		}
 	},
 }
@@ -54,7 +71,10 @@ func init() {
 	// and all subcommands, e.g.:
 	// qrcodeCmd.PersistentFlags().String("foo", "", "A help for foo")
 	qrcodeCmd.Flags().IntVarP(&size, "size", "s", 256, "二维码的size")
-	qrcodeCmd.Flags().StringVarP(&name, "name", "n", "qr.png", "二维码图片的名字")
+	qrcodeCmd.Flags().StringVarP(&name, "name", "n", "output.png", "二维码图片的名字")
+
+	qrcodeCmd.Flags().IntVarP(&level, "level", "l", 1, "生成图片质量，默认是1(15%), 2(25%), 3(30%)")
+	qrcodeCmd.Flags().BoolVarP(&disableBorder, "disableBorder", "d", false, "是否禁用二维码边框")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
