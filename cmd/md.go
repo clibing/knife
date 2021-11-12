@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	htmlToMd "github.com/JohannesKaufmann/html-to-markdown"
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
@@ -70,7 +71,10 @@ knife md -d -s source.md -t target.html.`,
 			if err != nil {
 				log.Fatal(err)
 			}
-			ioutil.WriteFile(target, []byte(markdown), 0644)
+			err = ioutil.WriteFile(target, []byte(markdown), 0644)
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	},
 }

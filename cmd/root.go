@@ -54,14 +54,77 @@ var rootCmd = &cobra.Command{
    其中md5可以替换 sha1, sha256, sha512, base64
 
 4. xml,json,yml 互转与美化
+   4.1 美化json
+   knife json "{\"id\":1,\"name\":\"clibing\"}" 
+   输出
+   {
+           "id": 1,
+           "name": "clibing"
+   }
+
+   4.2 xml 转换 json
+   knife json -c 1 "<?xml version=\"1.0\" encoding=\"UTF-8\"?><name>clibing</name>"
+   输出
+   {"name": "clibing"}
+   
+   4.3 json 转换为 xml
+   knife json -c 2 "{\"id\":1,\"name\":\"clibing\"}" 
+   输出
+   <?xml version="1.0" encoding="UTF-8"?> <object><number name="id">1</number><string name="name">clibing</string></object>
+
+   4.4 json 转换为 yml
+   knife json -c 3 "{\"id\":1,\"name\":\"clibing\"}" 
+   输出
+   id: 1
+   name: clibing
+   
+   4.5 yml 转换 json
+   knife json -c 4 "id: 1" 
+   输出
+   {"id":1}
 
 5. 定时器cron表达式
+   knife cron 这是常用的cron表达式
+
 6. 图片生成 从Base64生成文件，根据文件生成Base64
+   无
+
 7. 证书pem生成器
+   knife rsa -b 1024 
+
 8. 二维码生成器
+   8.1 当前目录快速生成二维码, 名字默认为 output.png
+   knife qrcode "https://clibing.com"
+
+   8.2 有边框，大小512，recovery level 2 输出到 /tmp/512.png 二维码的内容是 "https://clibing.com"
+   knife qrcode -l 2 -s 512 -f /tmp/512.png "https://clibing.com"
+
+   8.3 无边框，大小512，recovery level 2 输出到 /tmp/512.png 二维码的内容是 "https://clibing.com"
+   knife qrcode -d -l 2 -s 512 -f /tmp/512.png "https://clibing.com"
+
 9. IP查询，支持本机ip、出口ip等
+   9.1 查看本机ip
+   knife ip 
+
+   9.2 查看出口ip
+   knife ip -e 
 10. markdown处理，支持从HTML转Markdown
+   10.1. html -> markdown
+   knife md -s /tmp/source.html -t /tmp/target.md
+
+   10.2  markdown -> html
+   knife md -d -s /tmp/target.md -t /tmp/source.html 
+
 11. 正则表达式
+   11.1 根据正则执行 查找String模式
+   knife reg -e "H(.*)d" "HelloWorld message "
+
+   11.2 根据正则执行 匹配String模式
+   knife reg -d -e "H(.*)d" "HelloWorld message "
+
+更新帮助文档详见 
+knife -h
+knife <command> -h
 `,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
