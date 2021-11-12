@@ -37,9 +37,24 @@ var rootCmd = &cobra.Command{
 	Long: `封装一些常用的小工具:
 
 1. 时间格式化工具，实现提取当前系统的戳毫秒(13位), 接收一个时间戳按照指定的格式进行格式化。
+   knife time 输出13为时间戳
+   knife time -h 帮助
+   knife time -d 1h 以当前时间点向后增加1小时, 1h 可以替换为 -2h, 3m, 1d, -1d, 
+   knife time -i 1636610579860 格式当前时间戳
+
 2. URL编码解码
+   编码：knife url "https://github.com/clibing/knife"
+   解码：knife url -e "http%3A%2F%2Fgithub.com%2Fclibing%2Fknife"
+   编码并解码：knife url "https://github.com/clibing/knife" | knife url -e
+
 3. 加密计算， 默认接收字符串计算，支持计算指定的文件
+   knife sign -t md5 "clibing"
+   knife sign -t md5 -s /tmp/data.txt 注意文件签名与指定字符串签名不一致， 因为文件最后含有一个\r\n 、\r之类的换行符是隐藏的
+   echo "clibing" | knife sign -t md5
+   其中md5可以替换 sha1, sha256, sha512, base64
+
 4. xml,json,yml 互转与美化
+
 5. 定时器cron表达式
 6. 图片生成 从Base64生成文件，根据文件生成Base64
 7. 证书pem生成器

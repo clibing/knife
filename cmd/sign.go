@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"bufio"
 	"crypto/md5"
 	"crypto/sha1"
 	"crypto/sha256"
@@ -25,11 +26,13 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"io/ioutil"
+	"os"
+	"strings"
 )
 
 var (
-	action,sourceFile string
-	direct bool
+	action, sourceFile string
+	direct             bool
 )
 
 // signCmd represents the sign command
@@ -38,29 +41,43 @@ var signCmd = &cobra.Command{
 	Short: "常用的加密算法",
 	Long: `封装一些常用的加密算法包括md5, sha, sha256, hmac, ras, aes等等: 
 
-1. MD5 使用方式
-   knife sign -md5 ""
-   knife sign -md5 -file /tmp/file.txt
+使用方式
+knife sign -t <type> "" 其中: <type>支持"md5", "sha1", "sha256", "sha512", "base64"
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+1. MD5 
+   knife sign -t md5 "clibing"
+   knife sign -t md5 -s /tmp/data.txt 注意文件签名与指定字符串签名不一致， 因为文件最后含有一个\r\n 、\r之类的换行符是隐藏的
+   echo "clibing" | knife sign -t md5
+2. sha1, sha256, sha512, base64操作同md5.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, content := range args {
 			sign(action, []byte(content))
 		}
 		if sourceFile != "" {
-			value , err := ioutil.ReadFile(sourceFile)
+			value, err := ioutil.ReadFile(sourceFile)
 			if err != nil {
 				fmt.Println("sign file error, ", err)
 			}
+			fmt.Println("source file: ", sourceFile)
 			sign(action, value)
 		}
+
+		value, _ := os.Stdin.Stat()
+		if (value.Mode() & os.ModeNamedPipe) != os.ModeNamedPipe {
+			return
+		}
+
+		var buf strings.Builder
+		s := bufio.NewScanner(os.Stdin)
+		for s.Scan() {
+			buf.WriteString(s.Text())
+		}
+		sign(action, []byte(buf.String()))
 	},
 }
 
-func sign(signType string, content []byte){
-	switch signType{
+func sign(signType string, content []byte) {
+	switch signType {
 	// md5
 	case "md5":
 		{
@@ -112,6 +129,22 @@ func sign(signType string, content []byte){
 			}
 		}
 		break
+	//case "aes":
+	//	{
+	//	}
+	//	break
+	//case "des":
+	//	{
+	//	}
+	//	break
+	//case "hmac":
+	//	{
+	//	}
+	//	break
+	//case "rsa":
+	//	{
+	//	}
+	//	break
 	default:
 		fmt.Println("暂不支持的加密方法, ", action)
 	}

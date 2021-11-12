@@ -23,7 +23,7 @@ import (
 )
 var (
 	size,level int
-	name string
+	fileName string
 	disableBorder bool
 )
 // qrcodeCmd represents the qrcode command
@@ -32,8 +32,16 @@ var qrcodeCmd = &cobra.Command{
 	Short: "生成二维码",
 	Long: `将输入的内容生成二维码, 并生成png文件:
 
-生成二维码的内容为"admin"， 名字为 image
-knife qrcode -s 128 -n image "admin"
+生成二维码
+1. 当前目录快速生成二维码, 名字默认为 output.png
+   knife qrcode "https://clibing.com"
+
+2. 有边框，大小512，recovery level 2 输出到 /tmp/512.png 二维码的内容是 "https://clibing.com"
+   knife qrcode -l 2 -s 512 -f /tmp/512.png "https://clibing.com"
+
+3. 无边框，大小512，recovery level 2 输出到 /tmp/512.png 二维码的内容是 "https://clibing.com"
+   knife qrcode -d -l 2 -s 512 -f /tmp/512.png "https://clibing.com"
+
 .`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
@@ -55,10 +63,11 @@ knife qrcode -s 128 -n image "admin"
 		q.ForegroundColor = color.Black
 		q.DisableBorder = disableBorder
 
-		err = q.WriteFile(size, name)
+		err = q.WriteFile(size, fileName)
 		if err != nil {
 			fmt.Errorf("生成二维码异常 %s", err)
 		}
+		fmt.Println("二维码生成成功, ", fileName)
 	},
 }
 
@@ -71,10 +80,10 @@ func init() {
 	// and all subcommands, e.g.:
 	// qrcodeCmd.PersistentFlags().String("foo", "", "A help for foo")
 	qrcodeCmd.Flags().IntVarP(&size, "size", "s", 256, "二维码的size")
-	qrcodeCmd.Flags().StringVarP(&name, "name", "n", "output.png", "二维码图片的名字")
+	qrcodeCmd.Flags().StringVarP(&fileName, "fileName", "f", "./output.png", "输出二维码图片完整路径")
 
 	qrcodeCmd.Flags().IntVarP(&level, "level", "l", 1, "生成图片质量，默认是1(15%), 2(25%), 3(30%)")
-	qrcodeCmd.Flags().BoolVarP(&disableBorder, "disableBorder", "d", false, "是否禁用二维码边框")
+	qrcodeCmd.Flags().BoolVarP(&disableBorder, "disableBorder", "d", false, "是否禁用二维码边框, 默认不禁用")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:

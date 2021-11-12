@@ -36,31 +36,31 @@ var urlCmd = &cobra.Command{
 	Short: "URL的编码 解码",
 	Long: `对URL进行编码、解码：
 
-解密：
-knife sign -t base64 -d Y2xpYmluZw==
-base64:  Y2xpYmluZw==
-source:  clibing
+编码：
+knife url  "http://github.com/clibing/knife"
+http%3A%2F%2Fgithub.com%2Fclibing%2Fknife
 
-加密：
-knife sign -t base64 clibing
-source:  clibing
-base64:  Y2xpYmluZw==
+解码：
+knife url -e "http%3A%2F%2Fgithub.com%2Fclibing%2Fknife"
+http://github.com/clibing/knife
+
+支持管道
+编码： echo "http://github.com/clibing/knife" | knife url 
+解码： echo "http%3A%2F%2Fgithub.com%2Fclibing%2Fknife" | knife url -e
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		for _, value := range args {
-			if unescape == false {
-				fmt.Printf("%s\n", url.QueryEscape(value))
-			} else {
-				result, _ := url.QueryUnescape(value)
-				fmt.Printf("%s\n", result)
+		if len(args) > 0 {
+			for _, value := range args {
+				if unescape == false {
+					fmt.Printf("%s\n", url.QueryEscape(value))
+				} else {
+					result, _ := url.QueryUnescape(value)
+					fmt.Printf("%s\n", result)
+				}
 			}
 		}
-		if len(args) > 0 {
-			return
-		}
-		fileInfo, _ := os.Stdin.Stat()
-		if (fileInfo.Mode() & os.ModeNamedPipe) != os.ModeNamedPipe {
-			fmt.Println("The command is intended to work with pipes.")
+		value, _ := os.Stdin.Stat()
+		if (value.Mode() & os.ModeNamedPipe) != os.ModeNamedPipe {
 			return
 		}
 
