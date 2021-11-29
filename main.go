@@ -16,7 +16,10 @@ limitations under the License.
 package main
 
 import (
+	"github.com/c-bata/go-prompt"
 	"github.com/knife/cmd"
+	"os"
+	"os/exec"
 )
 
 var (
@@ -25,6 +28,41 @@ var (
 	commitID  string
 )
 
+func executor(t string) {
+	if t == "bash" || t == "zsh" {
+		cmd := exec.Command(t)
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Run()
+	}else if t == "exit" {
+		os.Exit(1)
+	}
+	return
+}
+
+func completer(t prompt.Document) []prompt.Suggest {
+	return []prompt.Suggest{
+		{Text: "bash"},
+		{Text: "zsh"},
+		{Text: "exit"},
+	}
+}
+
+func completer1(d prompt.Document) []prompt.Suggest {
+	s := []prompt.Suggest{
+		{Text: "users", Description: "Store the username and age"},
+		{Text: "articles", Description: "Store the article text posted by user"},
+		{Text: "comments", Description: "Store the text commented to articles"},
+	}
+	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
+}
+
 func main() {
+	p := prompt.New(
+		executor,
+		completer,
+	)
+	p.Run()
 	cmd.Execute(version, buildDate, commitID)
 }
