@@ -7,6 +7,7 @@ require (
 	github.com/basgys/goxml2json v1.1.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/gomarkdown/markdown v0.0.0-20211105120026-16f708f914c3
+	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.9.0
@@ -19,6 +20,7 @@ require (
 	github.com/andybalholm/cascadia v1.1.0 // indirect
 	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
+	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
@@ -29,6 +31,9 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
+	github.com/tklauser/go-sysconf v0.3.9 // indirect
+	github.com/tklauser/numcpus v0.3.0 // indirect
+	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	golang.org/x/net v0.0.0-20210503060351-7fd8e65b6420 // indirect
 	golang.org/x/sys v0.0.0-20211103235746-7861aae1554b // indirect
 	golang.org/x/text v0.3.6 // indirect
