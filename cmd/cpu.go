@@ -19,8 +19,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/spf13/cobra"
 	"github.com/shirou/gopsutil/cpu"
+	"github.com/spf13/cobra"
+)
+
+var (
+	times int
 )
 
 // cpuCmd represents the cpu command
@@ -28,20 +32,26 @@ var cpuCmd = &cobra.Command{
 	Use:   "cpu",
 	Short: "cpu temperature",
 	Run: func(cmd *cobra.Command, args []string) {
-		percent, err := cpu.Percent(time.Second, false)
-		if err != nil {
-			fmt.Println("获取失败")
+		var i int
+		for i = 0; i < times; i++ {
+			fmt.Printf("当前cpu的温度为: %.2f℃\n", termperature())
 		}
-
-		fmt.Printf("当前cpu的温度为: %.2f ℃\n", percent)
 	},
 }
 
+func termperature() (val float64) {
+	percent, err := cpu.Percent(time.Second, false)
+	if err != nil {
+		fmt.Println("获取失败")
+	}
+	val = percent[0]
+	return
+}
 func init() {
 	rootCmd.AddCommand(cpuCmd)
 
 	// Here you will define your flags and configuration settings.
-
+	cpuCmd.Flags().IntVarP(&times, "times", "t", 3, "检查cpu当前温度，需要检查多少次，间隔为1秒")
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// cpuCmd.PersistentFlags().String("foo", "", "A help for foo")
