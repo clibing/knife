@@ -33,7 +33,7 @@ var cpuCmd = &cobra.Command{
 			fmt.Println("获取失败")
 		}
 
-		fmt.Printf("当前cpu的温度为: %d ℃\n", percent)
+		fmt.Printf("当前cpu的温度为: %.2f ℃\n", percent)
 	},
 }
 
