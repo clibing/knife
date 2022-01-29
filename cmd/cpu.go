@@ -33,8 +33,11 @@ var cpuCmd = &cobra.Command{
 	Short: "cpu temperature",
 	Run: func(cmd *cobra.Command, args []string) {
 		var i int
+		if times > 100 {
+			times = 99
+		}
 		for i = 0; i < times; i++ {
-			fmt.Printf("当前cpu的温度为: %.2f℃\n", termperature())
+			fmt.Printf("%02d 当前cpu的温度为: %.2f℃\n", i+1, termperature())
 		}
 	},
 }
