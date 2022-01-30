@@ -47,4 +47,5 @@ knife -h
 * [x] 9.IP查询，支持本机ip、出口ip等
 * [x] 10.markdown处理，支持从HTML转Markdown
 * [x] 11.正则表达式
+* [x] 12.CPU和内存使用率
 

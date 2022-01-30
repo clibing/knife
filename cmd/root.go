@@ -122,6 +122,12 @@ var rootCmd = &cobra.Command{
    11.2 根据正则执行 匹配String模式
    knife reg -d -e "H(.*)d" "HelloWorld message "
 
+12. 硬件检测
+   12.1 检查当前cpu和内存使用率
+   knife monitor 
+   12.1 检查当前cpu和内存使用率 并重复检查10
+   knife monitor -t 10
+
 更新帮助文档详见 
 knife -h
 knife <command> -h

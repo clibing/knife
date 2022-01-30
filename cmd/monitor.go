@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"github.com/shirou/gopsutil/cpu"
+	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/spf13/cobra"
 )
 
@@ -27,17 +28,19 @@ var (
 	times int
 )
 
-// cpuCmd represents the cpu command
-var cpuCmd = &cobra.Command{
-	Use:   "cpu",
-	Short: "cpu temperature",
+// monitorCmd represents the cpu command
+var monitorCmd = &cobra.Command{
+	Use:   "monitor",
+	Short: "检查当前系统cpu使用率，内存使用率",
 	Run: func(cmd *cobra.Command, args []string) {
 		var i int
 		if times > 100 {
+			fmt.Println("times超出限制，默认为100")
 			times = 99
 		}
 		for i = 0; i < times; i++ {
-			fmt.Printf("%02d 当前cpu的温度为: %.2f℃\n", i+1, termperature())
+			v, _ := mem.VirtualMemory()
+			fmt.Printf("- %02d 当前cpu的温度为: %.2f℃, 内存: %.2fG(%v字节), 剩余内存: %.2fG(%v字节), 使用率: %.2f%%\n", i+1, termperature(), float64(v.Total)/1024/1024/1024, v.Total, float64(v.Free)/1024/1024/1024, v.Free, v.UsedPercent)
 		}
 	},
 }
@@ -51,15 +54,15 @@ func termperature() (val float64) {
 	return
 }
 func init() {
-	rootCmd.AddCommand(cpuCmd)
+	rootCmd.AddCommand(monitorCmd)
 
 	// Here you will define your flags and configuration settings.
-	cpuCmd.Flags().IntVarP(&times, "times", "t", 3, "检查cpu当前温度，需要检查多少次，间隔为1秒")
+	monitorCmd.Flags().IntVarP(&times, "times", "t", 3, "检查cpu当前温度，需要检查多少次，间隔为1秒")
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// cpuCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// monitorCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// cpuCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// monitorCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
