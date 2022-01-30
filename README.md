@@ -17,7 +17,7 @@ git clone github.com/clibing/knife
 以macos为例
 ```shell
 chmod a+x knife_darwin_amd64
-./knife_darwin_amd64 install 
+sudo ./knife_darwin_amd64 install 
 ```
 
 
