@@ -22,7 +22,7 @@ import (
 )
 
 var (
-	f,h,d string
+	f,h,d,v string
 	z int8
 	i uint64
 	s bool
@@ -97,6 +97,16 @@ knife time -i 1636367761724 -f "2006-01-02 15:04"
 			return
 		}
 
+		if v != "" {
+			stamp, _ := time.ParseInLocation("2006-01-02 15:04:05", v, time.Local)
+			if s == false {
+				fmt.Println(stamp.UnixMilli())
+				return
+			}
+			fmt.Println(stamp.Unix())
+			return
+		}
+
 		if s == false {
 			fmt.Println(t.UnixMilli())
 			return
@@ -122,6 +132,7 @@ func init() {
 	//timeCmd.Flags().Int8VarP(&z, "zone", "z", 8, "时区")
 	timeCmd.Flags().Uint64VarP(&i, "input", "i", 0, "需要格式化的int类型的时间戳")
 	timeCmd.Flags().BoolVarP(&s, "second", "s", false, "是否需要秒, 默认不需要, 暂时毫秒")
+	timeCmd.Flags().StringVarP(&v, "value", "v", "", "输入的字符串时间格式为: yyyy-MM-dd HH:mm:ss")
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
