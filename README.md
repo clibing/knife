@@ -49,6 +49,3 @@ knife -h
 * [x] 11.正则表达式
 * [x] 12.CPU和内存使用率
 
-### 统计
-
-[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=clibing)](https://github.com/anuraghazra/github-readme-stats)
