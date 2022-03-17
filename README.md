@@ -11,15 +11,17 @@ git clone github.com/clibing/knife
 下载二进制包，执行安装命令即可
 
 
-* linux/macos 默认安装到 /usr/local/bin/
-* win 默认安装到 C:/Windows/system32/
+* linux/macos 默认安装到 /usr/local/bin/knife
+* win 默认安装到 C:/Windows/system32/knife.exe 
 
 以macos为例
 ```shell
 chmod a+x knife_darwin_amd64
 sudo ./knife_darwin_amd64 install 
-```
 
+输出
+install success
+```
 
 ### 查看帮助
 
