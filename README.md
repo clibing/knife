@@ -50,4 +50,5 @@ knife -h
 * [x] 10.markdown处理，支持从HTML转Markdown
 * [x] 11.正则表达式
 * [x] 12.CPU和内存使用率
+* [x] 13.生成随机数（默认UUID）支持数字、大小26个英文、标点符号
 

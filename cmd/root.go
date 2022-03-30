@@ -128,6 +128,12 @@ var rootCmd = &cobra.Command{
    12.1 检查当前cpu和内存使用率 并重复检查10
    knife monitor -t 10
 
+13. 随机数
+   13.1 默认生成uuid
+   knife random
+   13.2 生成包含数字、大小写字母、标点符号，长度为6, 共生成3个
+   knife random -n -c -p -l 6 -t 3
+
 更新帮助文档详见 
 knife -h
 knife <command> -h
