@@ -76,6 +76,22 @@ func genRsaKey(bits int) error {
 	if err != nil {
 		return err
 	}
+
+	privatePKCS8Key, err := x509.MarshalPKCS8PrivateKey(privateKey)
+
+	blockPKCS8 := &pem.Block{
+		Type:  "PRIVATE KEY",
+		Bytes: privatePKCS8Key,
+	}
+	filePKCS8, err := os.Create("private.key")
+	if err != nil {
+		return err
+	}
+	err = pem.Encode(filePKCS8, blockPKCS8)
+	if err != nil {
+		return err
+	}
+
 	// 生成公钥文件
 	publicKey := &privateKey.PublicKey
 	derPkix, err := x509.MarshalPKIXPublicKey(publicKey)
@@ -94,6 +110,6 @@ func genRsaKey(bits int) error {
 	if err != nil {
 		return err
 	}
-	return nil
 
+	return nil
 }
