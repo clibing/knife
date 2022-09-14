@@ -46,8 +46,10 @@ var randomCmd = &cobra.Command{
 .`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if !needChar && !needNumber && !needPunctuation {
-			uuid := uuid.New()
-			fmt.Println(uuid)
+			for t := 1; t <= randomTimes; t++ {
+			    uuid := uuid.New()
+                fmt.Println(uuid)
+			}
 		} else {
 			valueLen := randomLen
 			result := make([]rune, valueLen)

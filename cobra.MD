@@ -1,0 +1,1 @@
+ cobra add cmd的名字 
