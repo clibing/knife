@@ -28,8 +28,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var downloadPath string
-var downloadUrl string
+var storagePath string
+var sourceUrl string
 
 // downloadCmd represents the download command
 var downloadCmd = &cobra.Command{
@@ -44,14 +44,12 @@ knife download https://clibing.com/download.demo.tar.gz
 knife download -p ./ -s https://clibing.com/download.demo.tar.gz
 .`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(downloadPath) == 0 && len(downloadUrl) == 0 {
+		if len(storagePath) == 0 && len(sourceUrl) == 0 {
 			for _, url := range args {
 				Download(url, "./")
 			}
 		} else {
-			fmt.Println(downloadPath)
-			fmt.Println(downloadUrl)
-			Download(downloadUrl, downloadPath)
+			Download(sourceUrl, storagePath)
 		}
 	},
 }
@@ -98,8 +96,8 @@ func init() {
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	downloadCmd.InheritedFlags().StringVarP(&downloadPath, "path", "p", "", "存储目录")
-	downloadCmd.InheritedFlags().StringVarP(&downloadUrl, "source", "s", "", "资源地址")
+	downloadCmd.Flags().StringVarP(&storagePath, "storagePath", "p", "", "存储目录")
+	downloadCmd.Flags().StringVarP(&sourceUrl, "sourceUrl", "s", "", "资源地址")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:

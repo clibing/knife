@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${fileDirname}",
-            "args":["download", "https://dl.google.com/go/go1.14.2.src.tar.gz"]
+            "args":["download", "-p", "./", "-s", "https://dl.google.com/go/go1.14.2.src.tar.gz"]
         }
     ]
 }
