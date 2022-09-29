@@ -56,7 +56,11 @@ knife download -p ./ -s https://clibing.com/download.demo.tar.gz
 
 func Download(source, path string) {
 	req, _ := http.NewRequest("GET", source, nil)
-	resp, _ := http.DefaultClient.Do(req)
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		fmt.Println("请求下载失败", err)
+		return
+	}
 	defer resp.Body.Close()
 
 	var filename string
