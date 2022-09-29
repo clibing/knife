@@ -87,10 +87,26 @@ func Download(source, path string) {
 	f, _ := os.OpenFile(fmt.Sprintf("%s/%s", path, filename), os.O_CREATE|os.O_WRONLY, 0644)
 	defer f.Close()
 
-	bar := progressbar.DefaultBytes(
-		resp.ContentLength,
-		"进度",
-	)
+	fmt.Println("下载的文件: ", resp.ContentLength)
+	// bar := progressbar.DefaultBytes(
+	// 	resp.ContentLength,
+	// 	"进度",
+	// )
+
+	bar := progressbar.NewOptions(1000,
+		progressbar.OptionSetWriter(os.Stdout),
+		progressbar.OptionEnableColorCodes(true),
+		progressbar.OptionShowBytes(true),
+		progressbar.OptionSetWidth(15),
+		progressbar.OptionSetDescription("[cyan][1/3][reset] Writing moshable file..."),
+		progressbar.OptionSetTheme(progressbar.Theme{
+			Saucer:        "[green]=[reset]",
+			SaucerHead:    "[green]>[reset]",
+			SaucerPadding: " ",
+			BarStart:      "[",
+			BarEnd:        "]",
+		}))
+
 	io.Copy(io.MultiWriter(f, bar), resp.Body)
 }
 func init() {
