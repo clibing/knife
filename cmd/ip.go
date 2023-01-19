@@ -85,7 +85,7 @@ func getLocalIP() (ipv4 string, err error) {
 }
 
 func getExternal() {
-	resp, err := http.Get("https://ipw.cn/api/ip/myip")
+	resp, err := http.Get("https://tool.linuxcrypt.cn/showCurrentIp")
 	if err != nil {
 		os.Stderr.WriteString(err.Error())
 		os.Stderr.WriteString("\n")
