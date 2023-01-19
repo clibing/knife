@@ -27,7 +27,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "查看当前版本号",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("version: %s\nbuildDate: %s\ncommitID: %s\nAuthors: clibing wmsjhappy@gmail.com\nCopyright (c) %s clibing, All rights reserved.",
+		fmt.Printf("Version: %s\n\nBuildDate: %s\nCommitID: %snAuthors: clibing wmsjhappy@gmail.com\nCopyright (c) %s clibing, All rights reserved.",
 			version, buildDate, commitId, time.Now().Format("2006"))
 	},
 }
