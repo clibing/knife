@@ -38,30 +38,30 @@ knife install
 2. 指定目录安装
 knife install -p /usr/local/bin
 .`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		binPath, err := exec.LookPath(os.Args[0])
 		if err != nil {
-			fmt.Errorf("failed to get bin file info: %s: %s", os.Args[0], err)
+			fmt.Printf("failed to get bin file info: %s: %s", os.Args[0], err)
 			return
 		}
 
 		currentFile, err := os.Open(binPath)
 		if err != nil {
-			fmt.Errorf("failed to get bin file info: %s: %s", binPath, err)
+			fmt.Printf("failed to get bin file info: %s: %s", binPath, err)
 			return
 		}
 		defer func() { _ = currentFile.Close() }()
 
 		installFile, err := os.OpenFile(filepath.Join(path, "knife"), os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0755)
 		if err != nil {
-			fmt.Errorf("failed to create bin file: %s: %s", filepath.Join(path, "knife"), err)
+			fmt.Printf("failed to create bin file: %s: %s", filepath.Join(path, "knife"), err)
 			return
 		}
 		defer func() { _ = installFile.Close() }()
 
 		_, err = io.Copy(installFile, currentFile)
 		if err != nil {
-			fmt.Errorf("failed to copy file: %s: %s", filepath.Join(path, "knife"), err)
+			fmt.Printf("failed to copy file: %s: %s", filepath.Join(path, "knife"), err)
 			return
 		}
 		fmt.Println("install success")
