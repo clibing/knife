@@ -69,11 +69,13 @@ current os arch, kernal.`,
 		}
 
 		result := str
+		var Os, Architecture string
 		if len(ver) > 0 {
 			result = strings.ReplaceAll(result, "${version}", ver)
+			result = strings.ReplaceAll(result, "$version", ver)
+			result = strings.ReplaceAll(result, "${VERSION}", ver)
+			result = strings.ReplaceAll(result, "$VERSION", ver)
 		}
-
-		var Os, Architecture string
 
 		if len(o) > 0 {
 			Os = o
