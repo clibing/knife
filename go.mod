@@ -8,6 +8,7 @@ require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-basic/uuid v1.0.0
 	github.com/gomarkdown/markdown v0.0.0-20211105120026-16f708f914c3
+	github.com/gosuri/uiprogress v0.0.1
 	github.com/schollz/progressbar/v3 v3.11.0
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/shirou/gopsutil/v3 v3.21.12
@@ -24,10 +25,12 @@ require (
 	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
+	github.com/gosuri/uilive v0.0.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
+	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/mattn/go-runewidth v0.0.14 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/mitchellh/mapstructure v1.4.2 // indirect
