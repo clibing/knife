@@ -12,8 +12,9 @@ import (
 )
 
 var (
-    str, ver, o, arch string
+	str, ver, o, arch string
 )
+
 // archCmd represents the arch command
 var archCmd = &cobra.Command{
 	Use:   "arch",
@@ -22,7 +23,11 @@ var archCmd = &cobra.Command{
 
 默认替换os、arch关键字, 注意输入的-s的值需要使用单引号, 不能使用双信号。
 
+变量支持 ${NAME} $NAME ${name} $name 四种定义方式，当使用$+变量名字时候，会出现替换错误， 例如 当OS=linux, 其中 $OSA和$OS, 会被替换 linuxA 和 linux
 knife arch -s 'https://go.dev/dl/go${version}.${os}-${arch}.tar.gz' 
+knife arch -s 'https://go.dev/dl/go${VERSION}.${OS}-$arch.tar.gz' 
+knife arch -s 'https://go.dev/dl/go$version.$os-${ARCH}.tar.gz' 
+knife arch -s 'https://go.dev/dl/go$VERSION.$OS-$ARCH.tar.gz' 
 
 knife arch -s 'https://go.dev/dl/go${version}.${os}-${arch}.tar.gz' -o linux -a 386 -v 1.20.4
 
@@ -60,7 +65,7 @@ windows	amd64
 current os arch, kernal.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(str) == 0 {
-			fmt.Printf("%s %s\n", runtime.GOOS, runtime.GOARCH)
+			fmt.Printf("%s %s", runtime.GOOS, runtime.GOARCH)
 		}
 
 		result := str
@@ -68,17 +73,27 @@ current os arch, kernal.`,
 			result = strings.ReplaceAll(result, "${version}", ver)
 		}
 
+		var Os, Architecture string
+
 		if len(o) > 0 {
-			result = strings.ReplaceAll(result, "${os}", o)
+			Os = o
 		} else {
-			result = strings.ReplaceAll(result, "${os}", runtime.GOOS)
+			Os = runtime.GOOS
 		}
+		result = strings.ReplaceAll(result, "$OS", Os)
+		result = strings.ReplaceAll(result, "${os}", Os)
+		result = strings.ReplaceAll(result, "${OS}", Os)
+		result = strings.ReplaceAll(result, "$os", Os)
 
 		if len(arch) > 0 {
-			result = strings.ReplaceAll(result, "${arch}", arch)
-		}else {
-			result = strings.ReplaceAll(result, "${arch}", runtime.GOARCH)
+			Architecture = arch
+		} else {
+			Architecture = runtime.GOARCH
 		}
+		result = strings.ReplaceAll(result, "${arch}", Architecture)
+		result = strings.ReplaceAll(result, "$arch", Architecture)
+		result = strings.ReplaceAll(result, "${ARCH}", Architecture)
+		result = strings.ReplaceAll(result, "$ARCH", Architecture)
 
 		fmt.Println(result)
 	},
@@ -88,10 +103,10 @@ func init() {
 	rootCmd.AddCommand(archCmd)
 
 	// Here you will define your flags and configuration settings.
-    archCmd.PersistentFlags().StringVarP(&str, "str", "s", "", "需要替换的URL")
-    archCmd.PersistentFlags().StringVarP(&ver, "version", "v", "", "需要替换的URL")
-    archCmd.PersistentFlags().StringVarP(&o, "os", "o", "", "当前系统运行的操作系统")
-    archCmd.PersistentFlags().StringVarP(&arch, "arch", "a", "", "当前系统运行的架构")
+	archCmd.PersistentFlags().StringVarP(&str, "str", "s", "", "需要替换的URL")
+	archCmd.PersistentFlags().StringVarP(&ver, "version", "v", "", "需要替换的URL")
+	archCmd.PersistentFlags().StringVarP(&o, "os", "o", "", "当前系统运行的操作系统")
+	archCmd.PersistentFlags().StringVarP(&arch, "arch", "a", "", "当前系统运行的架构")
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
