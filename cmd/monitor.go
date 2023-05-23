@@ -32,7 +32,7 @@ var (
 var monitorCmd = &cobra.Command{
 	Use:   "monitor",
 	Short: "检查当前系统cpu使用率，内存使用率",
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		var i int
 		if times > 100 {
 			fmt.Println("times超出限制，默认为100")

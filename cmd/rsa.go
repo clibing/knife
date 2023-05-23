@@ -36,7 +36,7 @@ var rsaCmd = &cobra.Command{
 1. 生成密钥长度为1024
 knife rsa -b 1024
 .`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		genRsaKey(bits)
 	},
 }
@@ -77,7 +77,7 @@ func genRsaKey(bits int) error {
 		return err
 	}
 
-	privatePKCS8Key, err := x509.MarshalPKCS8PrivateKey(privateKey)
+	privatePKCS8Key, _ := x509.MarshalPKCS8PrivateKey(privateKey)
 
 	blockPKCS8 := &pem.Block{
 		Type:  "PRIVATE KEY",

@@ -53,7 +53,7 @@ mac地址格式：
 使用：
     knife wol -m 11:22:33:44:55:66
     knife wol -m 11:22:33:44:55:66 -n eth0.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		if mac == "" {
 			fmt.Println("唤醒的MAC地址为空")
 			return
@@ -126,7 +126,7 @@ func interfaceIPv4(nic string) (net.IP, error) {
 
 	inter, err := net.InterfaceByName(n)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("获取指定网卡异常, error: %s", err))
+		return nil, fmt.Errorf("获取指定网卡异常, error: %s", err)
 	}
 	check := inter.Flags & net.FlagUp
 	if check == 0 {
@@ -135,7 +135,7 @@ func interfaceIPv4(nic string) (net.IP, error) {
 	}
 	addrs, err := inter.Addrs()
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("获取指定网卡的IP异常, error: %s", err))
+		return nil, fmt.Errorf("获取指定网卡的IP异常, error: %s", err)
 	}
 
 	var currentIp net.IP
@@ -148,7 +148,7 @@ func interfaceIPv4(nic string) (net.IP, error) {
 		}
 	}
 	if currentIp == nil {
-		return nil, errors.New(fmt.Sprintf("获取指定网卡的IP异常, error: %s", err))
+		return nil, fmt.Errorf("获取指定网卡的IP异常, error: %s", err)
 	}
 	return currentIp, nil
 }

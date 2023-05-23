@@ -35,19 +35,21 @@ var imageCmd = &cobra.Command{
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		if direct {
 			// base64 -> image
 			ddd, _ := base64.StdEncoding.DecodeString(base64File)  //成图片文件并把文件写入到buffer
 			err := ioutil.WriteFile(imageFile, ddd, 0666) //buffer输出到jpg文件中（不做处理，直接写到文件）
 			if err != nil {
-				fmt.Errorf("base64 to image error, %s", err)
+				fmt.Printf("base64 to image error, %s", err)
+				return
 			}
 		} else {
 			// image -> base64
 			file, err := ioutil.ReadFile(imageFile)
 			if err != nil {
-				fmt.Errorf("read file error, %s", err)
+				fmt.Printf("read file error, %s", err)
+				return
 			}
 			result := base64.StdEncoding.EncodeToString(file)
 			ioutil.WriteFile(base64File, []byte(result), 0664)

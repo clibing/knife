@@ -49,7 +49,7 @@ knife sign -t <type> "" 其中: <type>支持"md5", "sha1", "sha256", "sha512", "
    knife sign -t md5 -s /tmp/data.txt 注意文件签名与指定字符串签名不一致， 因为文件最后含有一个\r\n 、\r之类的换行符是隐藏的
    echo "clibing" | knife sign -t md5
 2. sha1, sha256, sha512, base64操作同md5.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		for _, content := range args {
 			sign(action, []byte(content))
 		}
@@ -87,7 +87,7 @@ func sign(signType string, content []byte) {
 			fmt.Println("source: ", string(content))
 			fmt.Println("md5   : ", value)
 		}
-		break
+		return
 	case "sha1":
 		{
 			s := sha1.New()
@@ -96,7 +96,7 @@ func sign(signType string, content []byte) {
 			fmt.Println("source: ", string(content))
 			fmt.Println("sha1  : ", value)
 		}
-		break
+		return
 	case "sha256":
 		{
 			s := sha256.New()
@@ -105,7 +105,7 @@ func sign(signType string, content []byte) {
 			fmt.Println("source: ", string(content))
 			fmt.Println("sha256: ", value)
 		}
-		break
+		return
 	case "sha512":
 		{
 			s := sha512.New()
@@ -114,11 +114,11 @@ func sign(signType string, content []byte) {
 			fmt.Println("source: ", string(content))
 			fmt.Println("sha512: ", value)
 		}
-		break
+		return
 	case "base64":
 		{
 			// 加密
-			if direct == false {
+			if !direct {
 				v := base64.StdEncoding.EncodeToString(content)
 				fmt.Println("source: ", string(content))
 				fmt.Println("base64: ", v)
@@ -128,7 +128,7 @@ func sign(signType string, content []byte) {
 				fmt.Println("source: ", string(v))
 			}
 		}
-		break
+		return
 	//case "aes":
 	//	{
 	//	}

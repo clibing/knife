@@ -39,7 +39,7 @@ knife ip
 knife ip -e
 
 本机IP地址使用的时候比较多，出口ip一般可以做一个端口处理转发时使用的比较多，本功能较为简单.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		if external {
 			getExternal()
 		} else {

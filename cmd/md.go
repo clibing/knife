@@ -52,7 +52,7 @@ hello 'clibing'
 
 4. markdown to html
 knife md -d -s source.md -t target.html.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		// direct 默认为false
 		if direct {
 			htmlFlags := html.CommonFlags | html.HrefTargetBlank
@@ -67,13 +67,19 @@ knife md -d -s source.md -t target.html.`,
 		}else{
 			converter := htmlToMd.NewConverter("", true, nil)
 			html, err := ioutil.ReadFile(source)
+			if err != nil {
+				log.Fatal(err)
+				return
+			}
 			markdown, err := converter.ConvertString(string(html))
 			if err != nil {
 				log.Fatal(err)
+				return
 			}
 			err = ioutil.WriteFile(target, []byte(markdown), 0644)
 			if err != nil {
 				fmt.Println(err)
+				return
 			}
 		}
 	},

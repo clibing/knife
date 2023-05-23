@@ -75,7 +75,7 @@ and usage of using your command. For example:
 实例12：晚上11点到早上7点之间，每隔一小时重启smb
 0 23-7/1 * * * /etc/init.d/smb restart.`,
 
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		fmt.Println("cron called")
 	},
 }

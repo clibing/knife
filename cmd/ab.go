@@ -35,7 +35,7 @@ var abCmd = &cobra.Command{
 	Long: `ab测试接口:
 
 .`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		fmt.Println("ab called")
 	},
 }

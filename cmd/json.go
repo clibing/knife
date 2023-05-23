@@ -83,7 +83,7 @@ var jsonCmd = &cobra.Command{
 jq: https://github.com/stedolan/jq.git
 使用:
 echo '{"id":1,"name":"clibing"}' | jq.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		// 使用的参数传递直接返回
 		if len(args) > 0 {
 			doJsonFunc(args)
@@ -109,19 +109,19 @@ func doJsonFunc(content []string) {
 		switch convert {
 		case xmlToJson:
 			xmlToJsonFunc(value)
-			break
+			return
 		case jsonToXml:
 			jsonToXmlFunc(value)
-			break
+			return
 		case jsonToYml:
 			jsonToYmlFunc(value)
-			break
+			return
 		case ymlToJson:
 			ymlToJsonFunc(value)
-			break
+			return
 		default:
 			befaultJson(value)
-			break
+			return
 		}
 	}
 }

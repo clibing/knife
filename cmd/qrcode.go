@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,9 +17,11 @@ package cmd
 
 import (
 	"fmt"
+	"image/color"
+	"log"
+
 	qrcode "github.com/skip2/go-qrcode"
 	"github.com/spf13/cobra"
-	"image/color"
 )
 var (
 	size,level int
@@ -43,9 +45,10 @@ var qrcodeCmd = &cobra.Command{
    knife qrcode -d -l 2 -s 512 -f /tmp/512.png "https://clibing.com"
 
 .`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		if len(args) != 1 {
-			fmt.Errorf("请输入二维码的内容")
+			log.Fatal("请输入二维码的内容")
+			return
 		}
 		recoveryLevel := qrcode.Medium
 		if level == 2 {
@@ -56,7 +59,7 @@ var qrcodeCmd = &cobra.Command{
 
 		q, err := qrcode.New(args[0], recoveryLevel)
 		if err != nil {
-			fmt.Errorf("创建二维码基础参数异常 %s", err)
+			log.Fatalf("创建二维码基础参数异常 %s", err)
 			return
 		}
 		q.BackgroundColor = color.White
@@ -65,7 +68,8 @@ var qrcodeCmd = &cobra.Command{
 
 		err = q.WriteFile(size, fileName)
 		if err != nil {
-			fmt.Errorf("生成二维码异常 %s", err)
+			log.Fatalf("生成二维码异常 %s", err)
+			return
 		}
 		fmt.Println("二维码生成成功, ", fileName)
 	},
