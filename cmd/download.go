@@ -24,6 +24,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/gosuri/uiprogress"
 	"github.com/schollz/progressbar/v3"
 	"github.com/spf13/cobra"
 )
@@ -86,6 +87,20 @@ func Download(source, path string) {
 
 	f, _ := os.OpenFile(fmt.Sprintf("%s/%s", path, filename), os.O_CREATE|os.O_WRONLY, 0644)
 	defer f.Close()
+
+	uiprogress.Start()
+	bar := uiprogress.AddBar(20).PrependElapsed().AppendCompleted()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for i := 1; i <= bar3.Total; i++ {
+			bar3.Set(i)
+			time.Sleep(waitTime)
+		}
+	}()
+
+	// wait for all the go routines to finish
+	wg.Wait()
 
 	bar := progressbar.DefaultBytes(
 		resp.ContentLength,
