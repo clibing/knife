@@ -31,7 +31,7 @@ var uninstallCmd = &cobra.Command{
 knife uninstall 
 2. 指定目录卸载
 knife uninstall -p /usr/local/bin.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		fmt.Println("uninstall called")
 	},
 }

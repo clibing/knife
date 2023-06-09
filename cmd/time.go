@@ -115,7 +115,7 @@ knife  time -s -f "yyyy/MM/dd HH:mm:ss" -d 1h30s  "2022/03/16 11:23:10"
 
 5. 注意 不要同事接收数字类型和字符串类型
 `,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		var value string
 		if len(args) >= 1 {
 			value = args[0]

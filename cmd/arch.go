@@ -63,7 +63,7 @@ windows	386
 windows	amd64
 
 current os arch, kernal.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		if len(str) == 0 {
 			fmt.Printf("%s %s", runtime.GOOS, runtime.GOARCH)
 		}

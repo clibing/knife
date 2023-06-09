@@ -35,12 +35,26 @@ var abCmd = &cobra.Command{
 	Long: `ab测试接口:
 
 .`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		fmt.Println("ab called")
 	},
 }
 
+// abCmd represents the ab command
+var benchCmd = &cobra.Command{
+	Use:   "bench",
+	Short: "bench测试接口",
+	Long: `bench测试接口:
+
+.`,
+	Run: func(_ *cobra.Command, _ []string) {
+		fmt.Println("sub command bench called")
+	},
+}
+
+
 func init() {
+	abCmd.AddCommand(benchCmd)
 	rootCmd.AddCommand(abCmd)
 
 	// Here you will define your flags and configuration settings.

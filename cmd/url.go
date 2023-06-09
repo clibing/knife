@@ -48,10 +48,10 @@ http://github.com/clibing/knife
 编码： echo "http://github.com/clibing/knife" | knife url 
 解码： echo "http%3A%2F%2Fgithub.com%2Fclibing%2Fknife" | knife url -e
 `,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		if len(args) > 0 {
 			for _, value := range args {
-				if unescape == false {
+				if !unescape {
 					fmt.Printf("%s\n", url.QueryEscape(value))
 				} else {
 					result, _ := url.QueryUnescape(value)
@@ -69,7 +69,7 @@ http://github.com/clibing/knife
 		for s.Scan() {
 			buf.WriteString(s.Text())
 		}
-		if unescape == false {
+		if !unescape {
 			fmt.Printf("%s\n", url.QueryEscape(buf.String()))
 		} else {
 			result, _ := url.QueryUnescape(buf.String())

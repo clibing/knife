@@ -46,7 +46,7 @@ var upgradeCmd = &cobra.Command{
 
 knife upgrade -u "0.0.6" -b /usr/local/bin/
 .`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		if len(download) == 0 && len(upgrade) == 0 {
 			fmt.Println("参数不能为空")
 			return

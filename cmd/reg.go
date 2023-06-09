@@ -31,7 +31,7 @@ var regCmd = &cobra.Command{
 	Long: `验证正则表达式对内容的匹配或者查找:
 
 knife reg -e "H(.*)d" "HelloWorld message ".`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		r, _ := regexp.Compile(expression)
 		if match {
 			for _, source:= range args {

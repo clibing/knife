@@ -44,7 +44,7 @@ var randomCmd = &cobra.Command{
 3. 生成一个强度比较高的密码
 等等
 .`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		if !needChar && !needNumber && !needPunctuation {
 			for t := 1; t <= randomTimes; t++ {
 			    uuid := uuid.New()
