@@ -14,6 +14,7 @@ import (
 var (
 	port       int
 	staticPath string
+	// values     []string
 )
 
 // staticCmd represents the static command
@@ -54,6 +55,7 @@ func init() {
 
 	staticCmd.Flags().StringVarP(&staticPath, "path", "p", "", "静态资源目录, 默认为当前目录")
 	staticCmd.Flags().IntVarP(&port, "port", "", 0, "端口, 默认会随机")
+	// staticCmd.Flags().StringSliceVarP(&values, "values", "v", nil, "parameters")
 
 	// staticCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

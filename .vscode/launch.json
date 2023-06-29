@@ -10,8 +10,7 @@
             "request": "launch",
             "mode": "auto",
             "program": "${fileDirname}",
-            // "args":["download", "-p", "./", "-s", "https://dl.google.com/go/go1.14.2.src.tar.gz"]
-            "args":["download", "https://dl.google.com/go/go1.14.2.src.tar.gz"]
+            "args":["static", "-p", "./", "-p", "/Users/clibing/go/src/github.com/clibing/knife"]
         }
     ]
 }
