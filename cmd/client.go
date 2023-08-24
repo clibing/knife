@@ -23,13 +23,22 @@ var (
 )
 
 func init() {
-
 	clientCmd.AddCommand(&cobra.Command{
 		Use:   "http",
 		Short: "http",
 		Long:  `http client`,
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println("http client called")
+		},
+	})
+
+	clientCmd.AddCommand(&cobra.Command{
+		Use:     "websocket",
+		Short:   "websocket",
+		Aliases: []string{"ws"},
+		Long:    `websocket client`,
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("websocket client called")
 		},
 	})
 
