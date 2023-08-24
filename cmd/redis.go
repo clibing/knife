@@ -27,6 +27,7 @@ var (
 	password                    string   // redis的密码
 	database                    int      // redis database
 	command                     string   // redis command
+	sentinel                    bool     // redis sentinel model
 	redisCmd                    = &cobra.Command{
 		Use:   "redis",
 		Short: "redis client",
@@ -68,7 +69,11 @@ func execute(ctx context.Context, rdb *redis.Client, cmd string, keys []string, 
 			if err != nil {
 				continue
 			}
-			fmt.Printf("  [%s]-->[%s]\n", key, value)
+			ttl, _ := rdb.TTL(ctx, key).Result()
+			fmt.Printf("  [%s]-->[%s] expire: %ds\n", key, value, int(ttl.Seconds()))
+			if sentinel {
+				break
+			}
 		}
 	case DEL:
 		if master(ctx, rdb) {
@@ -143,6 +148,7 @@ func init() {
 	redisCmd.Flags().StringSliceVarP(&keys, "key", "k", nil, "key list")
 	redisCmd.Flags().StringSliceVarP(&values, "value", "v", nil, "value list")
 	redisCmd.Flags().StringSliceVarP(&expires, "expire", "e", nil, "expire list")
+	redisCmd.Flags().BoolVarP(&sentinel, "sentinel", "s", false, "是否sentinel模式")
 
 	// Here you will define your flags and configuration settings.
 
