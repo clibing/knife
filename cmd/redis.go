@@ -31,7 +31,28 @@ var (
 	redisCmd                    = &cobra.Command{
 		Use:   "redis",
 		Short: "redis client",
-		Long:  `使用redis发送请求数据.`,
+		Long: `使用redis发送请求数据
+
+1.快速获取key: name的值
+  knife redis -c GET -k name
+
+2.获取key: name, userr的值
+  knife redis -H 127.0.0.1:6379 -c GET -k name -k user
+
+3.设置key: name, value: 123456, expire: 120s
+  knife redis -H 127.0.0.1:6379 -c SET -k name -v 123456 -e 120s
+
+4.删除key: name, user
+  knife redis -c DEL -k name -k user
+
+5.链接多redis服务，获取key: name
+  knife redis -H 127.0.0.1:6379 -H 127.0.0.1:6380 -c GET -k name
+
+6.删除哨兵的key, 会自动判断当前redis server的role是否为master
+  knife redis -H 127.0.0.1:6379 -H 127.0.0.1:6380 -c DEL -k name
+
+7.当链接哨兵模式时，读取配置时，只返回一个key对应的值
+  knife redis -H 127.0.0.1:6379 -H 127.0.0.1:6380 -s -c GET -k name.`,
 		Run: func(cmd *cobra.Command, args []string) {
 			ctx := context.Background()
 			size := len(host)
@@ -138,17 +159,14 @@ func master(ctx context.Context, rdb *redis.Client) bool {
 
 func init() {
 	rootCmd.AddCommand(redisCmd)
-	redisCmd.Flags().StringSliceVarP(&host, "host", "H", nil, "host list")
+	redisCmd.Flags().StringSliceVarP(&host, "host", "H", []string{"127.0.0.1:6379"}, "host list")
 	redisCmd.Flags().StringVarP(&password, "password", "p", "", "连接redis的密码")
 	redisCmd.Flags().IntVarP(&database, "database", "d", 0, "redis的数据，默认为0")
-	redisCmd.Flags().StringVarP(&command, "command", "c", "", `redis执行的命令:
-	GET: redis get命令
-	SET: redis set命令, knife redis set -k name -v value -e 0
-	DEL: redis 删除 value slice的信息.`)
+	redisCmd.Flags().BoolVarP(&sentinel, "sentinel", "s", false, "是否sentinel模式")
+	redisCmd.Flags().StringVarP(&command, "command", "c", "", "redis执行的命令: GET SET DEL")
 	redisCmd.Flags().StringSliceVarP(&keys, "key", "k", nil, "key list")
 	redisCmd.Flags().StringSliceVarP(&values, "value", "v", nil, "value list")
 	redisCmd.Flags().StringSliceVarP(&expires, "expire", "e", nil, "expire list")
-	redisCmd.Flags().BoolVarP(&sentinel, "sentinel", "s", false, "是否sentinel模式")
 
 	// Here you will define your flags and configuration settings.
 
