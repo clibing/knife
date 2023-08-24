@@ -43,7 +43,13 @@ var (
 				if size > 1 {
 					fmt.Printf("%d: %s\n", i, s)
 				}
-				execute(ctx, rdb, command, keys, values, expires)
+				abort, err := execute(ctx, rdb, command, keys, values, expires)
+				if err != nil {
+					fmt.Println("err message: ", err)
+				}
+				if abort {
+					break
+				}
 			}
 		},
 	}
@@ -52,7 +58,8 @@ var (
 func execute(ctx context.Context, rdb *redis.Client, cmd string, keys []string, values []string, expires []string) (abort bool, err error) {
 	keySize := len(keys)
 	if keySize == 0 {
-		panic("请输入key")
+		fmt.Println("请输入key")
+		return
 	}
 	switch cmd {
 	case GET:
@@ -84,17 +91,24 @@ func execute(ctx context.Context, rdb *redis.Client, cmd string, keys []string, 
 					} else {
 						expireDuration, err = time.ParseDuration(expire)
 						if err != nil {
-							panic("expire format error: " + expire)
+							abort = true
+							fmt.Println("expire format error: " + expire)
+							return
 						}
 					}
-					result, err := rdb.Set(ctx, key, value, expireDuration).Result()
+					var result string
+					result, err = rdb.Set(ctx, key, value, expireDuration).Result()
 					if err != nil {
-						panic(err)
+						fmt.Println(err.Error())
+						abort = true
+						return
 					}
-					fmt.Println(result)
+					fmt.Printf("%s. set %s %v\r\n", result, key, value)
 				}
 			} else {
-				panic("key, value, expire丢失")
+				fmt.Println("key, value, expire丢失")
+				abort = true
+				return
 			}
 		}
 	default:
