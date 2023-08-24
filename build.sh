@@ -10,6 +10,6 @@
 
 echo 'run this shell, need execute \"cd /go/src/github.com/clibing/knife/ && make\"'
 
-docker run --rm -it -v `pwd`/:/go/src/github.com/clibing/knife/ clibing/golang:1.20 bash
+# docker run --rm -it -v `pwd`/:/go/src/github.com/clibing/knife/ clibing/golang:1.20 bash
 
-
+docker run --rm -it -v $GOPATH:/go clibing/golang:1.20 bash
