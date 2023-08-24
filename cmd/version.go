@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,7 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "查看当前版本号",
 	Run: func(_ *cobra.Command, _ []string) {
-		fmt.Printf("Version: %s\n\nBuildDate: %s\nCommitID: %snAuthors: clibing wmsjhappy@gmail.com\nCopyright (c) %s clibing, All rights reserved.",
+		fmt.Printf("Version: %s\n\nBuildDate: %s\nCommitID: %s\nAuthors: clibing wmsjhappy@gmail.com\nCopyright (c) %s clibing, All rights reserved.",
 			version, buildDate, commitId, time.Now().Format("2006"))
 	},
 }
