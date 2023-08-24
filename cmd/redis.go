@@ -50,6 +50,10 @@ var (
 )
 
 func execute(ctx context.Context, rdb *redis.Client, cmd string, keys []string, values []string, expires []string) (abort bool, err error) {
+	keySize := len(keys)
+	if keySize == 0 {
+		panic("请输入key")
+	}
 	switch cmd {
 	case GET:
 		for _, key := range keys {
@@ -67,7 +71,6 @@ func execute(ctx context.Context, rdb *redis.Client, cmd string, keys []string, 
 		}
 	case SET:
 		if master(ctx, rdb) {
-			keySize := len(keys)
 			valueSize := len(values)
 			expireSize := len(expires)
 			if keySize > 0 && keySize == valueSize && valueSize == expireSize {
