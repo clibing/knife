@@ -9,8 +9,23 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${fileDirname}",
-            "args":["static", "-p", "./", "-p", "/Users/clibing/go/src/github.com/clibing/knife"]
+            "program": "${workspaceFolder}/main.go",
+            // "args":["static", "-p", "./", "-p", "/Users/clibing/go/src/github.com/clibing/knife"]
+            "args": [
+                "redis",
+                "-H",
+                "127.0.0.1:6379",
+                "-c",
+                "SET",
+                "-v",
+                "name",
+                "-v",
+                "root",
+                "-v",
+                "address",
+                "-v",
+                "127.0.0.1"
+            ]
         }
     ]
 }

@@ -6,6 +6,8 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/redis/go-redis/v9"
 	"github.com/spf13/cobra"
@@ -19,11 +21,12 @@ const (
 
 // redisCmd represents the redis command
 var (
-	host, value []string // redis server 多服务地址
-	password    string   // redis的密码
-	database    int      // redis database
-	command     string   // redis command
-	redisCmd    = &cobra.Command{
+	re                = regexp.MustCompile(`role:(.*)`)
+	host, value, keys []string // redis server 多服务地址
+	password          string   // redis的密码
+	database          int      // redis database
+	command           string   // redis command
+	redisCmd          = &cobra.Command{
 		Use:   "redis",
 		Short: "redis client",
 		Long:  `使用redis发送请求数据.`,
@@ -37,14 +40,17 @@ var (
 				})
 				fmt.Printf("%d: %s\n", i, s)
 				execute(ctx, rdb, command, value)
+
 			}
 		},
 	}
 )
 
 func execute(ctx context.Context, rdb *redis.Client, cmd string, args []string) (abort bool, err error) {
+	fmt.Println(cmd)
+
 	switch cmd {
-	case "GET":
+	case GET:
 		for _, key := range args {
 			value, err := rdb.Get(ctx, key).Result()
 			if err != nil {
@@ -52,10 +58,40 @@ func execute(ctx context.Context, rdb *redis.Client, cmd string, args []string) 
 			}
 			fmt.Printf("  [%s]-->[%s]\n", key, value)
 		}
+	case DEL:
+		if master(ctx, rdb) {
+			for _, key := range args {
+				rdb.Del(ctx, key).Result()
+			}
+		}
+	case SET:
+		if master(ctx, rdb) {
+			size := len(args)
+			if size > 0 && size%2 == 0 {
+				for i := 0; i < size; {
+					fmt.Println("key: ", args[i], " value: ", args[i+1])
+					i = i + 2
+				}
+			}
+		}
 	default:
 		fmt.Println("Not Found")
 	}
 	return
+}
+
+func master(ctx context.Context, rdb *redis.Client) bool {
+	replication, _ := rdb.Info(ctx, "replication").Result()
+	if len(replication) > 0 {
+		result := re.FindStringSubmatch(replication)
+		role := result[1]
+		role = strings.Replace(role, "\n", "", -1)
+		role = strings.Replace(role, "\r", "", -1)
+		if strings.Compare(role, "master") == 0 {
+			return true
+		}
+	}
+	return false
 }
 
 func init() {
