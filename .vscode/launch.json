@@ -23,13 +23,30 @@
                 "value1",
                 "-e",
                 "0",
-
                 "-k",
                 "key2",
                 "-v",
                 "value2",
                 "-e",
                 "30s"
+            ]
+        },
+        {
+            "name": "client http",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/main.go",
+            "args": [
+                "client",
+                "http",
+                "-d",
+                "admin=password",
+                "-H",
+                "Content-Type: application/x-www-form-urlencoded",
+                "-u",
+                "https://tool.linuxcrypt.cn/checkRemoteIp",
+                "--show-curl"
             ]
         }
     ]
