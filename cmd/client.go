@@ -98,20 +98,18 @@ var (
 			}
 			defer response.Body.Close()
 
-			path, enable, err := IsDownload(c)
-			if err == nil && enable {
-				data, err := io.ReadAll(response.Body)
-				if err == nil {
-					os.WriteFile(path, data, 0644)
+			data, _ := io.ReadAll(response.Body)
+			path, enable, _ := IsDownload(c)
+			if enable {
+				os.WriteFile(path, data, 0644)
+			} else {
+				content_type := response.Header.Get(CMD_CLIENT_HTTP_CONTENT_TYPE)
+				if isText(content_type) || isJson(content_type) {
+					debug.ShowSame("%s", response.Status)
+					debug.ShowSame("%s", string(data))
 				}
 			}
 
-			content_type := response.Header.Get(CMD_CLIENT_HTTP_CONTENT_TYPE)
-			if !enable && (isText(content_type) || isJson(content_type)) {
-				msg := "%s\n%s"
-				body, _ := io.ReadAll(response.Body)
-				debug.ShowSame(msg, response.Status, string(body))
-			}
 		},
 	}
 	websocketCmd = &cobra.Command{

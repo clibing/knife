@@ -40,13 +40,13 @@
             "args": [
                 "client",
                 "http",
-                "-d",
-                "admin=password",
+                // "-d",
+                // "admin=password",
                 "-H",
                 "Content-Type: application/x-www-form-urlencoded",
                 "-u",
                 "https://tool.linuxcrypt.cn/checkRemoteIp",
-                "--show-curl"
+                // "--show-curl"
             ]
         }
     ]
