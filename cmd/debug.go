@@ -40,9 +40,9 @@ func (d *Debug) EnableDebug() (debug bool) {
 
 func (d *Debug) Show(developFormat, releaseFormat string, parameters ...interface{}) {
 	if d.EnableDebug() {
-		fmt.Printf(d.AppendEntry(developFormat), parameters)
+		fmt.Printf(d.AppendEntry(developFormat), parameters...)
 	} else {
-		fmt.Printf(d.AppendEntry(releaseFormat), parameters)
+		fmt.Printf(d.AppendEntry(releaseFormat), parameters...)
 	}
 }
 
