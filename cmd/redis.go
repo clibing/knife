@@ -63,7 +63,7 @@ var (
 					DB:       database,
 				})
 				if size > 1 {
-					fmt.Printf("%d: %s\n", i, s)
+					fmt.Printf("%d: %s master: %t\n", i, s, master(ctx, rdb))
 				}
 				abort, err := execute(ctx, rdb, command, keys, values, expires)
 				if err != nil {
@@ -93,6 +93,7 @@ func execute(ctx context.Context, rdb *redis.Client, cmd string, keys []string, 
 			ttl, _ := rdb.TTL(ctx, key).Result()
 			fmt.Printf("  [%s]-->[%s] expire: %ds\n", key, value, int(ttl.Seconds()))
 			if sentinel {
+				abort = true
 				break
 			}
 		}

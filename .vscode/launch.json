@@ -48,6 +48,28 @@
                 "https://tool.linuxcrypt.cn/checkRemoteIp",
                 // "--show-curl"
             ]
+        },
+        {
+            "name": "client redis get",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/main.go",
+            "args": [
+                "redis",
+                "-H",
+                "127.0.0.1:6379",
+                "-H",
+                "127.0.0.1:6379",
+                "-c",
+                "GET",
+                "-k",
+                "name",
+                "-k",
+                "root",
+                "--sentinel",
+            ]
         }
     ]
 }
+
