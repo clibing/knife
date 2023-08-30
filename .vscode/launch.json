@@ -84,6 +84,13 @@
                 "client",
                 "http",
                 "https://tool.linuxcrypt.cn/checkRemoteIp",
+                "--show-curl",
+                "-m",
+                "POST",
+                "-d",
+                "{'name': 'admin'}",
+                "-H",
+                "Content-Type: applicaiton/json; charset=utf"
             ]
         },
     ]

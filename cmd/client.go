@@ -23,6 +23,7 @@ const (
 	CMD_CLIENT_HTTP_NAME         string = "http"
 	CMD_CLIENT_HTTP_METHOD       string = "method"
 	CMD_CLIENT_HTTP_SHOW_CURL    string = "show-curl"
+	CMD_CLIENT_HTTP_INPUT_TYPE   string = "input-type"
 	CMD_CLIENT_HTTP_CONTENT_TYPE string = "Content-Type"
 	CMD_CLIENT_HTTP_PATH         string = "path"
 )
@@ -33,6 +34,9 @@ var (
 		Use:   "client",
 		Short: "client",
 		Long:  `多应用客户端`,
+		Example: `knife client http https://tool.linuxcrypt.cn/checkRemoteIp
+knife client ws wss://api.linuxcrypt.cn
+		`,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.Help()
 		},
@@ -42,11 +46,25 @@ var (
 		Use:   CMD_CLIENT_HTTP_NAME,
 		Short: CMD_CLIENT_HTTP_NAME,
 		Long:  `http client`,
+		Example: `1.常用
+knife client http https://tool.linuxcrypt.cn/checkRemoteIp
+
+2.将Response.body保存到文件中/tmp/result.data
+knife client http https://tool.linuxcrypt.cn/checkRemoteIp -p /tmp/result.data
+
+3.请求JSON数据
+knife client http https://tool.linuxcrypt.cn/checkRemoteIp -m POST -d '{}'  -H 'Content-Type: application/json; charset=utf-8'
+
+4.非常规提交数据, 格式为key=value, 当请求的header为json，需要设置--form-to-json，会自动转换。
+client http https://tool.linuxcrypt.cn/checkRemoteIp -m POST -d 'name=admin' -d 'root=123456'  -H 'Content-Type: application/json; charset=utf-8' --form-to-json
+
+5.当请求时，需要转换curl格式
+knife client http https://tool.linuxcrypt.cn/checkRemoteIp --show-curl`,
 		Run: func(c *cobra.Command, args []string) {
 			debug := NewDebug(c)
 
 			if len(args) == 0 {
-				debug.ShowSame("url emtpy")
+				c.Help()
 				return
 			}
 
@@ -74,7 +92,11 @@ var (
 				// 获取  request header
 				headers := ParseHeader(c)
 				// 格式 请求数据
-				body := ParseData(c, headers, debug)
+				body, err := ParseRequestData(c, headers, debug)
+				if err != nil {
+					debug.ShowSame("%s", err.Error())
+					return
+				}
 
 				request, err = http.NewRequest(method, url, body)
 				for k, v := range headers {
@@ -139,17 +161,35 @@ func IsDownload(c *cobra.Command) (path string, enable bool, err error) {
 }
 
 // 格式化 data 数据
-func ParseData(c *cobra.Command, headers map[string]string, debug *Debug) (body io.Reader) {
+func ParseRequestData(c *cobra.Command, headers map[string]string, debug *Debug) (body io.Reader, err error) {
 	data, err := c.Flags().GetStringSlice("data")
 	if err == nil {
 		if len(data) > 0 {
 			if contentType, ok := headers[CMD_CLIENT_HTTP_CONTENT_TYPE]; ok && isJson(contentType) {
-				p := DataToJson(data)
-				debug.ShowSame("%s", p)
+				var p string
+				var b bool
+				if b, err = c.Flags().GetBool("form-to-json"); b && err == nil {
+					p = DataToJson(data)
+				} else {
+					size := len(data)
+					if size > 1 {
+						err = fmt.Errorf("按application/json提交,数据存在多段")
+						return
+					} else if size == 0 {
+						return
+					} else {
+						p = data[0]
+						if !json.Valid([]byte(p)) {
+							err = fmt.Errorf("输入的data不是json格式")
+							return
+						}
+					}
+				}
+				// debug.ShowSame("request body: %s", p)
 				body = strings.NewReader(p)
 			} else {
 				p := strings.Join(data, "&")
-				debug.ShowSame("%s", p)
+				// debug.ShowSame("request body: %s", p)
 				body = strings.NewReader(p)
 			}
 		}
@@ -246,12 +286,13 @@ func formatURL(request string) string {
 }
 
 func init() {
-	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_PATH, "p", "", "save http response body to file path")
-	httpCmd.Flags().Bool(fmt.Sprintf("%s-debug", httpCmd.Use), false, "set debug, default: false")
-	httpCmd.Flags().Bool(CMD_CLIENT_HTTP_SHOW_CURL, false, "show curl execute bash, default: false")
-	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_METHOD, "m", "GET", "request method [GET|POST|...], default GET")
-	httpCmd.Flags().StringSliceP("header", "H", []string{}, "header, 格式: \"-H 'key: value'\"")
-	httpCmd.Flags().StringSliceP("data", "d", []string{}, "data key=value")
+	httpCmd.Flags().StringSliceP("data", "d", []string{}, "data 数据，格式: \"-d username=admin\"")
+	httpCmd.Flags().BoolP("form-to-json", "F", false, "输入form格式的数据自动转换为json提交，否则提交提交")
+	httpCmd.Flags().StringSliceP("header", "H", []string{}, "header, 格式: \"-H 'Content-Type: application/json; charset=utf-8'\"")
+	httpCmd.Flags().BoolP(fmt.Sprintf("%s-debug", httpCmd.Use), "D", false, "是否启用debug, 默认: false")
+	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_METHOD, "m", "GET", "method [GET(获取资源)|HEAD(包头信息)|POST(增加资源)|PUT(更新-全字段)|PATCH(更新-目标字段)|DELETE(删除)|CONNECT|OPTIONS(获取支持的Method)]")
+	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_PATH, "p", "", "保存Response body到指定文件")
+	httpCmd.Flags().Bool(CMD_CLIENT_HTTP_SHOW_CURL, false, "是否展示curl命令行, 默认: false")
 
 	// client -> http request
 	clientCmd.AddCommand(httpCmd)
