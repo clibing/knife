@@ -15,13 +15,13 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/tidwall/pretty"
 	"moul.io/http2curl"
 )
 
 const (
 	CMD_CLIENT_HTTP_NAME         string = "http"
 	CMD_CLIENT_HTTP_METHOD       string = "method"
-	CMD_CLIENT_HTTP_URL          string = "url"
 	CMD_CLIENT_HTTP_SHOW_CURL    string = "show-curl"
 	CMD_CLIENT_HTTP_CONTENT_TYPE string = "Content-Type"
 	CMD_CLIENT_HTTP_PATH         string = "path"
@@ -45,71 +45,77 @@ var (
 		Run: func(c *cobra.Command, args []string) {
 			debug := NewDebug(c)
 
-			var err error
-			url, err := c.Flags().GetString(CMD_CLIENT_HTTP_URL)
-			if err != nil {
-				debug.ShowSame("method is required, err: %s", err.Error())
+			if len(args) == 0 {
+				debug.ShowSame("url emtpy")
 				return
 			}
 
-			if len(url) == 0 {
-				debug.ShowSame("method is required, url is empty")
-				return
-			}
-			url = formatURL(url)
+			for _, url := range args {
+				var err error
+				if len(url) == 0 {
+					debug.ShowSame("url is empty")
+					continue
+				}
+				url = formatURL(url)
 
-			method, _ := c.Flags().GetString(CMD_CLIENT_HTTP_METHOD)
-			if len(method) == 0 {
-				debug.ShowSame("method is required")
-				return
-			}
+				method, _ := c.Flags().GetString(CMD_CLIENT_HTTP_METHOD)
+				if len(method) == 0 {
+					debug.ShowSame("method is required")
+					continue
+				}
 
-			tr := &http.Transport{
-				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-			}
-			client := &http.Client{Timeout: 15 * time.Second, Transport: tr}
+				tr := &http.Transport{
+					TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+				}
+				client := &http.Client{Timeout: 15 * time.Second, Transport: tr}
 
-			var request *http.Request
+				var request *http.Request
 
-			// 获取  request header
-			headers := ParseHeader(c)
-			// 格式 请求数据
-			body := ParseData(c, headers, debug)
+				// 获取  request header
+				headers := ParseHeader(c)
+				// 格式 请求数据
+				body := ParseData(c, headers, debug)
 
-			request, err = http.NewRequest(method, url, body)
-			for k, v := range headers {
-				request.Header.Add(k, v)
-			}
+				request, err = http.NewRequest(method, url, body)
+				for k, v := range headers {
+					request.Header.Add(k, v)
+				}
 
-			if err != nil {
-				debug.ShowSame("create request failed. err: %s", err.Error())
-				return
-			}
+				if err != nil {
+					debug.ShowSame("create request failed. err: %s", err.Error())
+					continue
+				}
 
-			if showCurl, err := c.Flags().GetBool(CMD_CLIENT_HTTP_SHOW_CURL); err == nil && showCurl {
-				v, _ := http2curl.GetCurlCommand(request)
-				debug.ShowSame("%s", v)
-			}
+				if showCurl, err := c.Flags().GetBool(CMD_CLIENT_HTTP_SHOW_CURL); err == nil && showCurl {
+					v, _ := http2curl.GetCurlCommand(request)
+					debug.ShowSame("%s", v)
+				}
 
-			response, err := client.Do(request)
-			if err != nil {
-				debug.ShowSame("send request failed. err: %s", err.Error())
-				return
-			}
-			defer response.Body.Close()
+				response, err := client.Do(request)
+				if err != nil {
+					debug.ShowSame("send request failed. err: %s", err.Error())
+					continue
+				}
+				defer response.Body.Close()
 
-			data, _ := io.ReadAll(response.Body)
-			path, enable, _ := IsDownload(c)
-			if enable {
-				os.WriteFile(path, data, 0644)
-			} else {
-				content_type := response.Header.Get(CMD_CLIENT_HTTP_CONTENT_TYPE)
-				if isText(content_type) || isJson(content_type) {
-					debug.ShowSame("%s", response.Status)
-					debug.ShowSame("%s", string(data))
+				data, _ := io.ReadAll(response.Body)
+				path, enable, _ := IsDownload(c)
+				if enable {
+					os.WriteFile(path, data, 0644)
+				} else {
+					content_type := response.Header.Get(CMD_CLIENT_HTTP_CONTENT_TYPE)
+					if isText(content_type) || isJson(content_type) {
+						debug.ShowSame("%s\n", response.Status)
+						if isJson(content_type) {
+							option := &pretty.Options{Width: 80, Prefix: "", Indent: "  ", SortKeys: false}
+							value := pretty.PrettyOptions([]byte(data), option)
+							debug.ShowSame("%s", string(value))
+						} else {
+							debug.ShowSame("%s", string(data))
+						}
+					}
 				}
 			}
-
 		},
 	}
 	websocketCmd = &cobra.Command{
@@ -198,6 +204,9 @@ func isText(contentType string) bool {
 	if strings.Contains(contentType, "application/json") {
 		return true
 	}
+	if strings.Contains(contentType, "text/json") {
+		return true
+	}
 	return false
 }
 
@@ -207,6 +216,9 @@ func isJson(contentType string) bool {
 	}
 
 	if strings.HasPrefix(contentType, "application/json") {
+		return true
+	}
+	if strings.HasPrefix(contentType, "text/json") {
 		return true
 	}
 	return false
@@ -237,7 +249,6 @@ func init() {
 	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_PATH, "p", "", "save http response body to file path")
 	httpCmd.Flags().Bool(fmt.Sprintf("%s-debug", httpCmd.Use), false, "set debug, default: false")
 	httpCmd.Flags().Bool(CMD_CLIENT_HTTP_SHOW_CURL, false, "show curl execute bash, default: false")
-	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_URL, "u", "", "request url")
 	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_METHOD, "m", "GET", "request method [GET|POST|...], default GET")
 	httpCmd.Flags().StringSliceP("header", "H", []string{}, "header, 格式: \"-H 'key: value'\"")
 	httpCmd.Flags().StringSliceP("data", "d", []string{}, "data key=value")

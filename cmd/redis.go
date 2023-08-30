@@ -63,9 +63,9 @@ var (
 					DB:       database,
 				})
 				if size > 1 {
-					fmt.Printf("%d: %s master: %t\n", i, s, master(ctx, rdb))
+					fmt.Printf("%d: %s role(%s)\n", i, s, role(ctx, rdb))
 				}
-				abort, err := execute(ctx, rdb, command, keys, values, expires)
+				abort, err := execute(ctx, rdb, command, keys, values, expires, args)
 				if err != nil {
 					fmt.Println("err message: ", err)
 				}
@@ -77,7 +77,7 @@ var (
 	}
 )
 
-func execute(ctx context.Context, rdb *redis.Client, cmd string, keys []string, values []string, expires []string) (abort bool, err error) {
+func execute(ctx context.Context, rdb *redis.Client, cmd string, keys []string, values []string, expires []string, args []string) (abort bool, err error) {
 	keySize := len(keys)
 	if keySize == 0 {
 		fmt.Println("请输入key")
@@ -142,6 +142,27 @@ func execute(ctx context.Context, rdb *redis.Client, cmd string, keys []string, 
 		fmt.Println("Not Found")
 	}
 	return
+}
+
+type Parameter struct {
+	Key      string
+	Value    interface{}
+	Duration time.Duration
+}
+
+func ParseArgs(args []string) ([]*Parameter, error) {
+	parameters := make([]*Parameter, 0, len(args))
+	for i, _ := range args {
+		parameters[i] = nil
+	}
+	return parameters, nil
+}
+
+func role(ctx context.Context, rdb *redis.Client) string {
+	if master(ctx, rdb) {
+		return "master"
+	}
+	return "slave"
 }
 
 func master(ctx context.Context, rdb *redis.Client) bool {

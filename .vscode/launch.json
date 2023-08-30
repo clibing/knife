@@ -68,8 +68,23 @@
                 "-k",
                 "root",
                 "--sentinel",
+                "name",
+                "name password 1s",
+                "name password 1s \" ss ff \"",
+                "password 1"
             ]
-        }
+        },
+        {
+            "name": "client http args",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/main.go",
+            "args": [
+                "client",
+                "http",
+                "https://tool.linuxcrypt.cn/checkRemoteIp",
+            ]
+        },
     ]
 }
-

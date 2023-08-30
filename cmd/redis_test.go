@@ -35,3 +35,21 @@ func sliceTest(hosts ...string) {
 	}
 
 }
+
+func TestParseArgs(t *testing.T) {
+	s := []string{"name password 1s", "root 123456 30s", "n   s   12 \" sdf sdf\""}
+
+	for _, v := range s {
+		fmt.Println(v)
+		sp := strings.Split(v, " ")
+		for _, r := range sp {
+
+			fmt.Println(r)
+		}
+	}
+	// r, e := ParseArgs(s)
+	// if e != nil {
+	// 	fmt.Println(e)
+	// }
+	// fmt.Printf("%v\n", r)
+}
