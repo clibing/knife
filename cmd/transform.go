@@ -5,9 +5,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var convertCmd = &cobra.Command{
-	Use:   "convert",
-	Short: "转换器, markdown转换器(html ←→ md)",
+var transformCmd = &cobra.Command{
+	Use:   "transform",
+	Short: `转换器, markdown转换器(html ←→ md)`,
 	Run: func(c *cobra.Command, args []string) {
 		c.Help()
 	},
@@ -16,14 +16,14 @@ var convertCmd = &cobra.Command{
 func init() {
 	// markdown 转换
 	mdCmd := transform.NewMarkdown()
-	convertCmd.AddCommand(mdCmd)
+	transformCmd.AddCommand(mdCmd)
 
 	// url encoding decoding
 	urlCmd := transform.NewUrlEncoding()
-	convertCmd.AddCommand(urlCmd)
+	transformCmd.AddCommand(urlCmd)
 
 	// 转换器
-	rootCmd.AddCommand(convertCmd)
+	rootCmd.AddCommand(transformCmd)
 
 	// Here you will define your flags and configuration settings.
 
