@@ -7,7 +7,11 @@ import (
 
 var transformCmd = &cobra.Command{
 	Use:   "transform",
-	Short: `转换器, markdown转换器(html ←→ md)`,
+	Short: `转换器`,
+	Long: `转换器
+
+1. markdown转换器(html ←→ md)
+2. url encoding, url decoding`,
 	Run: func(c *cobra.Command, args []string) {
 		c.Help()
 	},
