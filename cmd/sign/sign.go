@@ -2,8 +2,6 @@ package sign
 
 import (
 	"bufio"
-	"crypto/md5"
-	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/base64"
@@ -67,20 +65,11 @@ func sign(signType string, content []byte) {
 	// md5
 	case "md5":
 		{
-			h := md5.New()
-			h.Write(content)
-			value := hex.EncodeToString(h.Sum(nil))
-			fmt.Println("source: ", string(content))
-			fmt.Println("md5   : ", value)
 		}
 		return
 	case "sha1":
 		{
-			s := sha1.New()
-			s.Write(content)
-			value := hex.EncodeToString(s.Sum(nil))
-			fmt.Println("source: ", string(content))
-			fmt.Println("sha1  : ", value)
+
 		}
 		return
 	case "sha256":

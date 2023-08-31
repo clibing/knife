@@ -18,9 +18,9 @@ var md5Cmd = &cobra.Command{
 		if len(args) == 0 && len(input) == 0 {
 			c.Help()
 		}
-		if len(input) != 0 {
-			value, err := os.ReadFile(sourceFile)
-			if err == nil {
+		if len(input) > 0 {
+			value, err := os.ReadFile(input)
+			if err != nil {
 				fmt.Println("sign file error, ", err)
 			} else {
 				md5sum(value)
@@ -36,9 +36,9 @@ var md5Cmd = &cobra.Command{
 
 func md5sum(content []byte) {
 	h := md5.New()
-	h.Write([]byte(content))
+	h.Write(content)
 	value := hex.EncodeToString(h.Sum(nil))
-	fmt.Println("source :", string(content))
+	fmt.Println("source :", strings.Replace(string(content), "\n", "", -1))
 	fmt.Println("md5(32):", value)
 	fmt.Println("       :", strings.ToUpper(value))
 	fmt.Println("md5(16):", value[8:24])
@@ -46,7 +46,6 @@ func md5sum(content []byte) {
 }
 func init() {
 	md5Cmd.Flags().StringP("input", "i", "", "输入待验证的文件")
-	// md5Cmd.Flags().StringP("input", "i", "", "输入待验证的文件")
 }
 
 func NewMd5Cmd() *cobra.Command {
