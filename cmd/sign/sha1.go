@@ -38,7 +38,7 @@ func sha1sum(content []byte) {
 	s := sha1.New()
 	s.Write(content)
 	value := hex.EncodeToString(s.Sum(nil))
-	fmt.Println("source :", string(content))
+	fmt.Println("source :", strings.Replace(string(content), "\n", "", -1))
 	fmt.Println("output :", value)
 	fmt.Println("       :", strings.ToUpper(value))
 
