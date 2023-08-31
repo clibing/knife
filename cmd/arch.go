@@ -35,32 +35,32 @@ knife arch -s 'https://go.dev/dl/go${version}.${os}-${arch}.tar.gz' -o linux -a 
 set VV=99
 knife arch -s 'https://go.dev/dl'"$VV"'/go${version}.${os}-${arch}.tar.gz' -o linux -a 386 -v 1.20.4
 
-$GOOS	$GOARCH
-darwin	386
-darwin	amd64
-darwin	arm
-darwin	arm64
-dragonfly	amd64
-freebsd	386
-freebsd	amd64
-freebsd	arm
-linux	386
-linux	amd64
-linux	arm
-linux	arm64
-linux	ppc64
-linux	ppc64le
-netbsd	386
-netbsd	amd64
-netbsd	arm
-openbsd	386
-openbsd	amd64
-openbsd	arm
-plan9	386
-plan9	amd64
-solaris	amd64
-windows	386
-windows	amd64
+$GOOS      $GOARCH
+darwin     386
+darwin     amd64
+darwin     arm
+darwin     arm64
+dragonfly  amd64
+freebsd    386
+freebsd    amd64
+freebsd    arm
+linux      386
+linux      amd64
+linux      arm
+linux      arm64
+linux      ppc64
+linux      ppc64le
+netbsd     386
+netbsd     amd64
+netbsd     arm
+openbsd    386
+openbsd    amd64
+openbsd    arm
+plan9      386
+plan9      amd64
+solaris    amd64
+windows    386
+windows    amd64
 
 current os arch, kernal.`,
 	Run: func(_ *cobra.Command, _ []string) {
@@ -106,7 +106,7 @@ func init() {
 
 	// Here you will define your flags and configuration settings.
 	archCmd.PersistentFlags().StringVarP(&str, "str", "s", "", "需要替换的URL")
-	archCmd.PersistentFlags().StringVarP(&ver, "version", "v", "", "需要替换的URL")
+	archCmd.PersistentFlags().StringVarP(&ver, "version", "v", "", "需要替换的版本号")
 	archCmd.PersistentFlags().StringVarP(&o, "os", "o", "", "当前系统运行的操作系统")
 	archCmd.PersistentFlags().StringVarP(&arch, "arch", "a", "", "当前系统运行的架构")
 

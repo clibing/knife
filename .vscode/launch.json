@@ -93,5 +93,17 @@
                 "Content-Type: applicaiton/json; charset=utf"
             ]
         },
+        {
+            "name": "client convert markdown",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/main.go",
+            "args": [
+                "convert",
+                "markdown",
+                "<html><body><h1>Hello World</h1></body></html>",
+            ]
+        },
     ]
 }
