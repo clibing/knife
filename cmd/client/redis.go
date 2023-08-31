@@ -1,7 +1,5 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
-package cmd
+package client
+
 
 import (
 	"context"
@@ -180,7 +178,6 @@ func master(ctx context.Context, rdb *redis.Client) bool {
 }
 
 func init() {
-	rootCmd.AddCommand(redisCmd)
 	redisCmd.Flags().StringSliceVarP(&host, "host", "H", []string{"127.0.0.1:6379"}, "host list")
 	redisCmd.Flags().StringVarP(&password, "password", "p", "", "连接redis的密码")
 	redisCmd.Flags().IntVarP(&database, "database", "d", 0, "redis的数据，默认为0")
@@ -189,14 +186,8 @@ func init() {
 	redisCmd.Flags().StringSliceVarP(&keys, "key", "k", nil, "key list")
 	redisCmd.Flags().StringSliceVarP(&values, "value", "v", nil, "value list")
 	redisCmd.Flags().StringSliceVarP(&expires, "expire", "e", nil, "expire list")
+}
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// redisCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// redisCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func NewRedisClient() *cobra.Command {
+	return redisCmd
 }
