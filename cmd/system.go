@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"time"
 
 	"github.com/knife/cmd/system"
 	"github.com/spf13/cobra"
@@ -78,6 +79,16 @@ var systemCmd = &cobra.Command{
 	},
 }
 
+// versionCmd represents the version command
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "查看当前版本号",
+	Run: func(_ *cobra.Command, _ []string) {
+		fmt.Printf("version: %s\n  build: %s\n commit: %s\n author: clibing (wmsjhappy@gmail.com)\nCopyright (c) %s clibing, All rights reserved.",
+			version, buildDate, commitId, time.Now().Format("2006"))
+	},
+}
+
 func init() {
 	systemCmd.AddCommand(system.NewArchCmd(), system.NewMonitorCmd(), system.NewUpgradeCmd())
 	// 转换器
@@ -89,4 +100,7 @@ func init() {
 
 	// 下载cmd
 	rootCmd.AddCommand(uninstallCmd)
+
+	// 系统版本
+	rootCmd.AddCommand(versionCmd)
 }

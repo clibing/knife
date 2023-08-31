@@ -49,15 +49,4 @@ func init() {
 	clientCmd.AddCommand(websocketCmd)
 
 	rootCmd.AddCommand(clientCmd)
-
-	// clientCmd.Flags().StringVarP(&clientType, "client-type", "c", "", "选择客户端类型： http, socks5, websocket")
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// clientCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// clientCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
