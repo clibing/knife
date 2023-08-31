@@ -1,31 +1,17 @@
-/*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-package cmd
+package transform
 
 import (
 	"bufio"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"os"
+	"strings"
+
 	xj "github.com/basgys/goxml2json"
 	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
 	"github.com/tidwall/pretty"
-	"os"
-	"strings"
 	"vimagination.zapto.org/json2xml"
 )
 
@@ -42,8 +28,8 @@ const (
 	ymlToJson
 )
 
-// jsonCmd represents the json command
-var jsonCmd = &cobra.Command{
+// convertCmd represents the json command
+var convertCmd = &cobra.Command{
 	Use:   "json",
 	Short: "json xml yml转换器",
 	Long: `美化json，json与xml转换, json与yml转换:
@@ -173,17 +159,12 @@ func ymlToJsonFunc(content string) (err error) {
 }
 
 func init() {
-	rootCmd.AddCommand(jsonCmd)
 	// Here you will define your flags and configuration settings.
-	jsonCmd.Flags().StringVarP(&indent, "indent", "i", "\t", "json格式化缩进标记，默认制表符")
-	jsonCmd.Flags().StringVarP(&prefix, "prefix", "p", "", "json格式化前缀")
-	jsonCmd.Flags().IntVarP(&convert, "convert", "c", 0, "转换模式\n0: json格式化\n1: xml to json\n2: json to xml(建议使用struct Tag)\n3: json to yml\n4: yml to json, 默认为0美化")
+	convertCmd.Flags().StringVarP(&indent, "indent", "i", "\t", "json格式化缩进标记，默认制表符")
+	convertCmd.Flags().StringVarP(&prefix, "prefix", "p", "", "json格式化前缀")
+	convertCmd.Flags().IntVarP(&convert, "convert", "c", 0, "转换模式\n0: json格式化\n1: xml to json\n2: json to xml(建议使用struct Tag)\n3: json to yml\n4: yml to json, 默认为0美化")
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// jsonCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// jsonCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func NewJsonConvert() *cobra.Command {
+	return convertCmd
 }

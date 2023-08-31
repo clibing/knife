@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package cmd
+package system
 
 import (
 	"fmt"
@@ -28,12 +28,10 @@ import (
 )
 
 var (
-	// 下载地址
-	download = ""
-	// 升级的版本
-	upgrade = ""
-	// 二进制的位置
-	bin = ""
+	download      = "" // 下载地址
+	upgrade       = "" // 升级的版本
+	bin           = "" // 二进制的位置
+	path, version string
 )
 
 const downloadURL = "https://github.com/clibing/knife/releases/download/%s/knife_%s_%s"
@@ -67,7 +65,7 @@ knife upgrade -u "0.0.6" -b /usr/local/bin/
 
 		// backup
 		if fileExist(file) {
-			if e :=autoBackup(file); e != nil {
+			if e := autoBackup(file); e != nil {
 				fmt.Println(e.Error())
 				return
 			}
@@ -93,7 +91,7 @@ knife upgrade -u "0.0.6" -b /usr/local/bin/
 	},
 }
 
-func autoBackup(file string) (error){
+func autoBackup(file string) error {
 	bak, err := os.Open(file)
 	if err != nil {
 		fmt.Println("打开现有文件异常", err)
@@ -123,18 +121,12 @@ func fileExist(path string) bool {
 }
 
 func init() {
-	rootCmd.AddCommand(upgradeCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
 	upgradeCmd.PersistentFlags().StringVarP(&download, "download", "d", "", "下载url")
 	upgradeCmd.PersistentFlags().StringVarP(&upgrade, "upgrade", "u", "", "升级的tag，例如v0.0.1")
 	upgradeCmd.PersistentFlags().StringVarP(&path, "path", "p", "/usr/local/bin", "二进制的保存目录, 默认为 /usr/local/bin")
 	upgradeCmd.PersistentFlags().StringVarP(&bin, "bin", "b", "knife", "二进制安装的名字, 默认为 knife")
+}
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// upgradeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func NewUpgradeCmd() *cobra.Command {
+	return upgradeCmd
 }

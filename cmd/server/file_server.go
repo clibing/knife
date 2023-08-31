@@ -1,7 +1,4 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
-package cmd
+package server
 
 import (
 	"fmt"
@@ -12,9 +9,8 @@ import (
 )
 
 var (
-	port       int
-	staticPath string
-	// values     []string
+	port int
+	path string
 )
 
 // staticCmd represents the static command
@@ -29,7 +25,7 @@ var staticCmd = &cobra.Command{
 		// 获取端口
 		value := fmt.Sprintf(":%d", port)
 		// 静态资源的目录
-		fs := http.FileServer(http.Dir(staticPath))
+		fs := http.FileServer(http.Dir(path))
 		// http 处理器
 		http.Handle("/", http.StripPrefix("/", fs))
 		// 建立监听
@@ -49,13 +45,10 @@ var staticCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(staticCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	staticCmd.Flags().StringVarP(&staticPath, "path", "p", "", "静态资源目录, 默认为当前目录")
+	staticCmd.Flags().StringVarP(&path, "path", "p", "", "静态资源目录, 默认为当前目录")
 	staticCmd.Flags().IntVarP(&port, "port", "", 0, "端口, 默认会随机")
-	// staticCmd.Flags().StringSliceVarP(&values, "values", "v", nil, "parameters")
+}
 
-	// staticCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func NewFileServer() *cobra.Command {
+	return staticCmd
 }

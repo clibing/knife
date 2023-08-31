@@ -1,7 +1,4 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
-package cmd
+package system
 
 import (
 	"fmt"
@@ -102,19 +99,12 @@ current os arch, kernal.`,
 }
 
 func init() {
-	rootCmd.AddCommand(archCmd)
-
-	// Here you will define your flags and configuration settings.
 	archCmd.PersistentFlags().StringVarP(&str, "str", "s", "", "需要替换的URL")
 	archCmd.PersistentFlags().StringVarP(&ver, "version", "v", "", "需要替换的版本号")
 	archCmd.PersistentFlags().StringVarP(&o, "os", "o", "", "当前系统运行的操作系统")
 	archCmd.PersistentFlags().StringVarP(&arch, "arch", "a", "", "当前系统运行的架构")
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// archCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// archCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func NewArchCmd() *cobra.Command {
+	return archCmd
 }

@@ -24,7 +24,7 @@ const (
 	CMD_CLIENT_HTTP_SHOW_CURL    string = "show-curl"
 	CMD_CLIENT_HTTP_INPUT_TYPE   string = "input-type"
 	CMD_CLIENT_HTTP_CONTENT_TYPE string = "Content-Type"
-	CMD_CLIENT_HTTP_PATH         string = "path"
+	CMD_CLIENT_HTTP_OUTPUT       string = "output"
 )
 
 var (
@@ -36,7 +36,7 @@ var (
 knife client http https://tool.linuxcrypt.cn/checkRemoteIp
 
 2.将Response.body保存到文件中/tmp/result.data
-knife client http https://tool.linuxcrypt.cn/checkRemoteIp -p /tmp/result.data
+knife client http https://tool.linuxcrypt.cn/checkRemoteIp -o /tmp/result.data
 
 3.请求JSON数据
 knife client http https://tool.linuxcrypt.cn/checkRemoteIp -m POST -d '{}'  -H 'Content-Type: application/json; charset=utf-8'
@@ -222,7 +222,7 @@ func parseHeader(c *cobra.Command) (result map[string]string) {
 }
 
 func isDownload(c *cobra.Command) (path string, enable bool, err error) {
-	path, err = c.Flags().GetString(CMD_CLIENT_HTTP_PATH)
+	path, err = c.Flags().GetString(CMD_CLIENT_HTTP_OUTPUT)
 	if err != nil {
 		return
 	}
@@ -278,6 +278,6 @@ func init() {
 	httpCmd.Flags().StringSliceP("header", "H", []string{}, "header, 格式: \"-H 'Content-Type: application/json; charset=utf-8'\"")
 	httpCmd.Flags().BoolP(fmt.Sprintf("%s-debug", httpCmd.Use), "D", false, "是否启用debug, 默认: false")
 	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_METHOD, "m", "GET", "method [GET(获取资源)|HEAD(包头信息)|POST(增加资源)|PUT(更新-全字段)|PATCH(更新-目标字段)|DELETE(删除)|CONNECT|OPTIONS(获取支持的Method)]")
-	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_PATH, "p", "", "保存Response body到指定文件")
+	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_OUTPUT, "o", "", "将响应保存到指定文件")
 	httpCmd.Flags().Bool(CMD_CLIENT_HTTP_SHOW_CURL, false, "是否展示curl命令行, 默认: false")
 }
