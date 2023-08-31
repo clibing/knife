@@ -18,6 +18,10 @@ func init() {
 	mdCmd := transform.NewMarkdown()
 	convertCmd.AddCommand(mdCmd)
 
+	// url encoding decoding
+	urlCmd := transform.NewUrlEncoding()
+	convertCmd.AddCommand(urlCmd)
+
 	// 转换器
 	rootCmd.AddCommand(convertCmd)
 
