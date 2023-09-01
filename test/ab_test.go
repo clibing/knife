@@ -1,4 +1,4 @@
-package cmd
+package test
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 /**
  * 测试 go routine
  */
-func GoRoutine(t *testing.T) {
+func TestGoRoutine(t *testing.T) {
 
 	fmt.Println("go routine")
 }
