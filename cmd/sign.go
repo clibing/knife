@@ -14,7 +14,7 @@ var signCmd = &cobra.Command{
 }
 
 func init() {
-	signCmd.AddCommand(sign.NewRsaCmd(), sign.NewMd5Cmd(), sign.NewSha1Cmd() ,sign.NewSignCmd())
+	signCmd.AddCommand(sign.NewRsaCmd(), sign.NewMd5Cmd(), sign.NewShaCmd(), sign.NewBase64Cmd(), sign.NewSignCmd())
 
 	// 转换器
 	rootCmd.AddCommand(signCmd)

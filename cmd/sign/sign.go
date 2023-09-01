@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"crypto/sha256"
 	"crypto/sha512"
-	"encoding/base64"
+	
 	"encoding/hex"
 	"fmt"
 	"io/ioutil"
@@ -92,16 +92,7 @@ func sign(signType string, content []byte) {
 		return
 	case "base64":
 		{
-			// 加密
-			if !direct {
-				v := base64.StdEncoding.EncodeToString(content)
-				fmt.Println("source: ", string(content))
-				fmt.Println("base64: ", v)
-			} else {
-				v, _ := base64.StdEncoding.DecodeString(string(content))
-				fmt.Println("base64: ", string(content))
-				fmt.Println("source: ", string(v))
-			}
+			
 		}
 		return
 	default:
