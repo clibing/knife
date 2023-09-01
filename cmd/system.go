@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/knife/cmd/system"
+	"github.com/clibing/knife/cmd/system"
 	"github.com/spf13/cobra"
 )
 

@@ -6,7 +6,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/knife/cmd/client"
+	"github.com/clibing/knife/cmd/client"
 	"github.com/spf13/cobra"
 )
 

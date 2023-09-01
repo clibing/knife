@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/knife/cmd/server"
+	"github.com/clibing/knife/cmd/server"
 	"github.com/spf13/cobra"
 )
 

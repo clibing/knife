@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/knife/cmd/sign"
+	"github.com/clibing/knife/cmd/sign"
 	"github.com/spf13/cobra"
 )
 

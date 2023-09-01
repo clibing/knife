@@ -2,7 +2,7 @@ package cmd
 
 
 import (
-	"github.com/knife/cmd/network"
+	"github.com/clibing/knife/cmd/network"
 	"github.com/spf13/cobra"
 )
 

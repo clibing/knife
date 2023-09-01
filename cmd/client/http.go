@@ -12,7 +12,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/knife/cmd/debug"
+	"github.com/clibing/knife/cmd/debug"
 	"github.com/spf13/cobra"
 	"github.com/tidwall/pretty"
 	"moul.io/http2curl"
