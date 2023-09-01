@@ -27,7 +27,7 @@ knife rsa -b 1024
 }
 
 func init() {
-	rsaCmd.Flags().IntVarP(&bits, "bits", "b", 1024, "密钥长度，默认为1024位")
+	rsaCmd.Flags().IntVarP(&bits, "bits", "b", 2048, "密钥长度，默认为1024位")
 }
 
 func NewRsaCmd() *cobra.Command {
