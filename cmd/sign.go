@@ -19,6 +19,7 @@ func init() {
 		sign.NewMd5Cmd(),
 		sign.NewShaCmd(),
 		sign.NewBase64Cmd(),
+		sign.NewAesCmd(),
 	)
 
 	// 转换器
