@@ -27,7 +27,7 @@ func init() {
 	transformCmd.AddCommand(urlCmd)
 
 	// add text convert
-	transformCmd.AddCommand(transform.NewJsonConvert())
+	// transformCmd.AddCommand(transform.NewJsonConvert())
 
 	// 转换器
 	rootCmd.AddCommand(transformCmd)

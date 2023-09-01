@@ -2,6 +2,7 @@ package client
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -10,7 +11,7 @@ func TestRedis(t *testing.T) {
 	v := make([]string, 0)
 	v = append(v, "admin", "clibing", "value")
 	sliceTest(v...)
-
+	re := regexp.MustCompile(`role:(.*)`)
 	result := re.FindStringSubmatch(`# Replication
 role:master
 connected_slaves:0
