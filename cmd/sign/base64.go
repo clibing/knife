@@ -35,21 +35,41 @@ var base64Cmd = &cobra.Command{
 
 func base64method(c *cobra.Command, content []byte) {
 	direct, _ := c.Flags().GetBool("direct")
+	output, _ := c.Flags().GetString("output")
+
+	skip_write := len(output) == 0
 
 	// 加密
+	var result, value string
 	if !direct {
-		v := base64.StdEncoding.EncodeToString(content)
-		fmt.Println("source :", strings.Replace(string(content), "\n", "", -1))
-		fmt.Println("base64: ", v)
+		if skip_write {
+			fmt.Println("source :", strings.Replace(string(content), "\n", "", -1))
+		}
+		value = base64.StdEncoding.EncodeToString(content)
+		result = "base64"
 	} else {
-		v, _ := base64.StdEncoding.DecodeString(string(content))
-		fmt.Println("base64 :", strings.Replace(string(content), "\n", "", -1))
-		fmt.Println("source: ", string(v))
+		if skip_write {
+			fmt.Println("base64 :", strings.Replace(string(content), "\n", "", -1))
+		}
+		data, e := base64.StdEncoding.DecodeString(string(content))
+		if e != nil {
+			fmt.Println("解码异常: ", e.Error())
+			return
+		}
+		value = string(data)
+		result = "source"
+	}
+
+	if skip_write {
+		fmt.Printf("%s: %s\n", result, value)
+	} else {
+		os.WriteFile(output, []byte(value), 0644)
 	}
 }
 
 func init() {
-	base64Cmd.Flags().StringP("input", "i", "", "输入待验证的文件")
+	base64Cmd.Flags().StringP("input", "i", "", "输入文件")
+	base64Cmd.Flags().StringP("output", "o", "", "输出的文件")
 	base64Cmd.Flags().BoolP("direct", "d", false, "编码方式，默认encode")
 }
 
