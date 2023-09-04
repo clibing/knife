@@ -5,9 +5,10 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/spf13/cobra"
 	"net"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
 var (
@@ -21,12 +22,13 @@ var wolCmd = &cobra.Command{
 	Use:   "wol",
 	Short: "Wake on Lan",
 	Long: `局域网唤醒主机:
+
 原理：
     16进制： 0xFFFFFFFFFF+16次重复的目标mac地址
    
 条件:
     1. 被唤醒的主机，主板支持Wake ON Lan并开启
-    2. 被唤醒的主机，需要与执行唤醒的
+    2. 被唤醒的主机，需要与执行唤醒动作的主机在同一局域网
     3. 被唤醒的主机是正常关机并接入有线。强制关机的不可用。
 
 mac地址格式：
@@ -38,9 +40,9 @@ mac地址格式：
 使用：
     knife wol -m 11:22:33:44:55:66
     knife wol -m 11:22:33:44:55:66 -n eth0.`,
-	Run: func(_ *cobra.Command, _ []string) {
+	Run: func(c *cobra.Command, _ []string) {
 		if mac == "" {
-			fmt.Println("唤醒的MAC地址为空")
+			c.Help()
 			return
 		}
 		fmt.Printf("发送唤醒的网卡地址: %s\n", mac)

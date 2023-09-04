@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,6 +18,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+
 	"github.com/spf13/cobra"
 
 	"github.com/spf13/viper"
@@ -27,12 +28,12 @@ var (
 	version   string
 	buildDate string
 	commitId  string
-	cfgFile string
+	cfgFile   string
 )
 
 var rootCmd = &cobra.Command{
 	Use:   "knife",
-	Short: "一个小的工具集合",
+	Short: "一个小工具集合",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
