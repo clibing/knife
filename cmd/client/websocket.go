@@ -53,7 +53,7 @@ type model struct {
 	keymap   keymap
 	help     help.Model
 	input    textarea.Model
-	readonly bool // 是否为只读
+	readOnly bool // 是否为只读
 }
 
 func newTextarea(placeholder string) textarea.Model {

@@ -32,20 +32,22 @@ var (
 		Use:   CMD_CLIENT_HTTP_NAME,
 		Short: CMD_CLIENT_HTTP_NAME,
 		Long:  `http client`,
-		Example: `1.常用
-knife client http https://tool.linuxcrypt.cn/checkRemoteIp
+		Example: `
+
+1.常用
+  knife client http https://tool.linuxcrypt.cn/checkRemoteIp
 
 2.将Response.body保存到文件中/tmp/result.data
-knife client http https://tool.linuxcrypt.cn/checkRemoteIp -o /tmp/result.data
+  knife client http https://tool.linuxcrypt.cn/checkRemoteIp -o /tmp/result.data
 
 3.请求JSON数据
-knife client http https://tool.linuxcrypt.cn/checkRemoteIp -m POST -d '{}'  -H 'Content-Type: application/json; charset=utf-8'
+  knife client http https://tool.linuxcrypt.cn/checkRemoteIp -m POST -d '{}'  -H 'Content-Type: application/json; charset=utf-8'
 
 4.非常规提交数据, 格式为key=value, 当请求的header为json，需要设置--form-to-json，会自动转换。
-client http https://tool.linuxcrypt.cn/checkRemoteIp -m POST -d 'name=admin' -d 'root=123456'  -H 'Content-Type: application/json; charset=utf-8' --form-to-json
+  knife client http https://tool.linuxcrypt.cn/checkRemoteIp -m POST -d 'name=admin' -d 'root=123456'  -H 'Content-Type: application/json; charset=utf-8' --form-to-json
 
 5.当请求时，需要转换curl格式
-knife client http https://tool.linuxcrypt.cn/checkRemoteIp --show-curl`,
+  knife client http https://tool.linuxcrypt.cn/checkRemoteIp --show-curl`,
 		Run: func(c *cobra.Command, args []string) {
 			debug := debug.NewDebug(c)
 

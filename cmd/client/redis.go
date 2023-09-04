@@ -1,6 +1,5 @@
 package client
 
-
 import (
 	"context"
 	"fmt"
@@ -146,14 +145,6 @@ type Parameter struct {
 	Key      string
 	Value    interface{}
 	Duration time.Duration
-}
-
-func ParseArgs(args []string) ([]*Parameter, error) {
-	parameters := make([]*Parameter, 0, len(args))
-	for i, _ := range args {
-		parameters[i] = nil
-	}
-	return parameters, nil
 }
 
 func role(ctx context.Context, rdb *redis.Client) string {

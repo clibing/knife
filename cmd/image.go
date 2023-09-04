@@ -15,7 +15,7 @@ var imageCmd = &cobra.Command{
 
 func init() {
 	// 增加二维码处理器
-	imageCmd.AddCommand(image.NewQrcodeCmd())
+	imageCmd.AddCommand(image.NewQrcodeCmd(), image.NewImageCmd())
 
 	// 转换器
 	rootCmd.AddCommand(imageCmd)
