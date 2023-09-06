@@ -49,6 +49,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.knife.yaml)")
+	rootCmd.PersistentFlags().BoolP("debug", "d", false, "global debug")
 
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

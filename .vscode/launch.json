@@ -122,5 +122,18 @@
                 "fd7e6fc0fd4e1b81d20c157d56b9e56a3b9df1abcd220d11c367c9626c8fd0de78c82814d346c51c",
             ]
         },
+        {
+            "name": "mvn clear",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/main.go",
+            "args": [
+                "system",
+                "mvn",
+                "-d",
+                "/Users/clibing/.m2/repository",
+            ]
+        },
     ]
 }

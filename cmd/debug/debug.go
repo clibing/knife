@@ -32,17 +32,26 @@ func NewDebug(c *cobra.Command) *Debug {
 
 func (d *Debug) EnableDebug() (debug bool) {
 	debug, e := d.Command.Flags().GetBool(fmt.Sprintf("%s-debug", d.Command.Use))
-	if e != nil {
-		debug = false
+	if e == nil {
+		return
 	}
+	debug, e = d.Command.Flags().GetBool("debug")
+	if e == nil {
+		return
+	}
+	debug = false
 	return
 }
 
 func (d *Debug) Show(developFormat, releaseFormat string, parameters ...interface{}) {
 	if d.EnableDebug() {
-		fmt.Printf(d.AppendEntry(developFormat), parameters...)
+		if len(developFormat) > 0 {
+			fmt.Printf(d.AppendEntry(developFormat), parameters...)
+		}
 	} else {
-		fmt.Printf(d.AppendEntry(releaseFormat), parameters...)
+		if len(releaseFormat) > 0 {
+			fmt.Printf(d.AppendEntry(releaseFormat), parameters...)
+		}
 	}
 }
 
