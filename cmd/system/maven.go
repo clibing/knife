@@ -6,6 +6,7 @@ import (
 
 	"github.com/clibing/knife/cmd/debug"
 	"github.com/clibing/knife/internal/maven"
+	"github.com/clibing/knife/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -34,36 +35,36 @@ knife system maven -c ./`,
 		debug.ShowSame("🔵 clean maven starting.")
 		has := false
 		for _, p := range args {
-			data := maven.Doing(p)
+			data := maven.Doing(debug, p)
 			for _, v := range data {
 				for _, w := range v.Snapshot {
 					has = true
 					if w.Deleted {
 						info, err := os.Stat(w.FullName)
 						if err != nil {
-							debug.Debug("Remove to failed, err: %s, file: %s", err.Error(), w.FullName)
+							debug.Debug("remove to failed, err: %s, file: %s", err.Error(), w.FullName)
 						} else {
 							freeUpspace = freeUpspace + info.Size()
 						}
 						if clear {
 							err = os.Remove(w.FullName)
 							if err != nil {
-								debug.Debug("Remove to failed, err: %s, file: %s", err.Error(), w.FullName)
+								debug.Debug("remove to failed, err: %s, file: %s", err.Error(), w.FullName)
 							}
 							sha1 := fmt.Sprintf("%s.sha1", w.FullName)
 							_, err = os.Stat(sha1)
 							if err == nil || os.IsExist(err) {
 								err = os.Remove(sha1)
 								if err != nil {
-									debug.Debug("Remove to failed, err: %s, file: %s", err.Error(), w.FullName)
+									debug.Debug("remove to failed, err: %s, file: %s", err.Error(), w.FullName)
 								}
 							}
 							debug.ShowSame("✅ successfully removed: %s", w.FullName)
 						} else {
-							debug.ShowSame("❌ Preview, automatically deleted when settings are deleted: %s", w.FullName)
+							debug.ShowSame("❓ preview automatically deleted when settings are deleted: %s", w.FullName)
 						}
 					} else {
-						debug.ShowSame("🟡 skip (not need delete: %s", w.FullName)
+						debug.ShowSame("🟡 skip delete: %s", w.FullName)
 					}
 				}
 			}
@@ -71,7 +72,14 @@ knife system maven -c ./`,
 		if !has {
 			debug.ShowSame("🟡 暂无需要处理的文件")
 		}
-		debug.ShowSame("🔵 clean maven end.")
+		if freeUpspace > 0 {
+			if !clear {
+				debug.ShowSame("❗ will free disk: %s", utils.BeautifyValue(freeUpspace))
+			} else {
+				debug.ShowSame("🟤 free disk: %s", utils.BeautifyValue(freeUpspace))
+			}
+		}
+		debug.ShowSame("🔵 clean maven end")
 	},
 }
 

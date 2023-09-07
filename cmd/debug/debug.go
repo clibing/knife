@@ -58,7 +58,6 @@ func (d *Debug) Show(developFormat, releaseFormat string, parameters ...interfac
 
 func (d *Debug) Debug(developFormat string, parameters ...interface{}) {
 	d.Show(developFormat, "", parameters...)
-
 }
 
 func (d *Debug) Release(releaseFormat string, parameters ...interface{}) {

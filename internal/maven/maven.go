@@ -24,7 +24,7 @@ const MAVEN_METADATA_LOCAL_NAME_2 = "maven-metadata-evernote-mirror.xml"
 // 核心入口处理文件
 func Doing(debug *debug.Debug, path string) (data map[string]*model.Gav) {
 	// scan(scanPath)
-	result, metadata := scanning(path)
+	result, metadata := scanning(debug, path)
 
 	gavList := make([]*model.Info, 0)
 
@@ -105,11 +105,13 @@ func Doing(debug *debug.Debug, path string) (data map[string]*model.Gav) {
 /**
  * 扫描指定目录
  */
-func scanning(path string) (result []string, metadata map[string]model.Metadata) {
+func scanning(debug *debug.Debug, path string) (result []string, metadata map[string]model.Metadata) {
 	result = make([]string, 0)
 	metadata = make(map[string]model.Metadata)
 	// 提取完整路径
 	scanDir, _ := filepath.Abs(path)
+	debug.ShowSame("🟣 scan path: %s", scanDir)
+
 	// 扫描
 	filepath.Walk(scanDir, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
@@ -121,7 +123,7 @@ func scanning(path string) (result []string, metadata map[string]model.Metadata)
 			key := filepath.Dir(path)
 			_, ok := metadata[key]
 			if !ok {
-				ok, key, meta := scanMetadataLocal(path)
+				ok, key, meta := scanMetadataLocal(debug, path)
 				if ok {
 					metadata[key] = meta
 				}
@@ -132,7 +134,7 @@ func scanning(path string) (result []string, metadata map[string]model.Metadata)
 	return
 }
 
-func scanMetadataLocal(name string) (status bool, dir string, metadata model.Metadata) {
+func scanMetadataLocal(debug *debug.Debug, name string) (status bool, dir string, metadata model.Metadata) {
 	simple := filepath.Base(name)
 	// 跳过 不是 以 metadata prefix file
 	if !strings.HasPrefix(simple, "maven-metadata") {
