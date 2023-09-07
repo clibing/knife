@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/clibing/knife/cmd/debug"
 	"github.com/clibing/knife/internal/model"
 )
 
@@ -21,7 +22,7 @@ const MAVEN_METADATA_LOCAL_NAME = "maven-metadata-local.xml"
 const MAVEN_METADATA_LOCAL_NAME_2 = "maven-metadata-evernote-mirror.xml"
 
 // 核心入口处理文件
-func Doing(path string) (data map[string]*model.Gav) {
+func Doing(debug *debug.Debug, path string) (data map[string]*model.Gav) {
 	// scan(scanPath)
 	result, metadata := scanning(path)
 
@@ -68,13 +69,13 @@ func Doing(path string) (data map[string]*model.Gav) {
 			mgav.Release = append(mgav.Release, item)
 			continue
 		}
+		debug.Debug("key: %s ;snapshot version: %s", key, item.SimpleName)
 		mgav.Snapshot = append(mgav.Snapshot, item)
 		// 多版本处理
 		if len(mgav.Snapshot) <= 3 {
 			continue
 		}
 
-		// log.WithField("key", item.Key()).Debug(item.FullName)
 	}
 
 	for _, mgav := range data {
