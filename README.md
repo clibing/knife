@@ -27,9 +27,35 @@ install success
 
 ## 查看帮助
 
-knife -h
+```sh
+一个小工具集合
 
-主要是实现一些简单常用的方法
+Usage:
+  knife [command]
+
+Available Commands:
+  client      多客户端: http, redis, websocket
+  common      通用工具: random, time
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  image       图片处理器: qrcode, base64 image
+  install     安装
+  net         网络处理器: ip, wol
+  server      服务器相关: static
+  sign        签名密钥相关: rsa, md5, base64, sha1, sha128, sha256, sha512
+  system      系统工具: arch, monitor, upgrade, maven
+  transform   转换器: json, markdown, url
+  uninstall   卸载
+  version     查看当前版本号
+
+Flags:
+      --config string   config file (default is $HOME/.knife.yaml)
+      --debug           global debug
+  -h, --help            help for knife
+  -t, --toggle          Help message for toggle
+
+Use "knife [command] --help" for more information about a command.
+```
 
 ## 功能
 
