@@ -278,7 +278,6 @@ func init() {
 	httpCmd.Flags().BoolP("form-to-json", "F", false, "输入form格式的数据自动转换为json提交，否则提交提交")
 	httpCmd.Flags().BoolP("beautify", "b", true, "美化输出json, --beautify=false(忽略美化)")
 	httpCmd.Flags().StringSliceP("header", "H", []string{}, "header, 格式: \"-H 'Content-Type: application/json; charset=utf-8'\"")
-	httpCmd.Flags().BoolP(fmt.Sprintf("%s-debug", httpCmd.Use), "D", false, "是否启用debug, 默认: false")
 	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_METHOD, "m", "GET", "method [GET(获取资源)|HEAD(包头信息)|POST(增加资源)|PUT(更新-全字段)|PATCH(更新-目标字段)|DELETE(删除)|CONNECT|OPTIONS(获取支持的Method)]")
 	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_OUTPUT, "o", "", "将响应保存到指定文件")
 	httpCmd.Flags().Bool(CMD_CLIENT_HTTP_SHOW_CURL, false, "是否展示curl命令行, 默认: false")

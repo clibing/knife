@@ -14,6 +14,13 @@ var mvnCmd = &cobra.Command{
 	Use:     "maven",
 	Aliases: []string{"mvn"},
 	Short:   "Clean Maven snapshot dependencies",
+	Example: `
+1. 扫描并分析当前目录下的jar包
+knife system maven ./	
+
+2. 扫描、分析并删除
+knife system maven -c ./`,
+
 	Run: func(c *cobra.Command, args []string) {
 		debug := debug.NewDebug(c)
 
@@ -24,10 +31,13 @@ var mvnCmd = &cobra.Command{
 		}
 		clear, _ := c.Flags().GetBool("clear")
 		var freeUpspace int64
+		debug.ShowSame("🔵 clean maven starting.")
+		has := false
 		for _, p := range args {
 			data := maven.Doing(p)
 			for _, v := range data {
 				for _, w := range v.Snapshot {
+					has = true
 					if w.Deleted {
 						info, err := os.Stat(w.FullName)
 						if err != nil {
@@ -48,17 +58,20 @@ var mvnCmd = &cobra.Command{
 									debug.Debug("Remove to failed, err: %s, file: %s", err.Error(), w.FullName)
 								}
 							}
-							debug.ShowSame("🟠 successfully removed: %s", w.FullName)
+							debug.ShowSame("✅ successfully removed: %s", w.FullName)
 						} else {
-							debug.ShowSame("🔴 Preview, automatically deleted when settings are deleted: %s", w.FullName)
+							debug.ShowSame("❌ Preview, automatically deleted when settings are deleted: %s", w.FullName)
 						}
 					} else {
-						debug.ShowSame("🟢 skip (not need delete: %s", w.FullName)
+						debug.ShowSame("🟡 skip (not need delete: %s", w.FullName)
 					}
 				}
 			}
-
 		}
+		if !has {
+			debug.ShowSame("🟡 暂无需要处理的文件")
+		}
+		debug.ShowSame("🔵 clean maven end.")
 	},
 }
 

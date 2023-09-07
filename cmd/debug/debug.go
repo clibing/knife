@@ -22,20 +22,21 @@ type Debug struct {
 }
 
 func NewDebug(c *cobra.Command) *Debug {
-	return &Debug{
+	d := &Debug{
 		Command:         c,
 		CombinationKey:  true,
 		Mode:            RELEASE,
 		AutoAppendEntry: true,
 	}
+	if d.EnableDebug() {
+		fmt.Println("🟣 Enable debug")
+		d.Mode = RELEASE
+	}
+	return d
 }
 
 func (d *Debug) EnableDebug() (debug bool) {
-	debug, e := d.Command.Flags().GetBool(fmt.Sprintf("%s-debug", d.Command.Use))
-	if e == nil {
-		return
-	}
-	debug, e = d.Command.Flags().GetBool("debug")
+	debug, e := d.Command.Flags().GetBool("debug")
 	if e == nil {
 		return
 	}
@@ -44,7 +45,7 @@ func (d *Debug) EnableDebug() (debug bool) {
 }
 
 func (d *Debug) Show(developFormat, releaseFormat string, parameters ...interface{}) {
-	if d.EnableDebug() {
+	if d.Mode == DEVELOP {
 		if len(developFormat) > 0 {
 			fmt.Printf(d.AppendEntry(developFormat), parameters...)
 		}
