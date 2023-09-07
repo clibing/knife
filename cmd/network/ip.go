@@ -2,7 +2,7 @@ package network
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"os"
@@ -24,9 +24,9 @@ knife ip
 knife ip -e
 
 本机IP地址使用的时候比较多，出口ip一般可以做一个端口处理转发时使用的比较多，本功能较为简单.`,
-	Run: func(_ *cobra.Command, _ []string) {
+	Run: func(c *cobra.Command, _ []string) {
 		if external {
-			getExternal()
+			getExternal(c)
 		} else {
 			ip, _ := getLocalIP()
 			fmt.Println("local ip: ", ip)
@@ -69,21 +69,23 @@ func getLocalIP() (ipv4 string, err error) {
 	return
 }
 
-func getExternal() {
-	resp, err := http.Get("https://tool.linuxcrypt.cn/showCurrentIp")
+func getExternal(c *cobra.Command) {
+	url, _ := c.Flags().GetString("url")
+	resp, err := http.Get(url)
 	if err != nil {
 		os.Stderr.WriteString(err.Error())
 		os.Stderr.WriteString("\n")
 		os.Exit(1)
 	}
 	defer resp.Body.Close()
-	s, _ := ioutil.ReadAll(resp.Body)
+	s, _ := io.ReadAll(resp.Body)
 	fmt.Println("external ip: ", string(s))
 	// io.Copy(os.Stdout, resp.Body)
 	os.Exit(0)
 }
 
 func init() {
+	ipCmd.Flags().StringP("url", "u", "https://tool.linuxcrypt.cn/showCurrentIp", "请求url")
 	ipCmd.Flags().BoolVarP(&external, "external", "e", false, "获取出口ip，默认获取本机ip")
 }
 

@@ -2,6 +2,7 @@ package debug
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/spf13/cobra"
 )
@@ -73,4 +74,11 @@ func (d *Debug) AppendEntry(source string) string {
 
 func (d *Debug) ShowSame(format string, parameters ...interface{}) {
 	d.Show(format, format, parameters...)
+}
+
+/**
+ * 填充空格
+ */
+func (d *Debug) FillSpace(width int, middle, value string) string {
+	return fmt.Sprintf("%"+strconv.Itoa(width)+"s"+middle, value)
 }
