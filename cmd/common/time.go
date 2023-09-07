@@ -1,18 +1,4 @@
-/* Copyright © 2021 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-package cmd
+package common
 
 import (
 	"fmt"
@@ -27,6 +13,7 @@ var (
 	inputTimeNum, inputTimeStr bool   // 输入的内容是否为数字类型、字符串类型（默认为当前时间）, 输入是否为格式化的字符串(默认为数字)
 	duration, format           string // duration 需要累加时间; format格式化
 )
+
 /**
 * 1. 先获取时间
 *    a. 默认为 time.Now()
@@ -138,9 +125,9 @@ knife  time -s -f "yyyy/MM/dd HH:mm:ss" -d 1h30s  "2022/03/16 11:23:10"
 			}
 			if len == 13 {
 				t = time.UnixMilli(v)
-			}else if len == 10{
+			} else if len == 10 {
 				t = time.Unix(v, 0)
-			}else{
+			} else {
 				fmt.Printf("输入[%d]的时间戳不是13位或者10位, len: %d\n", v, len)
 				return
 			}
@@ -186,9 +173,12 @@ func convertFormat(format string) string {
 }
 
 func init() {
-	rootCmd.AddCommand(timeCmd)
 	timeCmd.Flags().BoolVarP(&inputTimeNum, "inputTimeNum", "n", false, "开启，输入的内容为数字类型时间戳，自动识别13、10位")
 	timeCmd.Flags().BoolVarP(&inputTimeStr, "inputTimeStr", "s", false, "开启，输入的内容为格式化的时间戳, 默认 yyyy-MM-dd HH:mm:ss")
 	timeCmd.Flags().StringVarP(&duration, "duration", "d", "", "时间偏转计算(可以增加小时、分钟、秒、毫秒)，例如\"300ms\", \"-1.5h\" or \"2h45m\"")
 	timeCmd.Flags().StringVarP(&format, "format", "f", "", "时间格式化, 默认为 yyyy-MM-dd HH:mm:ss")
+}
+
+func NewTimeCmd() *cobra.Command {
+	return timeCmd
 }
