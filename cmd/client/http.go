@@ -19,12 +19,14 @@ import (
 )
 
 const (
-	CMD_CLIENT_HTTP_NAME         string = "http"
-	CMD_CLIENT_HTTP_METHOD       string = "method"
-	CMD_CLIENT_HTTP_SHOW_CURL    string = "show-curl"
-	CMD_CLIENT_HTTP_INPUT_TYPE   string = "input-type"
-	CMD_CLIENT_HTTP_CONTENT_TYPE string = "Content-Type"
-	CMD_CLIENT_HTTP_OUTPUT       string = "output"
+	CMD_CLIENT_HTTP_NAME           string = "http"
+	CMD_CLIENT_HTTP_METHOD         string = "method"
+	CMD_CLIENT_HTTP_SHOW_CURL      string = "show-curl"
+	CMD_CLIENT_HTTP_INPUT_TYPE     string = "input-type"
+	CMD_CLIENT_HTTP_CONTENT_TYPE   string = "Content-Type"
+	CMD_CLIENT_HTTP_OUTPUT         string = "output"
+	CMD_CLIENT_HTTP_DOWNLOAD_RANGE string = "range"          // 采用分段下载
+	CMD_CLIENT_HTTP_DOWNLOAD_TASKS string = "download-tasks" // 下载的多任务数据，默认为32
 )
 
 var (
@@ -281,4 +283,6 @@ func init() {
 	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_METHOD, "m", "GET", "method [GET(获取资源)|HEAD(包头信息)|POST(增加资源)|PUT(更新-全字段)|PATCH(更新-目标字段)|DELETE(删除)|CONNECT|OPTIONS(获取支持的Method)]")
 	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_OUTPUT, "o", "", "将响应保存到指定文件")
 	httpCmd.Flags().Bool(CMD_CLIENT_HTTP_SHOW_CURL, false, "是否展示curl命令行, 默认: false")
+	httpCmd.Flags().BoolP(CMD_CLIENT_HTTP_DOWNLOAD_RANGE, "range", false, "分段下载")
+	httpCmd.Flags().Int(CMD_CLIENT_HTTP_DOWNLOAD_TASKS, 32, "采用分片下载的任务数")
 }
