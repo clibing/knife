@@ -71,13 +71,24 @@ func getLocalIP() (ipv4 string, err error) {
 
 func getExternal(c *cobra.Command) {
 	url, _ := c.Flags().GetString("url")
-	resp, err := http.Get(url)
+
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		os.Stderr.WriteString(err.Error())
+		os.Stderr.WriteString("\n")
+		os.Exit(1)
+	}
+
+	req.Header.Set("User-Agent", "clibing/knife")
+	resp, err := client.Do(req)
 	if err != nil {
 		os.Stderr.WriteString(err.Error())
 		os.Stderr.WriteString("\n")
 		os.Exit(1)
 	}
 	defer resp.Body.Close()
+
 	s, _ := io.ReadAll(resp.Body)
 	fmt.Println("external ip: ", string(s))
 	// io.Copy(os.Stdout, resp.Body)
