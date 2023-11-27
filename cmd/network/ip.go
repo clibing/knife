@@ -85,7 +85,7 @@ func getExternal(c *cobra.Command) {
 }
 
 func init() {
-	ipCmd.Flags().StringP("url", "u", "https://tool.linuxcrypt.cn/showCurrentIp", "请求url")
+	ipCmd.Flags().StringP("url", "u", "https://discovery.linuxcrypt.cn/api/ip", "请求url")
 	ipCmd.Flags().BoolVarP(&external, "external", "e", false, "获取出口ip，默认获取本机ip")
 }
 
