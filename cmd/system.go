@@ -90,7 +90,13 @@ var versionCmd = &cobra.Command{
 }
 
 func init() {
-	systemCmd.AddCommand(system.NewArchCmd(), system.NewMonitorCmd(), system.NewUpgradeCmd(), system.NewMavenCmd())
+	systemCmd.AddCommand(
+		system.NewArchCmd(),
+		system.NewMonitorCmd(),
+		system.NewUpgradeCmd(),
+		system.NewMavenCmd(),
+		system.NewCronCmd(),
+	)
 
 	// 转换器
 	rootCmd.AddCommand(systemCmd)

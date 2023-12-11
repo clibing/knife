@@ -1,17 +1,18 @@
-package backup
+package system
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/robfig/cron/v3"
 	"github.com/spf13/cobra"
 )
 
 // cronCmd represents the cron command
 var cronCmd = &cobra.Command{
 	Use:   "cron",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "crontab 表达式",
+	Long: `详细使用:
 
 1. linux cron description:
 # .---------------- minute (0 - 59)
@@ -60,23 +61,28 @@ and usage of using your command. For example:
 实例12：晚上11点到早上7点之间，每隔一小时重启smb
 0 23-7/1 * * * /etc/init.d/smb restart.`,
 
-	Run: func(_ *cobra.Command, _ []string) {
-		fmt.Println("cron called")
+	Run: func(_ *cobra.Command, arg []string) {
+		for _, value := range arg {
+			withLocation := fmt.Sprintf("CRON_TZ=%s %s", "Asia/Shanghai", value)
+			schedule, err := cron.ParseStandard(withLocation)
+			if err != nil {
+				fmt.Println("parse error:", err)
+				return
+			}
+			record := time.Now()
+			fmt.Println("cron: ", value)
+			for i := 0; i < 10; i++ {
+				record = schedule.Next(record)
+				fmt.Println(record)
+			}
+		}
 	},
 }
 
 func init() {
-	// rootCmd.AddCommand(cronCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// cronCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// cronCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	cronCmd.Flags().IntP("time", "t", 10, "cron执行次数")
 }
 
-// https://www.cnblogs.com/LanTianYou/p/14395041.html
+func NewCronCmd() *cobra.Command {
+	return cronCmd
+}
