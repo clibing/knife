@@ -73,7 +73,7 @@ knife install -p /usr/local/bin
 var systemCmd = &cobra.Command{
 	Use:     "system",
 	Aliases: []string{"sys"},
-	Short:   `系统工具: arch, monitor, upgrade, maven`,
+	Short:   `系统工具: arch, monitor, upgrade, maven, cron`,
 	Run: func(c *cobra.Command, args []string) {
 		c.Help()
 	},
