@@ -19,14 +19,12 @@ import (
 )
 
 const (
-	CMD_CLIENT_HTTP_NAME           string = "http"
-	CMD_CLIENT_HTTP_METHOD         string = "method"
-	CMD_CLIENT_HTTP_SHOW_CURL      string = "show-curl"
-	CMD_CLIENT_HTTP_INPUT_TYPE     string = "input-type"
-	CMD_CLIENT_HTTP_CONTENT_TYPE   string = "Content-Type"
-	CMD_CLIENT_HTTP_OUTPUT         string = "output"
-	CMD_CLIENT_HTTP_DOWNLOAD_RANGE string = "range"          // 采用分段下载
-	CMD_CLIENT_HTTP_DOWNLOAD_TASKS string = "download-tasks" // 下载的多任务数据，默认为32
+	CMD_CLIENT_HTTP_NAME         string = "http"
+	CMD_CLIENT_HTTP_METHOD       string = "method"
+	CMD_CLIENT_HTTP_SHOW_CURL    string = "show-curl"
+	CMD_CLIENT_HTTP_INPUT_TYPE   string = "input-type"
+	CMD_CLIENT_HTTP_CONTENT_TYPE string = "Content-Type"
+	CMD_CLIENT_HTTP_OUTPUT       string = "output"
 )
 
 var (
@@ -37,19 +35,19 @@ var (
 		Example: `
 
 1.常用
-  knife client http https://tool.linuxcrypt.cn/checkRemoteIp
+  knife client http https://discovery.linuxcrypt.cn/api/ip
 
 2.将Response.body保存到文件中/tmp/result.data
-  knife client http https://tool.linuxcrypt.cn/checkRemoteIp -o /tmp/result.data
+  knife client http https://discovery.linuxcrypt.cn/api/ip -o /tmp/result.data
 
 3.请求JSON数据
-  knife client http https://tool.linuxcrypt.cn/checkRemoteIp -m POST -d '{}'  -H 'Content-Type: application/json; charset=utf-8'
+  knife client http https://discovery.linuxcrypt.cn/api/ip -m POST -d '{}'  -H 'Content-Type: application/json; charset=utf-8'
 
 4.非常规提交数据, 格式为key=value, 当请求的header为json，需要设置--form-to-json，会自动转换。
-  knife client http https://tool.linuxcrypt.cn/checkRemoteIp -m POST -d 'name=admin' -d 'root=123456'  -H 'Content-Type: application/json; charset=utf-8' --form-to-json
+  knife client http https://discovery.linuxcrypt.cn/api/ip -m POST -d 'name=admin' -d 'root=123456'  -H 'Content-Type: application/json; charset=utf-8' --form-to-json
 
 5.当请求时，需要转换curl格式
-  knife client http https://tool.linuxcrypt.cn/checkRemoteIp --show-curl`,
+  knife client http https://discovery.linuxcrypt.cn/api/ip --show-curl`,
 		Run: func(c *cobra.Command, args []string) {
 			debug := debug.NewDebug(c)
 
@@ -133,6 +131,20 @@ var (
 					}
 				}
 			}
+		},
+	}
+	reqCmd = &cobra.Command{
+		Use:   "req",
+		Short: "knife client http req...",
+		Run: func(c *cobra.Command, args []string) {
+			fmt.Println("req")
+		},
+	}
+	downCmd = &cobra.Command{
+		Use:   "down",
+		Short: "knife client http down...",
+		Run: func(c *cobra.Command, args []string) {
+			fmt.Println("down")
 		},
 	}
 )
@@ -272,6 +284,7 @@ func parseRequestData(c *cobra.Command, headers map[string]string, debug *debug.
 }
 
 func NewHttpClient() *cobra.Command {
+	httpCmd.AddCommand(reqCmd, downCmd)
 	return httpCmd
 }
 
@@ -283,6 +296,4 @@ func init() {
 	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_METHOD, "m", "GET", "method [GET(获取资源)|HEAD(包头信息)|POST(增加资源)|PUT(更新-全字段)|PATCH(更新-目标字段)|DELETE(删除)|CONNECT|OPTIONS(获取支持的Method)]")
 	httpCmd.Flags().StringP(CMD_CLIENT_HTTP_OUTPUT, "o", "", "将响应保存到指定文件")
 	httpCmd.Flags().Bool(CMD_CLIENT_HTTP_SHOW_CURL, false, "是否展示curl命令行, 默认: false")
-	httpCmd.Flags().BoolP(CMD_CLIENT_HTTP_DOWNLOAD_RANGE, "range", false, "分段下载")
-	httpCmd.Flags().Int(CMD_CLIENT_HTTP_DOWNLOAD_TASKS, 32, "采用分片下载的任务数")
 }
