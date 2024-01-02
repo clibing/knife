@@ -13,6 +13,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// const maxUploadSize = 2 * 1024 * 1024 // 2 mb
+
 var (
 	port int
 	path string
@@ -52,6 +54,12 @@ var staticCmd = &cobra.Command{
 					t.Execute(w, templateData)
 					return
 				}
+
+				// if err := r.ParseMultipartForm(maxUploadSize); err != nil {
+				// 	fmt.Printf("Could not parse multipart form: %v\n", err)
+				// 	renderError(w, "CANT_PARSE_FORM", http.StatusInternalServerError)
+				// 	return
+				// }
 
 				inputToken := r.FormValue("token")
 				if len(token) > 0 && token != inputToken {
