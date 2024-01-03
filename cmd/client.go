@@ -48,5 +48,8 @@ func init() {
 	// client -> websocket
 	clientCmd.AddCommand(websocketCmd)
 
+	// client --> mqtt
+	clientCmd.AddCommand(client.NewMqttCmd())
+
 	rootCmd.AddCommand(clientCmd)
 }
