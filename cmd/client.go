@@ -48,5 +48,8 @@ func init() {
 	// client -> websocket
 	clientCmd.AddCommand(websocketCmd)
 
+	// 下载器
+	clientCmd.AddCommand(client.NewDownloadCmd())
+
 	rootCmd.AddCommand(clientCmd)
 }
