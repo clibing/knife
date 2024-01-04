@@ -10,6 +10,7 @@ import (
 	"hash"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/clibing/knife/pkg/download"
 	"github.com/spf13/cobra"
@@ -72,9 +73,17 @@ var downloadCmd = &cobra.Command{
 				h[key] = value
 			}
 		}
+
+		start := time.Now()
+		fmt.Println("开启: ", start.Format("2006-01-02 15:04:05"))
 		err = download.NewFileDownloader(url, output, dir, sv, task, signatureMethod, h, ck, cv).Run()
 		if err != nil {
 			fmt.Println("下载任务失败: ", err.Error())
+		} else {
+			end := time.Now()
+			d := end.UnixMicro() - start.UnixMicro()
+			// util.
+			fmt.Printf("耗时: %s (%s)\n", end.Format("2006-01-02 15:04:05"), format(d))
 		}
 	},
 }
@@ -93,4 +102,21 @@ func init() {
 
 func NewDownloadCmd() *cobra.Command {
 	return downloadCmd
+}
+
+func format(micro int64) string {
+	if micro < 1000 {
+		return "不足1秒"
+	} else if micro < 1000*60 {
+		return fmt.Sprintf("%.2f 秒", float64(micro)/float64(1000))
+	} else if micro < 1000*60*60 {
+		return fmt.Sprintf("%.2f 分", float64(micro)/float64(1000*60))
+	} else if micro < 1000*60*60*24 {
+		return fmt.Sprintf("%.2f 时", float64(micro)/float64(1000*60*60))
+	} else if micro < 1000*60*60*24*30 {
+		return fmt.Sprintf("%.2f 天", float64(micro)/float64(1000*60*60*24))
+	} else if micro < 1000*60*60*24*30*12 {
+		return fmt.Sprintf("%.2f 月", float64(micro)/float64(1000*60*60*24*30))
+	}
+	return ""
 }
