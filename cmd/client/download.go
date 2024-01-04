@@ -108,15 +108,15 @@ func format(micro int64) string {
 	if micro < 1000 {
 		return "不足1秒"
 	} else if micro < 1000*60 {
-		return fmt.Sprintf("%.2f 秒", float64(micro)/float64(1000))
+		return fmt.Sprintf("%.2f秒", float64(micro)/float64(1000))
 	} else if micro < 1000*60*60 {
-		return fmt.Sprintf("%.2f 分", float64(micro)/float64(1000*60))
+		return fmt.Sprintf("%.2f分", float64(micro)/float64(1000*60))
 	} else if micro < 1000*60*60*24 {
-		return fmt.Sprintf("%.2f 时", float64(micro)/float64(1000*60*60))
+		return fmt.Sprintf("%.2f时", float64(micro)/float64(1000*60*60))
 	} else if micro < 1000*60*60*24*30 {
-		return fmt.Sprintf("%.2f 天", float64(micro)/float64(1000*60*60*24))
+		return fmt.Sprintf("%.2f天", float64(micro)/float64(1000*60*60*24))
 	} else if micro < 1000*60*60*24*30*12 {
-		return fmt.Sprintf("%.2f 月", float64(micro)/float64(1000*60*60*24*30))
+		return fmt.Sprintf("%.2f月", float64(micro)/float64(1000*60*60*24*30))
 	}
 	return ""
 }
