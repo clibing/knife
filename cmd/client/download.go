@@ -81,7 +81,7 @@ var downloadCmd = &cobra.Command{
 			fmt.Println("下载任务失败: ", err.Error())
 		} else {
 			end := time.Now()
-			d := end.UnixMicro() - start.UnixMicro()
+			d := end.UnixMilli() - start.UnixMilli()
 			// util.
 			fmt.Printf("耗时: %s (%s)\n", end.Format("2006-01-02 15:04:05"), format(d))
 		}

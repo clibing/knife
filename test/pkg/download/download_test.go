@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"runtime"
 	"testing"
+	"time"
 
 	"github.com/clibing/knife/pkg/download"
 )
@@ -30,6 +31,15 @@ func TestFormat(*testing.T) {
 	fmt.Println("1.5h:  ", format(1000*60*90))
 	fmt.Println("1.5d:  ", format(1000*60*90*24))
 	fmt.Println("1.5m:  ", format(1000*60*90*24*30))
+
+	start := "2024-01-04 15:26:09"
+	end := "2024-01-04 15:28:27"
+
+	s, _ := time.ParseInLocation("2006-01-02 15:04:05", start, time.Local)
+	e, _ := time.ParseInLocation("2006-01-02 15:04:05", end, time.Local)
+	d := e.UnixMilli() - s.UnixMilli()
+	fmt.Println(d)
+	fmt.Println(format(d))
 }
 
 func format(micro int64) string {
