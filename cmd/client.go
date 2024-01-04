@@ -51,5 +51,8 @@ func init() {
 	// 下载器
 	clientCmd.AddCommand(client.NewDownloadCmd())
 
+	// client --> mqtt
+	clientCmd.AddCommand(client.NewMqttCmd())
+
 	rootCmd.AddCommand(clientCmd)
 }
