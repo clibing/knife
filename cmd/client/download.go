@@ -17,7 +17,7 @@ import (
 
 var downloadCmd = &cobra.Command{
 	Use:   "download",
-	Short: "knife client http download...",
+	Short: "knife client download -u \"文件url\"",
 	Run: func(c *cobra.Command, args []string) {
 		url, err := c.Flags().GetString("url")
 		if err != nil {
