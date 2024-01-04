@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/clibing/go-common/pkg/util"
 	"github.com/clibing/knife/pkg/download"
 	"github.com/spf13/cobra"
 )
@@ -83,7 +84,7 @@ var downloadCmd = &cobra.Command{
 			end := time.Now()
 			d := end.UnixMilli() - start.UnixMilli()
 			// util.
-			fmt.Printf("耗时: %s (%s)\n", end.Format("2006-01-02 15:04:05"), format(d))
+			fmt.Printf("耗时: %s (%s)\n", end.Format("2006-01-02 15:04:05"), util.BeautifyTime(d))
 		}
 	},
 }
@@ -102,21 +103,4 @@ func init() {
 
 func NewDownloadCmd() *cobra.Command {
 	return downloadCmd
-}
-
-func format(micro int64) string {
-	if micro < 1000 {
-		return "不足1秒"
-	} else if micro < 1000*60 {
-		return fmt.Sprintf("%.2f秒", float64(micro)/float64(1000))
-	} else if micro < 1000*60*60 {
-		return fmt.Sprintf("%.2f分", float64(micro)/float64(1000*60))
-	} else if micro < 1000*60*60*24 {
-		return fmt.Sprintf("%.2f时", float64(micro)/float64(1000*60*60))
-	} else if micro < 1000*60*60*24*30 {
-		return fmt.Sprintf("%.2f天", float64(micro)/float64(1000*60*60*24))
-	} else if micro < 1000*60*60*24*30*12 {
-		return fmt.Sprintf("%.2f月", float64(micro)/float64(1000*60*60*24*30))
-	}
-	return ""
 }
