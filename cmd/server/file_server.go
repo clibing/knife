@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/clibing/go-common/pkg/util"
+	"github.com/go-basic/uuid"
 	"github.com/spf13/cobra"
 )
 
@@ -29,47 +31,93 @@ var staticCmd = &cobra.Command{
 新装系统后，安装所需软件的时候，每次都需要移动硬盘、U盘或者scp等拷贝资源到目标机器。
 一般情况都有一台闲置的电脑, 被安装的电脑在安装机器的期间, 可以使用闲置的机器可以去官网现在所需最新的软件安装包。`,
 	Run: func(cmd *cobra.Command, args []string) {
-		token, _ := cmd.Flags().GetString("token")
 
 		templateData := make(map[string]bool)
+		token, _ := cmd.Flags().GetString("token")
 		templateData["token"] = len(token) > 0
 
-		http.HandleFunc("/upload", http.HandlerFunc(
-			func(w http.ResponseWriter, r *http.Request) {
-				if r.Method == "GET" {
-					t, e := template.New("upload").Parse(`
+		// code
+		code := make(map[string]string)
+		http.HandleFunc("/verfiy", func(w http.ResponseWriter, r *http.Request) {
+			param := r.URL.Query()
+			input := param.Get("token")
+
+			w.Header().Set("Content-Type", "application/json")
+			// token 是否开启，
+			if len(token) == 0 {
+				// 没有开启
+				w.WriteHeader(http.StatusOK)
+				w.Write([]byte("{'code': 201, 'message': '暂未开启token认证'}"))
+				return
+			}
+
+			if len(token) > 0 && token != input {
+				w.WriteHeader(http.StatusUnauthorized)
+				w.Write([]byte("{'code': 401, 'message': '凭证错误'}"))
+				return
+			}
+
+			// 去除 - 短接线
+			key := strings.ReplaceAll(uuid.New(), "-", "")
+			// 存储cache
+			code[key] = ""
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte(fmt.Sprintf("{'code': 200, 'message': '认证成功', 'data': '%s'}", key)))
+		})
+
+		http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == "GET" {
+				t, e := template.New("upload").Parse(`
 <html><head><title>Upload file</title></head><body>
 <form enctype="multipart/form-data" action="upload" method="post">
-	{{ if .token }} 
-	<input type="input" name="token" /> 上传凭证 <br/>
-	{{ end }}
-	<input type="name" name="path" /> 存储目录 <br/>
-	<input type="file" name="file" /> 
-	<input type="submit" value="upload" />
+{{ if .token }} 
+<input type="input" name="token" /> 上传凭证 <br/>
+{{ end }}
+<input type="name" name="path" /> 存储目录 <br/>
+<input type="button" value="+"/><br/>
+<ol>
+	<li>
+		<input type="file" name="file" /> <br/>
+	</li>
+</ol>
+<input type="submit" value="upload" />
 </form></body></html>`)
-					if e != nil {
-						fmt.Println(e)
-						return
-					}
-					t.Execute(w, templateData)
+				if e != nil {
+					fmt.Println(e)
 					return
 				}
+				t.Execute(w, templateData)
+				return
+			}
 
-				// if err := r.ParseMultipartForm(maxUploadSize); err != nil {
-				// 	fmt.Printf("Could not parse multipart form: %v\n", err)
-				// 	renderError(w, "CANT_PARSE_FORM", http.StatusInternalServerError)
-				// 	return
-				// }
+			// 32<<20  ==> 32MB
+			// 32<<21  ==> 64MB
+			// 32<<25  ==> 1024MB
+			maxMemory, _ := cmd.Flags().GetString("maxMemory")
+			err := r.ParseMultipartForm(util.ReverseByteFormat(maxMemory)) // 设置最大上传文件大小为32MB
+			if err != nil {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte(fmt.Sprintf("允许最大上传文件为: %s", maxMemory)))
+				return
+			}
+			// 文件名字
+			storagePath := r.FormValue("path")
+			storagePath = strings.TrimPrefix(storagePath, "/")
 
-				inputToken := r.FormValue("token")
-				if len(token) > 0 && token != inputToken {
-					w.WriteHeader(http.StatusUnauthorized)
-					w.Write([]byte("凭证为空"))
-					return
-				}
+			key := r.FormValue("token")
+			if _, ok := code[key]; !ok {
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write([]byte("验证中间token不存在"))
+				return
+			}
+			// 删除 key
+			delete(code, key)
+
+			multiFiles := r.MultipartForm.File["file"]
+			for _, m := range multiFiles {
 
 				// parse and validate source and post parameters
-				source, m, err := r.FormFile("file")
+				source, err := m.Open()
 				if err != nil {
 					w.WriteHeader(http.StatusBadRequest)
 					w.Write([]byte("获取上传文件异常"))
@@ -77,9 +125,6 @@ var staticCmd = &cobra.Command{
 				}
 				defer source.Close()
 
-				// 文件名字
-				storagePath := r.FormValue("path")
-				storagePath = strings.TrimPrefix(storagePath, "/")
 				name := filepath.Join(path, storagePath, m.Filename)
 				parent := filepath.Dir(name)
 				if _, e := os.Stat(parent); e != nil {
@@ -112,11 +157,9 @@ var staticCmd = &cobra.Command{
 						return
 					}
 				}
-
-				w.WriteHeader(http.StatusOK)
-				w.Write([]byte(fmt.Sprintf("<html><title>上传成功</title><body>上传成功<br/><img src='%s/%s'></body></html>", storagePath, m.Filename)))
-			}),
-		)
+			}
+			http.Redirect(w, r, "/", http.StatusOK)
+		})
 		// 静态资源的目录
 		fs := http.FileServer(http.Dir(path))
 		// http 处理器
@@ -143,6 +186,7 @@ func init() {
 	staticCmd.Flags().StringVarP(&path, "path", "p", "", "静态资源目录, 默认为当前目录")
 	staticCmd.Flags().IntVarP(&port, "port", "", 0, "端口, 默认会随机")
 	staticCmd.Flags().StringP("token", "t", "", "上传开启凭证, 当为空时，不启用")
+	staticCmd.Flags().StringP("maxMemory", "m", "32M", "设置内存大小")
 }
 
 func NewFileServer() *cobra.Command {
