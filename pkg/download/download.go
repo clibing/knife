@@ -161,7 +161,7 @@ func (d FileDownloader) downloadPart(c filePart) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("开始[%d]下载from:%d to:%d\n", c.Index, c.From, c.To)
+	fmt.Printf("开始: [%d]下载from:%d to:%d\n", c.Index, c.From, c.To)
 	r.Header.Set("Range", fmt.Sprintf("bytes=%v-%v", c.From, c.To))
 	resp, err := http.DefaultClient.Do(r)
 	if err != nil {

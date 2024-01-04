@@ -75,7 +75,7 @@ var downloadCmd = &cobra.Command{
 		}
 
 		start := time.Now()
-		fmt.Println("开启: ", start.Format("2006-01-02 15:04:05"))
+		fmt.Println("开启:", start.Format("2006-01-02 15:04:05"))
 		err = download.NewFileDownloader(url, output, dir, sv, task, signatureMethod, h, ck, cv).Run()
 		if err != nil {
 			fmt.Println("下载任务失败: ", err.Error())
