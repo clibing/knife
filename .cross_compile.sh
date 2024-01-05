@@ -20,22 +20,22 @@ for pl in ${PLATFORMS}; do
     if [ "${GOOS}" == "windows" ]; then
         export TARGET=${TARGET_DIR}/${DIST_PREFIX}_${GOOS}_${GOARCH}.exe
     fi
-    export -n CC=x86_64-linux-musl-gcc
-    export -n CXX=x86_64-linux-musl-g++
-    export -n CC=aarch64-linux-musl-gcc
-    export -n CXX=aarch64-linux-musl-g++
-    if [ "${GOOS}" == "linux" ]; then
-        if [ "${GOARCH}" == "amd64" ]; then
-            export CC=x86_64-linux-musl-gcc  
-            export CXX=x86_64-linux-musl-g++
-            export TARGET=${TARGET_DIR}/${DIST_PREFIX}_${GOOS}_${GOARCH}_musl
-        fi
-        if [ "${GOARCH}" == "arm64" ]; then
-            export CC=aarch64-linux-musl--gcc  
-            export CXX=aarch64-linux-musl--g++
-            export TARGET=${TARGET_DIR}/${DIST_PREFIX}_${GOOS}_${GOARCH}_musl
-        fi
-    fi
+    # export -n CC=x86_64-linux-musl-gcc
+    # export -n CXX=x86_64-linux-musl-g++
+    # export -n CC=aarch64-linux-musl-gcc
+    # export -n CXX=aarch64-linux-musl-g++
+    # if [ "${GOOS}" == "linux" ]; then
+    #     if [ "${GOARCH}" == "amd64" ]; then
+    #         export CC=x86_64-linux-musl-gcc  
+    #         export CXX=x86_64-linux-musl-g++
+    #         export TARGET=${TARGET_DIR}/${DIST_PREFIX}_${GOOS}_${GOARCH}_musl
+    #     fi
+    #     if [ "${GOARCH}" == "arm64" ]; then
+    #         export CC=aarch64-linux-musl--gcc  
+    #         export CXX=aarch64-linux-musl--g++
+    #         export TARGET=${TARGET_DIR}/${DIST_PREFIX}_${GOOS}_${GOARCH}_musl
+    #     fi
+    # fi
 
     echo "build => ${TARGET}"
     go build -trimpath -o ${TARGET} \
