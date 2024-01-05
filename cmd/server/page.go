@@ -179,12 +179,16 @@ const HTML = `
                         for (var i = 0; i < names.length; i++) {
                             addToFileList(names[i]); //显示已上传的文件名称
                         }
+						{{ if .token }} 
+							document.getElementById("token").value="";
+						{{ end }} 
                         return
                     }
 
                 } else {
 					console.log("文件上传失败！错误信息: " + xhr.responseText);
 					document.getElementById("errMsg").innerHTML = xhr.responseText;
+
                 }
             };
             xhr.send(formData);
