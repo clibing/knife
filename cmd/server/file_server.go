@@ -171,6 +171,11 @@ var staticCmd = &cobra.Command{
 				}
 				values = append(values, name)
 			}
+
+			if r.Header.Get("X-Requested-With") != "XMLHttpRequest" {
+				http.Redirect(w, r, "/", http.StatusFound)
+				return
+			}
 			w.WriteHeader(http.StatusOK)
 			w.Write(CreateSuccessMsg("上传成功", values))
 		})
