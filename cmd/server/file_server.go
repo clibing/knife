@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
@@ -15,12 +16,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// const maxUploadSize = 2 * 1024 * 1024 // 2 mb
-
 var (
 	port int
 	path string
 )
+
+type Result[T any] struct {
+	Code    int    `json:"code"`
+	Data    T      `json:"data"`
+	Message string `json:"message"`
+}
+
+func CreateErrMsg(code int, message string) (output []byte) {
+	result := &Result[any]{
+		Code:    code,
+		Message: message,
+	}
+	output, _ = json.Marshal(result)
+	return
+}
+
+func CreateSuccessMsg[T any](message string, data T) (output []byte) {
+	result := &Result[T]{
+		Code:    200,
+		Data:    data,
+		Message: message,
+	}
+	output, _ = json.Marshal(result)
+	return
+}
 
 // staticCmd represents the static command
 var staticCmd = &cobra.Command{
@@ -38,7 +62,7 @@ var staticCmd = &cobra.Command{
 
 		// code
 		code := make(map[string]string)
-		http.HandleFunc("/verfiy", func(w http.ResponseWriter, r *http.Request) {
+		http.HandleFunc("/verify", func(w http.ResponseWriter, r *http.Request) {
 			param := r.URL.Query()
 			input := param.Get("token")
 
@@ -47,13 +71,13 @@ var staticCmd = &cobra.Command{
 			if len(token) == 0 {
 				// 没有开启
 				w.WriteHeader(http.StatusOK)
-				w.Write([]byte("{'code': 201, 'message': '暂未开启token认证'}"))
+				w.Write(CreateErrMsg(201, "暂未开启token认证"))
 				return
 			}
 
 			if len(token) > 0 && token != input {
 				w.WriteHeader(http.StatusUnauthorized)
-				w.Write([]byte("{'code': 401, 'message': '凭证错误'}"))
+				w.Write(CreateErrMsg(401, "凭证错误"))
 				return
 			}
 
@@ -62,26 +86,12 @@ var staticCmd = &cobra.Command{
 			// 存储cache
 			code[key] = ""
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte(fmt.Sprintf("{'code': 200, 'message': '认证成功', 'data': '%s'}", key)))
+			w.Write(CreateSuccessMsg("认证成功", key))
 		})
 
 		http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
 			if r.Method == "GET" {
-				t, e := template.New("upload").Parse(`
-<html><head><title>Upload file</title></head><body>
-<form enctype="multipart/form-data" action="upload" method="post">
-{{ if .token }} 
-<input type="input" name="token" /> 上传凭证 <br/>
-{{ end }}
-<input type="name" name="path" /> 存储目录 <br/>
-<input type="button" value="+"/><br/>
-<ol>
-	<li>
-		<input type="file" name="file" /> <br/>
-	</li>
-</ol>
-<input type="submit" value="upload" />
-</form></body></html>`)
+				t, e := template.New("upload").Parse(HTML)
 				if e != nil {
 					fmt.Println(e)
 					return
@@ -90,6 +100,7 @@ var staticCmd = &cobra.Command{
 				return
 			}
 
+			w.Header().Set("Content-Type", "application/json")
 			// 32<<20  ==> 32MB
 			// 32<<21  ==> 64MB
 			// 32<<25  ==> 1024MB
@@ -97,7 +108,7 @@ var staticCmd = &cobra.Command{
 			err := r.ParseMultipartForm(util.ReverseByteFormat(maxMemory)) // 设置最大上传文件大小为32MB
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte(fmt.Sprintf("允许最大上传文件为: %s", maxMemory)))
+				w.Write(CreateErrMsg(400, fmt.Sprintf("允许最大上传文件为: %s", maxMemory)))
 				return
 			}
 			// 文件名字
@@ -107,13 +118,14 @@ var staticCmd = &cobra.Command{
 			key := r.FormValue("token")
 			if _, ok := code[key]; !ok {
 				w.WriteHeader(http.StatusBadRequest)
-				w.Write([]byte("验证中间token不存在"))
+				w.Write(CreateErrMsg(400, "验证中间token不存在"))
 				return
 			}
 			// 删除 key
 			delete(code, key)
 
 			multiFiles := r.MultipartForm.File["file"]
+			values := make([]string, 0)
 			for _, m := range multiFiles {
 
 				// parse and validate source and post parameters
@@ -157,9 +169,12 @@ var staticCmd = &cobra.Command{
 						return
 					}
 				}
+				values = append(values, name)
 			}
-			http.Redirect(w, r, "/", http.StatusOK)
+			w.WriteHeader(http.StatusOK)
+			w.Write(CreateSuccessMsg("写入文件异常", values))
 		})
+
 		// 静态资源的目录
 		fs := http.FileServer(http.Dir(path))
 		// http 处理器
