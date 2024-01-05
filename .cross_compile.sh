@@ -4,7 +4,7 @@ set -e
 
 DIST_PREFIX="knife"
 TARGET_DIR="dist"
-PLATFORMS="darwin/amd64 darwin/arm64  linux/386 linux/amd64 linux/arm linux/arm64 windows/amd64 windows/386 windows/arm windows/arm64"
+PLATFORMS="darwin/amd64 darwin/arm64 linux/amd64 linux/arm linux/arm64 linux/386 windows/amd64 windows/386 windows/arm windows/arm64"
 
 BUILD_VERSION=$(cat version)
 BUILD_DATE=$(date "+%F %T")
