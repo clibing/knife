@@ -172,7 +172,7 @@ var staticCmd = &cobra.Command{
 				values = append(values, name)
 			}
 			w.WriteHeader(http.StatusOK)
-			w.Write(CreateSuccessMsg("写入文件异常", values))
+			w.Write(CreateSuccessMsg("上传成功", values))
 		})
 
 		// 静态资源的目录
