@@ -172,7 +172,8 @@ var staticCmd = &cobra.Command{
 				values = append(values, name)
 			}
 
-			if r.Header.Get("X-Requested-With") != "XMLHttpRequest" {
+			ajax := r.FormValue("ajax")
+			if ajax != "1" {
 				http.Redirect(w, r, "/", http.StatusFound)
 				return
 			}

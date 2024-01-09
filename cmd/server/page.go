@@ -67,13 +67,20 @@ const HTML = `
 		.dangerous {
 			color: red;
 		}
+		.progress {
+            width: 0px;
+            height: 0px;
+            line-height: 0px;
+            border-bottom: 2px solid green;
+            display: none;
+		}
     </style>
 </head>
 
 <body>
+    <div class="progress" id="progress"></div>
     <form method="post" enctype="multipart/form-data" id="upload">
-        <div class="inputDiv dangerous" id="errMsg">
-		</div>
+        <div class="inputDiv dangerous" id="errMsg"></div>
 		{{ if .token }} 
 			<div class="inputDiv">
 				<span>凭证: </span>
@@ -166,9 +173,49 @@ const HTML = `
                 console.log(file);
                 formData.append('file', file); //将文件添加到FormData对象中
             }
+            formData.append('ajax', 1); // 是否为 ajax请求组
 
             var xhr = new XMLHttpRequest();
+
+            xhr.upload.addEventListener("progress", updateProgress);
+            xhr.upload.addEventListener("load" , transferComplete);
+            xhr.upload.addEventListener("error", transferFailed  );
+            xhr.upload.addEventListener("abort", transferCanceled);
+
             xhr.open("POST", "/upload"); //设置上传URL为服务器接收文件的地址
+
+            // 上传进度
+            function updateProgress (event) {
+                // 如果 lengthComputable 属性的值是 false，那么意味着总字节数是未知并且 total 的值为零。
+                if (event.lengthComputable) {
+                    let p = event.loaded / event.total * 100;
+                    console.log('上传进度：' + p + '%') // 一个百分比进度
+                    let v = p * 380 / 100;
+                    if (v > 380) {
+                        v = 380
+                    }
+                    console.log("width value: "+ v)
+                    document.getElementById('progress').style.width = (v) + "px";
+                } else {
+                    // 总大小未知时不能计算进度信息
+                }
+            }
+            function transferComplete(event) {
+                console.log("上传完成");
+                document.getElementById('progress').style.width = "380px";
+                setTimeout(function(){
+                    document.getElementById('progress').style.display= "none";
+				}, 3000);
+            }
+            function transferFailed(event) {
+                console.log("上传失败");
+                document.getElementById('progress').style.width = "0px";
+            }
+
+            function transferCanceled(event) {
+                console.log("取消上传");
+                document.getElementById('progress').style.width = "0px";
+            }
 
             xhr.onload = function () {
                 if (xhr.status === 200) {
@@ -192,6 +239,7 @@ const HTML = `
                 }
             };
             xhr.send(formData);
+            document.getElementById('progress').style.display= "block"; 
         }
 
         function addToFileList(fileName) {

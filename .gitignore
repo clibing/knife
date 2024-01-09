@@ -2,3 +2,5 @@ dist/
 .idea/
 *.png
 .DS_Store
+/temp/
+__debug*
