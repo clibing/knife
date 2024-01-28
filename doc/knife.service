@@ -1,0 +1,14 @@
+[Unit]
+Description=knife service
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/data
+ExecStart=/usr/local/bin/knife server static -t ********** -p /opt/data --port 9087
+ExecStop=/usr/bin/kill -9 $MAINPID
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
+
