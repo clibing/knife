@@ -97,6 +97,7 @@ func init() {
 		system.NewMavenCmd(),
 		system.NewCronCmd(),
 		system.NewBeautifyCmd(),
+		system.NewRenameCmd(),
 	)
 
 	// 转换器
