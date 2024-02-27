@@ -2,9 +2,9 @@ package system
 
 import (
 	"fmt"
-	"time"
 
-	"github.com/robfig/cron/v3"
+	"github.com/clibing/knife/cmd/debug"
+	"github.com/clibing/knife/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -13,9 +13,18 @@ var renameCmd = &cobra.Command{
 	Use:   "rename",
 	Short: "rename file",
 	Long:  `详细使用: `,
-	Run: func(_ *cobra.Command, arg []string) {
-		
-		
+	Run: func(c *cobra.Command, arg []string) {
+		d := debug.NewDebug(c)
+		p, _ := c.Flags().GetString("path")
+		result := utils.Scan(d, p)
+
+		t, _ := c.Flags().GetString("target")
+		r, _ := c.Flags().GetString("replace")
+
+		for _, name := range result {
+			fmt.Println(t, r, name)
+		}
+
 	},
 }
 

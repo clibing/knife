@@ -1,14 +1,17 @@
 package utils
-	/**
+
+import (
+	"io/fs"
+	"path/filepath"
+
+	"github.com/clibing/knife/cmd/debug"
+)
+
+/**
  * 扫描指定目录
  */
 
-
-func Scan(){
-
-	result = make([]string, 0)
-	metadata = make(map[string]model.Metadata)
-	// 提取完整路径
+func Scan(debug *debug.Debug, path string) (result []string) {
 	scanDir, _ := filepath.Abs(path)
 	debug.ShowSame("🟣 scan path: %s", scanDir)
 
@@ -20,14 +23,6 @@ func Scan(){
 		// 只保存非目录
 		if !info.IsDir() {
 			result = append(result, path)
-			key := filepath.Dir(path)
-			_, ok := metadata[key]
-			if !ok {
-				ok, key, meta := scanMetadataLocal(debug, path)
-				if ok {
-					metadata[key] = meta
-				}
-			}
 		}
 		return nil
 	})
