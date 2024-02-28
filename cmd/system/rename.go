@@ -14,9 +14,13 @@ import (
 // rename command
 var renameCmd = &cobra.Command{
 	Use:   "rename",
-	Short: "rename file",
+	Short: "将指定目录下的文件，重新命名。",
 	Long: `example: 
-knife system rename -p ./ -s 查找内容 -t 替换后的内容`,
+- ./
+ |- 宝宝巴士-P1-你的名字.mp3
+
+将当前目录下名字抹除重复部分 "宝宝巴士-" 为 ""
+knife system rename -p ./ -s "宝宝巴士-" -t ""`,
 	Run: func(c *cobra.Command, arg []string) {
 		d := debug.NewDebug(c)
 		p, _ := c.Flags().GetString("path")
