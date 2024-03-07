@@ -1,6 +1,5 @@
 package common
 
-
 import (
 	"fmt"
 	"math/rand"
@@ -9,6 +8,9 @@ import (
 	"github.com/go-basic/uuid"
 	"github.com/spf13/cobra"
 )
+
+const formatString = "b2eff38a-8832-99de-9330-5fafed0ffacd"
+const inputString = "b2eff38a883299de93305fafed0ffacd"
 
 var (
 	needChar, needNumber, needPunctuation bool
@@ -29,7 +31,24 @@ var randomCmd = &cobra.Command{
 3. 生成一个强度比较高的密码
 等等
 .`,
-	Run: func(_ *cobra.Command, _ []string) {
+	Run: func(c *cobra.Command, input []string) {
+
+		ftu, _ := c.Flags().GetBool("format-to-uuid")
+		if ftu {
+			formatSize := len(formatString)
+			inputSize := len(inputString)
+
+			for _, value := range input {
+				currentSize := len(value)
+				if inputSize == currentSize {
+					fmt.Printf("%s-%s-%s-%s-%s\n", value[0:7], value[8:12], value[12:16], value[16:20], value[20:])
+				} else if currentSize == formatSize {
+					fmt.Println(value)
+				}
+			}
+			return
+		}
+
 		if !needChar && !needNumber && !needPunctuation {
 			for t := 1; t <= randomTimes; t++ {
 				uuid := uuid.New()
@@ -72,6 +91,8 @@ func init() {
 
 	randomCmd.Flags().IntVarP(&randomLen, "randomLen", "l", 6, "生成随机数的长度, 默认长度6个字符")
 	randomCmd.Flags().IntVarP(&randomTimes, "randomTimes", "t", 1, "生成随机数的个数，默认1个")
+
+	randomCmd.Flags().BoolP("format-to-uuid", "f", false, "将输入的内容格式化为uuid格式")
 }
 
 func NewRandomCmd() *cobra.Command {
