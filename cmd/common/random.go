@@ -42,7 +42,7 @@ var randomCmd = &cobra.Command{
 			for _, value := range input {
 				currentSize := len(value)
 				if inputSize == currentSize {
-					latest := fmt.Sprintf("%s-%s-%s-%s-%s\n", value[0:7], value[8:12], value[12:16], value[16:20], value[20:])
+					latest := fmt.Sprintf("%s-%s-%s-%s-%s", value[0:7], value[8:12], value[12:16], value[16:20], value[20:])
 					fmt.Println(strings.ToUpper(latest))
 					fmt.Println(strings.ToLower(latest))
 				} else if currentSize == formatSize {
