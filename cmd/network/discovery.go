@@ -64,14 +64,14 @@ show machine by latest sync time.`,
 							data = append(data, []string{strconv.Itoa(id + 1), v.Account, currentInterface.Name, ipType, address.Value})
 						}
 					} else {
-						data = append(data, []string{strconv.Itoa(id + 1), v.Account, currentInterface.Name, ipType, address.Value})
+						data = append(data, []string{strconv.Itoa(id + 1), v.Metrics.CreateTime.Format("2006-01-02 15:04:05.000"), v.Account, currentInterface.Name, ipType, address.Value})
 					}
 				}
 			}
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"ID", "Account", "Device", "Type", "Address"})
+		table.SetHeader([]string{"ID", "LatestTime", "Account", "Device", "Type", "Address"})
 		table.SetAutoMergeCells(true)
 		table.SetRowLine(true)
 		table.AppendBulk(data)
