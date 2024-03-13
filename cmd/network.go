@@ -15,7 +15,7 @@ var networkCmd = &cobra.Command{
 }
 
 func init() {
-	networkCmd.AddCommand(network.NewIpCmd(), network.NewWolCmd())
+	networkCmd.AddCommand(network.NewIpCmd(), network.NewWolCmd(), network.NewDiscoveryCmd())
 
 	// 转换器
 	rootCmd.AddCommand(networkCmd)
