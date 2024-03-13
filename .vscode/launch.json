@@ -131,6 +131,14 @@
         "args": ["system", "mvn", "-d", "/Users/clibing/.m2/repository"]
       },
       {
+        "name": "discovery client",
+        "type": "go",
+        "request": "launch",
+        "mode": "auto",
+        "program": "${workspaceFolder}/main.go",
+        "args": ["net", "discovery"]
+      },
+      {
         "name": "static file",
         "type": "go",
         "request": "launch",

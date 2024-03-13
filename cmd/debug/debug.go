@@ -37,6 +37,9 @@ func NewDebug(c *cobra.Command) *Debug {
 }
 
 func (d *Debug) EnableDebug() (debug bool) {
+	if d.Command == nil {
+		return false
+	}
 	debug, e := d.Command.Flags().GetBool("debug")
 	if e == nil {
 		return
