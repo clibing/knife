@@ -136,7 +136,7 @@
         "request": "launch",
         "mode": "auto",
         "program": "${workspaceFolder}/main.go",
-        "args": ["net", "discovery"]
+        "args": ["net", "discovery", "-k", "16g"]
       },
       {
         "name": "static file",

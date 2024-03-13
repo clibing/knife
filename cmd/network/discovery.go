@@ -58,20 +58,34 @@ show machine by latest sync time.`,
 					if !address.IsV4 {
 						ipType = "ipv6"
 					}
+					id := strconv.Itoa(id + 1)
+					ct := v.Metrics.CreateTime.Format("2006-01-02 15:04:05.000")
 					if len(keyword) > 0 {
 						ignorekeywrod := strings.ToLower(keyword)
 						if strings.Contains(strings.ToLower(v.Account), ignorekeywrod) || strings.Contains(strings.ToLower(currentInterface.Name), ignorekeywrod) || strings.Contains(strings.ToLower(address.Value), ignorekeywrod) {
-							data = append(data, []string{strconv.Itoa(id + 1), v.Account, currentInterface.Name, ipType, address.Value})
+							if !skipIpv6 {
+								data = append(data, []string{id, ct, v.Account, currentInterface.Name, address.Value})
+							} else {
+								data = append(data, []string{id, ct, v.Account, currentInterface.Name, ipType, address.Value})
+							}
 						}
 					} else {
-						data = append(data, []string{strconv.Itoa(id + 1), v.Metrics.CreateTime.Format("2006-01-02 15:04:05.000"), v.Account, currentInterface.Name, ipType, address.Value})
+						if !skipIpv6 {
+							data = append(data, []string{id, ct, v.Account, currentInterface.Name, address.Value})
+						} else {
+							data = append(data, []string{id, ct, v.Account, currentInterface.Name, ipType, address.Value})
+						}
 					}
 				}
 			}
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"ID", "LatestTime", "Account", "Device", "Type", "Address"})
+		if !skipIpv6 {
+			table.SetHeader([]string{"ID", "LatestTime", "Account", "Device", "Address"})
+		} else {
+			table.SetHeader([]string{"ID", "LatestTime", "Account", "Device", "Type", "Address"})
+		}
 		table.SetAutoMergeCells(true)
 		table.SetRowLine(true)
 		table.AppendBulk(data)
@@ -162,7 +176,6 @@ func checkAddrs(addrs snet.InterfaceAddrList, skipIpv6 bool) (value []*Addr) {
 
 func init() {
 	discoveryCmd.Flags().StringP("keyword", "k", "", "过滤内容，支持主机名字、ip地址、mac地址")
-	discoveryCmd.Flags().BoolP("hidden-ipv4", "4", false, "隐藏ipv4地址")
 	discoveryCmd.Flags().BoolP("show-ipv6", "6", false, "显示ipv6地址")
 }
 
