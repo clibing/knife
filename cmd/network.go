@@ -8,7 +8,7 @@ import (
 
 var networkCmd = &cobra.Command{
 	Use:   "net",
-	Short: `网络处理器: ip, wol`,
+	Short: `网络处理器: ip, wol, discovery`,
 	Run: func(c *cobra.Command, args []string) {
 		c.Help()
 	},
