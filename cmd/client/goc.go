@@ -26,6 +26,7 @@ var gocCmd = &cobra.Command{
 		source, _ := cmd.Flags().GetString("source")
 		branch, _ := cmd.Flags().GetString("branch")
 		output, _ := cmd.Flags().GetString("output")
+		submodule, _ := cmd.Flags().GetBool("submodule")
 
 		if len(source) > 0 {
 			fmt.Println("source:", source)
@@ -35,7 +36,11 @@ var gocCmd = &cobra.Command{
 		}
 
 		var parameters []string
-		parameters = append(parameters, "clone", source)
+		parameters = append(parameters, "clone")
+		if submodule {
+			parameters = append(parameters, "--recursive")
+		}
+		parameters = append(parameters, source)
 
 		if len(branch) > 0 {
 			fmt.Println("branch:", source)
@@ -55,7 +60,9 @@ var gocCmd = &cobra.Command{
 
 		parameters = append(parameters, output)
 
+		fmt.Println("......")
 		e = utils.ExecGit(parameters...)
+		fmt.Println("......")
 
 		if e != nil {
 			fmt.Println("faild :", e)
@@ -69,9 +76,10 @@ var gocCmd = &cobra.Command{
 }
 
 func init() {
-	gocCmd.Flags().StringP("source", "s", "", "git project url")
-	gocCmd.Flags().StringP("branch", "b", "", "git branch name")
+	gocCmd.Flags().StringP("source", "s", "", "克隆项目的url")
+	gocCmd.Flags().StringP("branch", "b", "", "克隆指定分支, 默认使用项目的主分支")
 	gocCmd.Flags().StringP("output", "o", "", "将项目clone到指定目录")
+	gocCmd.Flags().BoolP("submodule", "", false, "是否克隆子项目(子模块)")
 }
 
 func NewGocCmd() *cobra.Command {

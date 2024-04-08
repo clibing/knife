@@ -42,7 +42,7 @@ func ExecGit(commands ...string) (err error) {
 	go func() {
 		scanner := bufio.NewScanner(stdout)
 		for scanner.Scan() {
-			fmt.Println(scanner.Text())
+			fmt.Print(scanner.Text())
 		}
 	}()
 
