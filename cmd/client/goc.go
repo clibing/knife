@@ -55,17 +55,11 @@ var gocCmd = &cobra.Command{
 
 		parameters = append(parameters, output)
 
-		var result string
-
-		result, e = utils.ExecGit(parameters...)
+		e = utils.ExecGit(parameters...)
 
 		if e != nil {
-			fmt.Println("faild :", result, e)
+			fmt.Println("faild :", e)
 			return
-		}
-
-		if len(result) > 0 {
-			fmt.Println("Result:", result)
 		}
 
 		time.Sleep(3 * time.Second)
