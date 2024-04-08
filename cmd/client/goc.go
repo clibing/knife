@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/clibing/knife/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -55,7 +56,9 @@ var gocCmd = &cobra.Command{
 		parameters = append(parameters, output)
 
 		var result string
-		// result, e = utils.ExecGit(parameters...)
+
+		result, e = utils.ExecGit(parameters...)
+
 		if e != nil {
 			fmt.Println("faild :", result, e)
 			return
