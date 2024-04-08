@@ -14,7 +14,7 @@ import (
  * 执行系统git命令
  * 安装hook
  */
-func ExecGit(commands ...string) (error) {
+func ExecGit(commands ...string) (err error) {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
 		cmd = exec.Command("git.exe", commands...)
@@ -25,18 +25,18 @@ func ExecGit(commands ...string) (error) {
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error creating stdout pipe:", err)
-		os.Exit(1)
+		return
 	}
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error creating stderr pipe:", err)
-		os.Exit(1)
+		return
 	}
 
-	if err := cmd.Start(); err != nil {
+	if err = cmd.Start(); err != nil {
 		fmt.Fprintln(os.Stderr, "Error starting command:", err)
-		os.Exit(1)
+		return
 	}
 
 	go func() {
@@ -53,7 +53,7 @@ func ExecGit(commands ...string) (error) {
 		}
 	}()
 
-	if err := cmd.Wait(); err != nil {
+	if err = cmd.Wait(); err != nil {
 		return errors.New(strings.TrimSpace(err.Error()))
 	}
 	return nil
