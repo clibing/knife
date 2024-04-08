@@ -14,7 +14,7 @@ import (
 var (
 	clientCmd = &cobra.Command{
 		Use:   "client",
-		Short: "多客户端: http, redis, websocket, download, mqtt",
+		Short: "多客户端: http, redis, websocket, download, mqtt, goc",
 		Long:  `多应用客户端`,
 		Example: `knife client http https://tool.linuxcrypt.cn/checkRemoteIp
 knife client ws wss://api.linuxcrypt.cn
