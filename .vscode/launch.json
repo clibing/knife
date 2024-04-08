@@ -145,6 +145,14 @@
         "mode": "auto",
         "program": "${workspaceFolder}/main.go",
         "args": ["server", "static", "-p", "${workspaceFolder}", "-t", "123456", "--port", "8888"]
+      },
+      {
+        "name": "client goc",
+        "type": "go",
+        "request": "launch",
+        "mode": "auto",
+        "program": "${workspaceFolder}/main.go",
+        "args": ["client", "goc", "--source", "https://github.com/drakkan/sftpgo.git"]
       }
     ]
 }

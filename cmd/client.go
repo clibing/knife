@@ -54,5 +54,8 @@ func init() {
 	// client --> mqtt
 	clientCmd.AddCommand(client.NewMqttCmd())
 
+	// client --> goc
+	clientCmd.AddCommand(client.NewGocCmd())
+
 	rootCmd.AddCommand(clientCmd)
 }
