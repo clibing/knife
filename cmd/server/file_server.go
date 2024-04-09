@@ -303,7 +303,8 @@ func foundStaticServer(staticServerPort int) {
 			}
 			key := string(buffer[:i])
 			if _, ok := stash[key]; !ok {
-				fmt.Println(key)
+				value := fmt.Sprintf("http://%s", key)
+				fmt.Println(value)
 				stash[key] = key
 			}
 			// 向客户端返回消息
