@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/clibing/go-common/pkg/util"
+	"github.com/clibing/knife/internal/utils"
 	"github.com/go-basic/uuid"
 	"github.com/spf13/cobra"
 )
@@ -20,6 +21,9 @@ var (
 	port int
 	path string
 )
+
+// 用户发现时携带的UA
+const USER_AGENT = "clibing/knife"
 
 type Result[T any] struct {
 	Code    int    `json:"code"`
@@ -55,6 +59,11 @@ var staticCmd = &cobra.Command{
 新装系统后，安装所需软件的时候，每次都需要移动硬盘、U盘或者scp等拷贝资源到目标机器。
 一般情况都有一台闲置的电脑, 被安装的电脑在安装机器的期间, 可以使用闲置的机器可以去官网现在所需最新的软件安装包。`,
 	Run: func(cmd *cobra.Command, args []string) {
+
+		found, _ := cmd.Flags().GetBool("found")
+		if found {
+
+		}
 
 		templateData := make(map[string]bool)
 		token, _ := cmd.Flags().GetString("token")
@@ -194,7 +203,14 @@ var staticCmd = &cobra.Command{
 			return
 		}
 
-		fmt.Printf("服务启动中: http://0.0.0.0:%d \n", listener.Addr().(*net.TCPAddr).Port)
+		// 获取 本地ip地址
+		ip, _ := utils.GetLocalIp()
+		port := listener.Addr().(*net.TCPAddr).Port
+		// 发现服务
+		go discovery(ip, port)
+
+		fmt.Printf("服务启动中: http://%s:%d \n", ip, port)
+		fmt.Printf("服务启动中: http://0.0.0.0:%d \n", port)
 		err = http.Serve(listener, nil)
 		if err != nil {
 			fmt.Println("服务启动失败，请检查, ", err.Error())
@@ -203,13 +219,114 @@ var staticCmd = &cobra.Command{
 	},
 }
 
+type Message struct {
+	UserAgent string `json:"UserAgent"`
+	Port      int    `json:"Port"`
+}
+
+// 注册器
+func discovery(ip string, port int) {
+	addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		return
+	}
+
+	conn, err := net.ListenUDP("udp", addr)
+	if err != nil {
+		return
+	}
+	defer conn.Close()
+
+	for {
+		var buf [512]byte
+		n, remoteAddr, err := conn.ReadFromUDP(buf[:])
+		if err != nil {
+			continue
+		}
+		var msg Message
+		json.Unmarshal(buf[:n], &msg)
+		if msg.UserAgent == USER_AGENT {
+			// 将本机ip+port发送给客户端
+			SendIpAndPort(ip, remoteAddr.IP.String(), port, msg.Port)
+		}
+	}
+}
+
+func SendIpAndPort(localIp, remoteIp string, localPort, remotePort int) {
+	conn, err := net.Dial("udp", fmt.Sprintf("%s:%d", remoteIp, remotePort))
+	if err != nil {
+		return
+	}
+	defer conn.Close()
+	_, err = conn.Write([]byte(fmt.Sprintf("%s:%d", localIp, localPort)))
+	if err != nil {
+		return
+	}
+	fmt.Printf("新的客户端: %s:%d\n", remoteIp, remotePort)
+}
+
 func init() {
 	staticCmd.Flags().StringVarP(&path, "path", "p", "", "静态资源目录, 默认为当前目录")
 	staticCmd.Flags().IntVarP(&port, "port", "", 0, "端口, 默认会随机")
 	staticCmd.Flags().StringP("token", "t", "", "上传开启凭证, 当为空时，不启用")
 	staticCmd.Flags().StringP("maxMemory", "m", "32M", "设置内存大小")
+	staticCmd.Flags().BoolP("found", "f", false, "自动发现局域网内的静态服务器")
 }
 
 func NewFileServer() *cobra.Command {
 	return staticCmd
+}
+
+func foundStaticServer(staticServerPort int) {
+	addr := &net.UDPAddr{
+		IP:   net.ParseIP("0.0.0.0"), // 本地地址
+		Port: 0,                      // 让操作系统随机选择端口
+	}
+	// 在UDP地址上建立UDP监听,得到连接
+	conn, _ := net.ListenUDP("udp", addr)
+	defer conn.Close()
+
+	go func(nuc *net.UDPConn) {
+		// 建立缓冲区
+		stash := make(map[string]string, 0)
+		buffer := make([]byte, 1024)
+		for {
+			//从连接中读取内容,丢入缓冲区
+			i, udpAddr, e := nuc.ReadFromUDP(buffer)
+			// 第一个是字节长度,第二个是udp的地址
+			if e != nil {
+				continue
+			}
+			key := string(buffer[:i])
+			if _, ok := stash[key]; !ok {
+				fmt.Println(key)
+				stash[key] = key
+			}
+			// 向客户端返回消息
+			nuc.WriteToUDP([]byte("\n"), udpAddr)
+		}
+	}(conn)
+
+	listenPort := conn.LocalAddr().(*net.UDPAddr).Port
+
+	broadConn, err := net.DialUDP("udp", nil, &net.UDPAddr{
+		IP:   net.IPv4(255, 255, 255, 255),
+		Port: staticServerPort,
+	})
+	if err != nil {
+		fmt.Println("发送广播异常", err)
+		return
+	}
+	defer broadConn.Close()
+
+	msg := &Message{
+		UserAgent: USER_AGENT,
+		Port:      listenPort,
+	}
+	data, _ := json.Marshal(msg)
+	broadConn.Write(data)
+
+	for {
+
+	}
 }

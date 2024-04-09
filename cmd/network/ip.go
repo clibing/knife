@@ -3,10 +3,10 @@ package network
 import (
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"os"
 
+	"github.com/clibing/knife/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +28,7 @@ knife ip -e
 		if external {
 			getExternal(c)
 		} else {
-			ip, _ := getLocalIP()
+			ip, _ := utils.GetLocalIp()
 			fmt.Println("local ip: ", ip)
 		}
 	},
@@ -40,33 +40,6 @@ type commonError struct {
 
 func (ce *commonError) Error() string {
 	return ce.title
-}
-
-// 获取本机网卡IP
-func getLocalIP() (ipv4 string, err error) {
-	var (
-		addrs   []net.Addr
-		addr    net.Addr
-		ipNet   *net.IPNet // IP地址
-		isIpNet bool
-	)
-	// 获取所有网卡
-	if addrs, err = net.InterfaceAddrs(); err != nil {
-		return
-	}
-	// 取第一个非lo的网卡IP
-	for _, addr = range addrs {
-		// 这个网络地址是IP地址: ipv4, ipv6
-		if ipNet, isIpNet = addr.(*net.IPNet); isIpNet && !ipNet.IP.IsLoopback() {
-			// 跳过IPV6
-			if ipNet.IP.To4() != nil {
-				ipv4 = ipNet.IP.String() // 192.168.1.1
-				return
-			}
-		}
-	}
-	err = &commonError{"获取IP异常"}
-	return
 }
 
 func getExternal(c *cobra.Command) {
