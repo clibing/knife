@@ -62,7 +62,11 @@ var staticCmd = &cobra.Command{
 
 		found, _ := cmd.Flags().GetBool("found")
 		if found {
-
+			if port == 0 {
+				fmt.Println("暂未设置静态服务端口.")
+				return
+			}
+			foundStaticServer(port)
 		}
 
 		templateData := make(map[string]bool)
