@@ -11,8 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// imageCmd represents the image command
-var imageCmd = &cobra.Command{
+// base64Cmd represents the image command
+var base64Cmd = &cobra.Command{
 	Use:   "base64",
 	Short: "图片转base64",
 	Long: `将图片转换成base64， 也可以将base64生成图片:
@@ -159,12 +159,12 @@ func html(c *cobra.Command, output string, args ...string) {
 }
 
 func init() {
-	imageCmd.Flags().StringP("input", "i", "", "源文件")
-	imageCmd.Flags().StringP("output", "o", "", "输出到文件")
-	imageCmd.Flags().BoolP("html", "", false, "图片转base64后，是否生成html，默认不需要")
-	imageCmd.Flags().BoolP("binary", "b", true, "是否为二进制, 默认图片转base64")
+	base64Cmd.Flags().StringP("input", "i", "", "源文件")
+	base64Cmd.Flags().StringP("output", "o", "", "输出到文件")
+	base64Cmd.Flags().BoolP("html", "", false, "图片转base64后，是否生成html，默认不需要")
+	base64Cmd.Flags().BoolP("binary", "b", true, "是否为二进制, 默认图片转base64")
 }
 
 func NewImageCmd() *cobra.Command {
-	return imageCmd
+	return base64Cmd
 }
