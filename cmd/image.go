@@ -6,9 +6,9 @@ import (
 )
 
 var imageCmd = &cobra.Command{
-	Use:   "image",
+	Use:     "image",
 	Aliases: []string{"img"},
-	Short: `图片处理器: qrcode, base64 image`,
+	Short:   `图片处理器: qrcode, base64 image, convert image`,
 	Run: func(c *cobra.Command, args []string) {
 		c.Help()
 	},

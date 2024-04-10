@@ -20,7 +20,11 @@ var convertCmd = &cobra.Command{
 	Use:     "convert",
 	Aliases: []string{"c"},
 	Short:   "图片格式转换",
-	Long:    `图片转换: .`,
+	Long: `图片转换: 
+
+1. 将svg转换为png，并指定生成的图片100x100
+    knife image convert -t 0 -i 1.svg -o 1.png -w 100 -h 100
+.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		_type, _ := cmd.Flags().GetInt("type")
 		w, _ := cmd.Flags().GetInt("width")
@@ -41,8 +45,8 @@ var convertCmd = &cobra.Command{
 func init() {
 	convertCmd.Flags().StringP("input", "i", "", "输入资源文件路径")
 	convertCmd.Flags().StringP("output", "o", "", "输出资源文件路径")
-	convertCmd.Flags().IntP("width", "w", 0, "输出图片宽度")
-	convertCmd.Flags().IntP("height", "h", 0, "输出图片高度")
+	convertCmd.Flags().IntP("width", "W", 0, "输出图片宽度")
+	convertCmd.Flags().IntP("height", "H", 0, "输出图片高度")
 	convertCmd.Flags().IntP("type", "t", 0, `转换类型:
     0: svg->png, 默认输入input.svg 输出output.png;
     1: png->jpg, 默认输入input.png 输出output.jpg;
