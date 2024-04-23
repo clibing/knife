@@ -49,7 +49,7 @@ var gocCmd = &cobra.Command{
 
 		var e error
 		if len(output) == 0 {
-			output, e = createDir(source)
+			output, e = CreateDir(source)
 			if e != nil {
 				fmt.Println("生成项目目录错误", e)
 				return
@@ -86,7 +86,7 @@ func NewGocCmd() *cobra.Command {
 	return gocCmd
 }
 
-func createDir(source string) (value string, e error) {
+func CreateDir(source string) (value string, e error) {
 	gopath := os.Getenv("GOPATH")
 	fmt.Println("GOPATH:", gopath)
 	if len(source) == 0 {
@@ -102,6 +102,13 @@ func createDir(source string) (value string, e error) {
 	tmp, _ := strings.CutPrefix(u.Path, "/")
 
 	tmp, _ = strings.CutSuffix(tmp, ".git")
+
+	if u.Host == "gitea.linuxcrypt.cn" {
+		v := strings.Split(tmp, "/")
+		if len(v) > 0 {
+			tmp = "clibing/" + v[len(v)-1]
+		}
+	}
 
 	value = filepath.Join(gopath, "src", u.Host, tmp)
 	return
