@@ -176,3 +176,11 @@ func ExistApplications(prefix, value string) (has bool, err error) {
 	has, err = ExistPath(prefix, "/Applications", value)
 	return
 }
+
+func InstallByBrew(prefix, cmd string) (err error) {
+	if len(prefix) == 0 {
+		prefix = "brew"
+	}
+	err = ExecuteCommand(prefix, "brew", []string{"install", cmd}, false)
+	return
+}

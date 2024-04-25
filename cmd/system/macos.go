@@ -16,8 +16,9 @@ var macOSCmd = &cobra.Command{
 需要先安装 Command Line Tools (CLT) 工具， 链接：https://developer.apple.com/download/all
 
 01. 安装.vimrc规范文件
-
-.`,
+02. 安装homebrew
+03. 安装golang
+04. 安装iterm2终端.`,
 
 	Run: func(c *cobra.Command, arg []string) {
 		overwrite, _ := c.Flags().GetBool("overwrite")
@@ -38,12 +39,11 @@ func init() {
 	macOSCmd.Flags().BoolP("overwrite", "o", false, "是否覆盖安装")
 
 	App = append(App,
-		pkg.NewOhmyzsh(),
-		// &pkg.Brew{},
+		&pkg.Brew{},
 		// &pkg.Vim{}, // pass
 		// &pkg.Go{},
 
-		// application
+		// // application
 		// &pkg.ITerm2{},
 	)
 }

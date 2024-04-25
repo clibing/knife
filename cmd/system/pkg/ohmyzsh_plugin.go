@@ -119,7 +119,7 @@ func (v *OhmyzshPlugin) GetPackage() *Package {
 	}
 }
 
-func NewOhmyzsh() *OhmyzshPlugin {
+func NewOhmyzshPlugin() *OhmyzshPlugin {
 	homeDir, _ := GetHomeDir("ohmyzsh")
 	return &OhmyzshPlugin{
 		Plugin: []*Plugin{

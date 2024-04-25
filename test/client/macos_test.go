@@ -7,7 +7,13 @@ import (
 )
 
 func TestMacos(t *testing.T) {
-	ohmyzsh := pkg.NewOhmyzsh()
+	ohmyzsh := pkg.NewOhmyzshPlugin()
 	p := ohmyzsh.GetPackage()
 	ohmyzsh.Install(p)
+}
+
+func TestMacos2(t *testing.T) {
+	b := &pkg.Brew{}
+	p := b.GetPackage()
+	b.Install(p)
 }

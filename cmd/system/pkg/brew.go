@@ -8,22 +8,31 @@ type Brew struct{}
  * 安装应用
  */
 func (v *Brew) Install(value *Package) bool {
-
-	err := ExecuteCommand(value.Name, "git", []string{
+	var err error
+	log.Printf("[%s]下载homebrew安装包", value.Name)
+	err = ExecuteCommand(value.Name, "git", []string{
 		"clone",
 		"--depth=1",
 		"https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/install.git",
 		"/tmp/brew-install",
 	}, false)
+
 	if err != nil {
 		log.Printf("[%s]克隆homebrew镜像异常: %s", value.Name, err.Error())
 		return false
 	}
-	err = ExecuteCommand(value.Name, "/bin/bash", []string{"brew-install/install.sh"}, false)
+
+	log.Printf("[%s]授权homebrew可执行脚本", value.Name)
+	// 授权
+	ExecuteCommand(value.Name, "chmod", []string{"+x", "/tmp/brew-install/install.sh"}, false)
+
+	log.Printf("[%s]安装homebrew", value.Name)
+	err = ExecuteCommand(value.Name, "/bin/bash", []string{"/tmp/brew-install/install.sh"}, false)
 	if err != nil {
 		log.Printf("[%s]安装homebrew异常: %s", value.Name, err.Error())
 		return false
 	}
+
 	export := FilterAppendEnv(value.Name, value.Env)
 	result, e := SettingEnv(value.Name, export, value.Target)
 	if e != nil {
@@ -54,7 +63,7 @@ func (v *Brew) Before(value *Package, overwrite bool) bool {
 }
 
 func (v *Brew) After(value *Package) {
-	e := ExecuteCommand(value.Name, "rm", []string{"-rf", "brew-install"}, false)
+	e := ExecuteCommand(value.Name, "rm", []string{"-rf", "/tmp/brew-install"}, false)
 	if e != nil {
 		log.Printf("[%s]删除brew-install目录失败", value.Name)
 	}
@@ -87,17 +96,5 @@ func (v *Brew) GetPackage() *Package {
 				Value: "https://pypi.tuna.tsinghua.edu.cn/simple",
 			},
 		},
-		Shell:       "",
-		Compress:    "",
-		Target:      "",
-		Description: "",
-		Source:      []string{},
 	}
-}
-func InstallByBrew(prefix, cmd string) (err error) {
-	if len(prefix) == 0 {
-		prefix = "brew"
-	}
-	err = ExecuteCommand(prefix, "brew", []string{"install", cmd}, false)
-	return
 }

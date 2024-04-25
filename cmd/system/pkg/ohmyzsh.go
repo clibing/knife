@@ -4,9 +4,7 @@ import (
 	"log"
 )
 
-type Ohmyzsh struct {
-	Plugin []*Plugin
-}
+type Ohmyzsh struct{}
 
 /**
  * 安装应用
