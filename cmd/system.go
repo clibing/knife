@@ -73,7 +73,7 @@ knife install -p /usr/local/bin
 var systemCmd = &cobra.Command{
 	Use:     "system",
 	Aliases: []string{"sys"},
-	Short:   `系统工具: arch, monitor, upgrade, maven, cron, beautify, rename`,
+	Short:   `系统工具: arch, monitor, upgrade, maven, cron, beautify, rename, macos`,
 	Run: func(c *cobra.Command, args []string) {
 		c.Help()
 	},
@@ -98,6 +98,7 @@ func init() {
 		system.NewCronCmd(),
 		system.NewBeautifyCmd(),
 		system.NewRenameCmd(),
+		system.NewMacOSCmd(),
 	)
 
 	// 转换器
