@@ -13,6 +13,8 @@ var macOSCmd = &cobra.Command{
 	Short: "macos 初始化",
 	Long: `安装macoOS初始化
 
+需要先安装 Command Line Tools (CLT) 工具， 链接：https://developer.apple.com/download/all
+
 01. 安装.vimrc规范文件
 
 .`,
@@ -36,13 +38,13 @@ func init() {
 	macOSCmd.Flags().BoolP("overwrite", "o", false, "是否覆盖安装")
 
 	App = append(App,
-		&pkg.Brew{},
-		&pkg.Vim{},
-		&pkg.Go{},
+		pkg.NewOhmyzsh(),
+		// &pkg.Brew{},
+		// &pkg.Vim{}, // pass
+		// &pkg.Go{},
 
 		// application
-		&pkg.ITerm2{},
-		pkg.NewOhmyzsh(),
+		// &pkg.ITerm2{},
 	)
 }
 

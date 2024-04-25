@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"fmt"
 	"log"
 	"os"
 )
@@ -313,7 +314,11 @@ let g:miniBufExplMapWindowNavArrows = 1
 let g:miniBufExplMapCTabSwitchBufs = 1
 let g:miniBufExplModSelTarget = 1	
 	`
-	os.WriteFile(value.Target, []byte(content), 0644)
+	err := os.WriteFile(value.Target, []byte(content), os.ModePerm)
+	if err != nil {
+		log.Printf("[%s]创建.vimrc失败%s", value.Name, err.Error())
+		return false
+	}
 	return true
 }
 
@@ -335,11 +340,11 @@ func (v *Vim) Before(value *Package, overwrite bool) bool {
 	_, e := os.Stat(value.Target)
 	// 不存在
 	if os.IsNotExist(e) {
-		log.Printf("[%s]配置文件:[%s], 已经存在\n", value.Name, value.Target)
-		return false
+		log.Printf("[%s]配置文件，安装目录为: %s", value.Name, value.Target)
+		return true
 	}
-	log.Printf("[%s]配置文件，安装目录为: %s", value.Name, value.Target)
-	return true
+	log.Printf("[%s]配置文件:[%s], 已经存在\n", value.Name, value.Target)
+	return false
 }
 
 /**
@@ -350,12 +355,13 @@ func (v *Vim) After(value *Package) {
 }
 
 func (v *Vim) GetPackage() *Package {
+	homeDir, _ := GetHomeDir("vim")
 	return &Package{
 		Name:        "vim",
 		Version:     "latest",
 		Shell:       "",
 		Compress:    "txt",
-		Target:      "~/.vimrc",
+		Target:      fmt.Sprintf("%s/.vimrc", homeDir),
 		Description: "vim规范文件",
 		Source:      []string{},
 	}
