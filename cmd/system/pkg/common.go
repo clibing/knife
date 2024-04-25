@@ -28,7 +28,7 @@ func processState(e error) *os.ProcessState {
 }
 
 func CheckCommand(prefix, value string) (has bool, err error) {
-	err = ExecuteCommand(prefix, "which", []string{"-s", value})
+	err = ExecuteCommand(prefix, "which", []string{"-s", value}, true)
 	if err != nil {
 		return
 	}
@@ -36,21 +36,28 @@ func CheckCommand(prefix, value string) (has bool, err error) {
 	return
 }
 
-func ExecuteCommand(prefix, bin string, value []string) (err error) {
+func ExecuteCommand(prefix, bin string, value []string, pipe bool) (err error) {
 	cmd := exec.Command(bin, value...)
-	stdOut, err := cmd.StdoutPipe()
-	cmd.Stdin = os.Stdin
-	cmd.Stderr = cmd.Stdout
-	go func(out io.ReadCloser) {
-		for {
-			tmp := make([]byte, 1024)
-			n, err := out.Read(tmp)
-			log.Printf("[%s]%s", prefix, string(tmp[:n]))
-			if err != nil {
-				break
+	if pipe {
+		cmd.Stdin = os.Stdin
+		stdOut, _ := cmd.StdoutPipe()
+		cmd.Stderr = cmd.Stdout
+		go func(out io.ReadCloser) {
+			for {
+				tmp := make([]byte, 1024)
+				n, err := out.Read(tmp)
+				log.Printf("[%s]%s", prefix, string(tmp[:n]))
+				if err != nil {
+					break
+				}
 			}
-		}
-	}(stdOut)
+		}(stdOut)
+		defer stdOut.Close()
+	} else {
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+	}
 
 	if err = cmd.Start(); err != nil {
 		return
@@ -59,7 +66,6 @@ func ExecuteCommand(prefix, bin string, value []string) (err error) {
 	if err = cmd.Wait(); err != nil {
 		return
 	}
-	defer stdOut.Close()
 	return
 }
 

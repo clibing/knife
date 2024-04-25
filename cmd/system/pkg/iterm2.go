@@ -9,13 +9,13 @@ func (v *ITerm2) Install(value *Package) bool {
 	tmp := "/tmp/iterm2.zip"
 
 	url := value.Source[0]
-	err := ExecuteCommand(value.Name, "curl", []string{"-fsSL", "-o", tmp, url})
+	err := ExecuteCommand(value.Name, "curl", []string{"-fsSL", "-o", tmp, url}, false)
 	if err != nil {
 		log.Printf("[%s]下载文件异常", value.Name)
 		return false
 	}
 
-	err = ExecuteCommand(value.Name, "unzip", []string{tmp, "-d", value.Target})
+	err = ExecuteCommand(value.Name, "unzip", []string{tmp, "-d", value.Target}, false)
 	if err != nil {
 		log.Printf("[%s]解药到%s失败", value.Name, err.Error())
 		return false
