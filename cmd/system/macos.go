@@ -42,6 +42,7 @@ func init() {
 
 		// application
 		&pkg.ITerm2{},
+		pkg.NewOhmyzsh(),
 	)
 }
 
