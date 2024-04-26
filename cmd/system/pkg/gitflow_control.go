@@ -7,6 +7,7 @@ import (
 )
 
 type GitflowControl struct {
+	Log
 }
 
 func (v *GitflowControl) Install(value *Package) bool {
@@ -51,4 +52,10 @@ func (v *GitflowControl) GetPackage() *Package {
 			"https://github.com/clibing/gitflow-control.git",
 		},
 	}
+}
+
+func NewGitflowControl() *GitflowControl {
+	g := &GitflowControl{}
+	g.Log = Log{Key: g.Key()}
+	return g
 }

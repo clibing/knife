@@ -11,6 +11,7 @@ import (
 
 type OhmyzshPlugin struct {
 	Plugin []*Plugin
+	Log
 }
 
 type Plugin struct {
@@ -133,9 +134,13 @@ func (v *OhmyzshPlugin) GetPackage() *Package {
 	}
 }
 
+func (v *OhmyzshPlugin) Key() string {
+	return "ohmyzsh-plugin"
+}
+
 func NewOhmyzshPlugin() *OhmyzshPlugin {
 	homeDir, _ := GetHomeDir("ohmyzsh")
-	return &OhmyzshPlugin{
+	o := &OhmyzshPlugin{
 		Plugin: []*Plugin{
 			{
 				Name:   "zsh-syntax-highlighting",
@@ -150,8 +155,6 @@ func NewOhmyzshPlugin() *OhmyzshPlugin {
 			},
 		},
 	}
-}
-
-func (v *OhmyzshPlugin) Key() string {
-	return "ohmyzsh-plugin"
+	o.Log = Log{Key: o.Key()}
+	return o
 }

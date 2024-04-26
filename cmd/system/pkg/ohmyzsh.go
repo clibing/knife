@@ -5,29 +5,31 @@ import (
 	"log"
 )
 
-type Ohmyzsh struct{}
+type Ohmyzsh struct {
+	Log
+}
 
 /**
  * 安装应用
  */
 func (v *Ohmyzsh) Install(value *Package) bool {
-	log.Printf("[%s]下载安装ohmyzsh安装脚本\n", value.Name)
+	v.Log.Println("下载安装ohmyzsh安装脚本")
 	err := ExecuteCommand(value.Name, "curl", []string{"-fsSL", "https://install.ohmyz.sh/", "-o", "/tmp/ohmyzsh.sh"}, false)
 	if err != nil {
-		log.Printf("[%s]下载安装脚本异常%s\n", value.Name, err)
+		v.Log.Println("下载安装脚本异常%s", err)
 		return false
 	}
 
-	log.Printf("[%s]授权ohmyzsh可执行脚本\n", value.Name)
+	v.Log.Println("授权ohmyzsh可执行脚本")
 	// 授权
 	ExecuteCommand(value.Name, "chmod", []string{"+x", "/tmp/ohmyzsh.sh"}, false)
 
-	log.Printf("[%s]安装ohmyzsh\n", value.Name)
+	v.Log.Println("安装ohmyzsh")
 	err = ExecuteCommand(value.Name, "sh", []string{"/tmp/ohmyzsh.sh"}, false)
 	if err != nil {
-		log.Printf("[%s]安装失败%s\n", value.Name, err)
+		v.Log.Println("安装失败%s", err.Error())
 	}
-	log.Printf("[%s]安装成功\n", value.Name)
+	v.Log.Println("安装成功")
 	return true
 }
 
@@ -48,13 +50,13 @@ func (v *Ohmyzsh) Before(value *Package, overwrite bool) bool {
 	homeDir, _ := GetHomeDir(value.Name)
 	has, _ := ExistPath(value.Name, homeDir, ".oh-my-zsh")
 	if overwrite {
-		log.Printf("[%s]强制安装\n", value.Name)
+		v.Log.Println("强制安装")
 		ExecuteCommand(value.Name, "rm", []string{"-rf", "/tmp/ohmyzsh.sh"}, false)
 		ExecuteCommand(value.Name, "rm", []string{"-rf", fmt.Sprintf("%s/.oh-my-zsh", homeDir)}, false)
 		return true
 	}
 	if has {
-		log.Printf("[%s]已安装\n", value.Name)
+		v.Log.Println("已安装")
 	}
 	return !has
 }
@@ -78,4 +80,11 @@ func (v *Ohmyzsh) GetPackage() *Package {
 
 func (v *Ohmyzsh) Key() string {
 	return "ohmyzsh"
+}
+
+func NewOhmyzsh() *Ohmyzsh {
+	o := &Ohmyzsh{}
+	l := Log{Key: o.Key()}
+	o.Log = l
+	return o
 }

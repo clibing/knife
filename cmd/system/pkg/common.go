@@ -184,3 +184,30 @@ func InstallByBrew(prefix, cmd string) (err error) {
 	err = ExecuteCommand(prefix, "brew", []string{"install", cmd}, false)
 	return
 }
+
+/**
+ * format 不需要 增加 [%s]
+ * parameters 格式化中的对应的占位
+ *    第一个参数 prefix 前缀
+ */
+func LogFormatted(format string, parameters ...interface{}) (err error) {
+	var values []interface{}
+	values = append(values, parameters...)
+
+	format = "[%s] " + format + "\n"
+	log.Printf(format, values...)
+	return
+}
+
+type Log struct {
+	Key string
+}
+
+func (v *Log) Println(format string, args ...interface{}) {
+	var m []interface{}
+	m = append(m, v.Key)
+	if len(args) > 0 {
+		m = append(m, args...)
+	}
+	LogFormatted(format, m...)
+}

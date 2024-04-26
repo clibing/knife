@@ -71,14 +71,14 @@ func execute(overwrite bool, run pkg.Application) {
 
 func init() {
 	add([]pkg.Application{
-		&pkg.Brew{},
-		&pkg.Vim{},
-		&pkg.Golang{},
+		pkg.NewBrew(),
+		pkg.NewVim(),
+		pkg.NewGolang(),
 		pkg.NewOhmyzshPlugin(),
 
-		&pkg.GitflowControl{},
+		pkg.NewGitflowControl(),
 
-		&pkg.ITerm2{},
+		pkg.NewITerm2(),
 	},
 	)
 

@@ -3,6 +3,7 @@ package pkg
 import "log"
 
 type ITerm2 struct {
+	Log
 }
 
 func (v *ITerm2) Install(value *Package) bool {
@@ -58,4 +59,12 @@ func (v *ITerm2) GetPackage() *Package {
 
 func (v *ITerm2) Key() string {
 	return "iTerm2"
+}
+
+func NewITerm2() *ITerm2 {
+	i := &ITerm2{}
+	l := Log{Key: i.Key()}
+	i.Log = l
+	return i
+
 }

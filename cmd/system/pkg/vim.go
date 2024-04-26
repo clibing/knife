@@ -2,11 +2,12 @@ package pkg
 
 import (
 	"fmt"
-	"log"
 	"os"
 )
 
-type Vim struct{}
+type Vim struct {
+	Log
+}
 
 /**
  * 安装应用
@@ -316,7 +317,7 @@ let g:miniBufExplModSelTarget = 1
 	`
 	err := os.WriteFile(value.Target, []byte(content), os.ModePerm)
 	if err != nil {
-		log.Printf("[%s]创建.vimrc失败%s\n", value.Name, err.Error())
+		v.Log.Println("创建.vimrc失败%s", err.Error())
 		return false
 	}
 	return true
@@ -334,16 +335,16 @@ func (v *Vim) Upgrade(value *Package) bool {
  */
 func (v *Vim) Before(value *Package, overwrite bool) bool {
 	if overwrite {
-		log.Printf("[%s]配置文件，强制安装: %s\n", value.Name, value.Target)
+		v.Log.Println("配置文件，强制安装: %s", value.Target)
 		return true
 	}
 	_, e := os.Stat(value.Target)
 	// 不存在
 	if os.IsNotExist(e) {
-		log.Printf("[%s]配置文件，安装目录为: %s\n", value.Name, value.Target)
+		v.Log.Println("配置文件，安装目录为: %s", value.Target)
 		return true
 	}
-	log.Printf("[%s]配置文件:[%s], 已经存在\n", value.Name, value.Target)
+	v.Log.Println("配置文件:[%s], 已经存在", value.Target)
 	return false
 }
 
@@ -351,7 +352,7 @@ func (v *Vim) Before(value *Package, overwrite bool) bool {
  * 后置事件
  */
 func (v *Vim) After(value *Package) {
-	log.Printf("[%s]安装结束\n", value.Name)
+	v.Log.Println("安装结束")
 }
 
 func (v *Vim) GetPackage() *Package {
@@ -368,4 +369,11 @@ func (v *Vim) GetPackage() *Package {
 
 func (v *Vim) Key() string {
 	return "vim"
+}
+
+func NewVim() *Vim {
+	v := &Vim{}
+	l := Log{Key: v.Key()}
+	v.Log = l
+	return v
 }

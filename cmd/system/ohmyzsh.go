@@ -17,7 +17,7 @@ var ohmyzshCmd = &cobra.Command{
 
 	Run: func(c *cobra.Command, arg []string) {
 		overwrite, _ := c.Flags().GetBool("overwrite")
-		ozh := &pkg.Ohmyzsh{}
+		ozh := pkg.NewOhmyzsh()
 
 		pd := ozh.GetPackage()
 		check := ozh.Before(pd, overwrite)

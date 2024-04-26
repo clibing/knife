@@ -2,11 +2,10 @@ package pkg
 
 import (
 	"fmt"
-	"log"
 	"os/user"
 )
 
-type Golang struct{}
+type Golang struct{ Log }
 
 /**
  * 安装应用
@@ -14,17 +13,17 @@ type Golang struct{}
 func (v *Golang) Install(value *Package) bool {
 	has, e := CheckCommand(value.Name, value.Bin)
 	if !has {
-		log.Printf("[%s]暂未安装, has: %t, err: %s\n", value.Name, has, e)
+		v.Log.Println("暂未安装, has: %t, err: %s", has, e)
 	}
 	if !has {
-		log.Printf("[%s]安装%s\n", value.Name, value.Bin)
+		v.Log.Println("安装%s", value.Bin)
 		InstallByBrew(value.Name, value.Bin)
 	}
 
 	result := FilterAppendEnv(value.Name, value.Env)
 	status, e := SettingEnv(value.Name, result, value.Target)
 	if e != nil {
-		log.Printf("[%s]%s\n", value.Name, e.Error())
+		v.Log.Println("%s", e.Error())
 		return false
 	}
 	return status
@@ -43,11 +42,11 @@ func (v *Golang) Upgrade(value *Package) bool {
 func (v *Golang) Before(value *Package, overwrite bool) bool {
 	profile, e := GetCurrentProfile(value.Name)
 	if e != nil {
-		log.Printf("[%s]检查用户配置异常，错误信息:%s\n", value.Name, e.Error())
+		v.Log.Println("检查用户配置异常，错误信息:%s", e.Error())
 		return false
 	}
 
-	log.Printf("[%s]开始安装:%s, 追加内容\n", value.Name, profile)
+	v.Log.Println("开始安装:%s, 追加内容", profile)
 	value.Target = profile
 	return true
 }
@@ -56,13 +55,13 @@ func (v *Golang) Before(value *Package, overwrite bool) bool {
  * 后置事件
  */
 func (v *Golang) After(value *Package) {
-	log.Printf("[%s]安装完成\n", value.Name)
+	v.Log.Println("安装完成")
 }
 
 func (v *Golang) GetPackage() *Package {
 	u, e := user.Current()
 	if e != nil {
-		log.Println("获取当前用户名异常", e)
+		v.Log.Println("获取当前用户名异常:%s", e)
 	}
 
 	return &Package{
@@ -95,4 +94,11 @@ func (v *Golang) GetPackage() *Package {
 
 func (v *Golang) Key() string {
 	return "golang"
+}
+
+func NewGolang() *Golang {
+	g := &Golang{}
+	l := Log{Key: g.Key()}
+	g.Log = l
+	return g
 }
