@@ -15,6 +15,7 @@ func (v *Software) Upgrade(value *Package) bool {
 }
 
 func (v *Software) Before(value *Package, overwrite bool) bool {
+	ExecuteCommand(value.Name, "brew", []string{"tap", "git-chglog/git-chglog"}, false)
 	return true
 }
 
