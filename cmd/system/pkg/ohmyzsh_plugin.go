@@ -60,7 +60,6 @@ func (v *OhmyzshPlugin) Install(value *Package) bool {
 	// 创建新的Writer
 	writer := bufio.NewWriter(target)
 
-
 	// 逐行扫描
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -77,6 +76,10 @@ func (v *OhmyzshPlugin) Install(value *Package) bool {
 		log.Printf("[%s]逐行扫描配置文件异常%s", value.Name, err)
 		return false
 	}
+	backupFile := fmt.Sprintf("%s.backup.%d", profile, time.Now().Unix())
+	ExecuteCommand(value.Name, "mv", []string{profile, backupFile}, false)
+	ExecuteCommand(value.Name, "mv", []string{newFile, profile}, false)
+
 	return true
 }
 
