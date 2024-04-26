@@ -16,6 +16,11 @@ limitations under the License.
 package main
 
 import (
+	"context"
+	"log"
+	"os"
+	"os/signal"
+
 	"github.com/clibing/knife/cmd"
 )
 
@@ -26,5 +31,8 @@ var (
 )
 
 func main() {
+	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
 	cmd.Execute(version, buildDate, commitID)
+	<-ctx.Done()
+	log.Println("context canceled")
 }
