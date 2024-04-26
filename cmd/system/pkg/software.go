@@ -41,6 +41,7 @@ func (v *Software) GetPackage() *Package {
 			"noti",
 			"ffmpeg",
 			"git-chglog",
+			"tree",
 		},
 	}
 }

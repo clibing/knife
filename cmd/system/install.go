@@ -13,9 +13,11 @@ var App map[string]pkg.Application = make(map[string]pkg.Application)
 
 // macOSCmd represents the cron command
 var macOSCmd = &cobra.Command{
-	Use:   "macos",
-	Short: "macos 初始化",
+	Use:   "install",
+	Short: "install 初始化一些软件",
 	Long: `安装macoOS初始化
+
+主要应用于macos系统
 
 需要先安装 Command Line Tools (CLT) 工具， 链接：https://developer.apple.com/download/all
 
