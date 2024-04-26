@@ -40,7 +40,7 @@ knife system install -o -s vim
 		values, _ := c.Flags().GetStringSlice("select")
 
 		if len(values) > 0 {
-			log.Println("选择性执行安装")
+			log.Println("选择性执行安装: ", strings.Join(values, ","))
 			for _, key := range values {
 				if len(key) == 0 {
 					continue
