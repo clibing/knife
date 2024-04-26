@@ -83,6 +83,7 @@ func (v *OhmyzshPlugin) Install(value *Package) bool {
  * 升级应用
  */
 func (v *OhmyzshPlugin) Upgrade(value *Package) bool {
+	ExecuteCommand(value.Name, "omz", []string{"update"}, false)
 	return true
 }
 
@@ -110,7 +111,7 @@ func (v *OhmyzshPlugin) Before(value *Package, overwrite bool) bool {
 
 func (v *OhmyzshPlugin) GetPackage() *Package {
 	return &Package{
-		Name:        "ohmyzsh-plugin",
+		Name:        v.Key(),
 		Version:     "latest",
 		Env:         []*Env{},
 		Compress:    "git",
@@ -136,4 +137,8 @@ func NewOhmyzshPlugin() *OhmyzshPlugin {
 			},
 		},
 	}
+}
+
+func (v *OhmyzshPlugin) Key() string {
+	return "ohmyzsh-plugin"
 }

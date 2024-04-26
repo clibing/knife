@@ -4,6 +4,9 @@ type Software struct {
 }
 
 func (v *Software) Install(value *Package) bool {
+	for _, sf := range value.Source {
+		ExecuteCommand(value.Name, "brew", []string{"install", sf}, false)
+	}
 	return true
 }
 
@@ -20,7 +23,7 @@ func (v *Software) After(value *Package) {
 
 func (v *Software) GetPackage() *Package {
 	return &Package{
-		Name:        "Software",
+		Name:        v.Key(),
 		Bin:         "",
 		Version:     "latest",
 		Env:         []*Env{},
@@ -40,4 +43,8 @@ func (v *Software) GetPackage() *Package {
 			"git-chglog",
 		},
 	}
+}
+
+func (v *Software) Key() string {
+	return "Software"
 }

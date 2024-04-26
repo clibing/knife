@@ -51,7 +51,7 @@ func (v *Ohmyzsh) Before(value *Package, overwrite bool) bool {
 
 func (v *Ohmyzsh) GetPackage() *Package {
 	return &Package{
-		Name:        "ohmyzsh",
+		Name:        v.Key(),
 		Bin:         "ohmyzsh",
 		Version:     "latest",
 		Env:         []*Env{},
@@ -64,4 +64,8 @@ func (v *Ohmyzsh) GetPackage() *Package {
 			"$(curl -fsSL https://install.ohmyz.sh/)",
 		},
 	}
+}
+
+func (v *Ohmyzsh) Key() string {
+	return "ohmyzsh"
 }

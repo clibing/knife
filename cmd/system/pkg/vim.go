@@ -357,13 +357,15 @@ func (v *Vim) After(value *Package) {
 func (v *Vim) GetPackage() *Package {
 	homeDir, _ := GetHomeDir("vim")
 	return &Package{
-		Name:        "vim",
+		Name:        v.Key(),
+		Bin:         "vim",
 		Version:     "latest",
-		Shell:       "",
-		Compress:    "txt",
 		Target:      fmt.Sprintf("%s/.vimrc", homeDir),
 		Description: "vim规范文件",
 		Source:      []string{},
 	}
+}
 
+func (v *Vim) Key() string {
+	return "Vim"
 }

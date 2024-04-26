@@ -23,6 +23,11 @@ type Package struct {
  */
 type Application interface {
 	/**
+	 * 应用的关键字
+	 */
+	Key() string
+
+	/**
 	 * 获取安装
 	 */
 	GetPackage() *Package

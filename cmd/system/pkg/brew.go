@@ -56,10 +56,8 @@ func (v *Brew) Before(value *Package, overwrite bool) bool {
 	}
 
 	has, e := CheckCommand(value.Name, value.Bin)
-	if e != nil {
-		return false
-	}
-	return has
+	log.Printf("[%s]检查当前命令是否存在: %t, err: %s\n", value.Name, has, e)
+	return !has
 }
 
 func (v *Brew) After(value *Package) {
@@ -67,11 +65,16 @@ func (v *Brew) After(value *Package) {
 	if e != nil {
 		log.Printf("[%s]删除brew-install目录失败", value.Name)
 	}
+
+	// ExecuteCommand(value.Name, "brew", []string{"update", "--verbose"}, false)
+
+	// ExecuteCommand(value.Name, "brew", []string{"upgrade", "--verbose"}, false)
+	ExecuteCommand(value.Name, "brew", []string{"help"}, false)
 }
 
 func (v *Brew) GetPackage() *Package {
 	return &Package{
-		Name:    "Homebrew",
+		Name:    v.Key(),
 		Bin:     "brew",
 		Version: "latest",
 		Env: []*Env{
@@ -97,4 +100,8 @@ func (v *Brew) GetPackage() *Package {
 			},
 		},
 	}
+}
+
+func (v *Brew) Key() string {
+	return "Homebrew"
 }

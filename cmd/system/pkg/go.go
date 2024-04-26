@@ -62,7 +62,7 @@ func (v *Go) GetPackage() *Package {
 	}
 
 	return &Package{
-		Name:    "Go",
+		Name:    v.Key(),
 		Bin:     "go",
 		Version: "latest",
 		Env: []*Env{
@@ -87,4 +87,9 @@ func (v *Go) GetPackage() *Package {
 		Description: "Go环境变量",
 		Source:      []string{},
 	}
+}
+
+
+func (v *Go) Key() string {
+	return "Go"
 }

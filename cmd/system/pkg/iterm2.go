@@ -42,7 +42,7 @@ func (v *ITerm2) After(value *Package) {
 
 func (v *ITerm2) GetPackage() *Package {
 	return &Package{
-		Name:        "iTerm2",
+		Name:        v.Key(),
 		Bin:         "iTerm.app",
 		Version:     "latest",
 		Compress:    "zip",
@@ -50,4 +50,8 @@ func (v *ITerm2) GetPackage() *Package {
 		Description: "iTerm2是一个开源的 macOS 终端模拟器。",
 		Source:      []string{"https://iterm2.com/downloads/stable/latest"},
 	}
+}
+
+func (v *ITerm2) Key() string {
+	return "iTerm2"
 }
