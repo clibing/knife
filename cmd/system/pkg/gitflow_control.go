@@ -20,6 +20,11 @@ func (v *GitflowControl) Upgrade(value *Package) bool {
 }
 
 func (v *GitflowControl) Before(value *Package, overwrite bool) bool {
+	has, _ := CheckCommand(value.Name, "knife")
+	if !has {
+		log.Printf("[%s]请先安装本工具knife, https://github.com/clibing/knife/releases.\n", value.Name)
+		return has
+	}
 	return true
 }
 
