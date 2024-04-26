@@ -2,7 +2,6 @@ package pkg
 
 import (
 	"fmt"
-	"log"
 )
 
 type Ohmyzsh struct {
