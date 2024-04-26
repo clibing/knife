@@ -106,6 +106,10 @@ func (o *OhmyzshPlugin) GetPlugin() (key []string) {
 func (v *OhmyzshPlugin) Before(value *Package, overwrite bool) bool {
 	homeDir, _ := GetHomeDir(value.Name)
 	has, _ := ExistPath(value.Name, homeDir, ".oh-my-zsh")
+	if overwrite {
+		log.Printf("[%s]强制安装", value.Name)
+		return true
+	}
 	return has
 }
 

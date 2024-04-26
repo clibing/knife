@@ -32,6 +32,10 @@ func (v *ITerm2) Before(value *Package, overwrite bool) bool {
 	if e != nil {
 		log.Printf("[%s]检查应用异常: %s", value.Name, e.Error())
 	}
+	if overwrite {
+		log.Printf("[%s]强制安装", value.Name)
+		return true
+	}
 	// 不存在需要执行安装
 	return !has
 }

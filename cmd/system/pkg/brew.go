@@ -55,6 +55,12 @@ func (v *Brew) Before(value *Package, overwrite bool) bool {
 		return false
 	}
 
+	if overwrite {
+		ExecuteCommand(value.Name, "rm", []string{"-rf", "/tmp/brew-install"}, false)
+		log.Printf("[%s]强制安装", value.Name)
+		return true
+	}
+
 	has, e := CheckCommand(value.Name, value.Bin)
 	log.Printf("[%s]检查当前命令是否存在: %t, err: %s\n", value.Name, has, e)
 	return !has

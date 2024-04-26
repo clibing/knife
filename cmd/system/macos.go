@@ -32,6 +32,9 @@ var macOSCmd = &cobra.Command{
 		if len(values) > 0 {
 			log.Println("选择性执行安装")
 			for _, key := range values {
+				if len(key) == 0 {
+					continue
+				}
 				log.Println("正在安装:", key)
 				execute(overwrite, App[key])
 			}
