@@ -64,7 +64,7 @@ func init() {
 		&pkg.Brew{},
 		&pkg.Vim{},
 		&pkg.Go{},
-		&pkg.OhmyzshPlugin{},
+		pkg.NewOhmyzshPlugin(),
 
 		&pkg.ITerm2{},
 	},

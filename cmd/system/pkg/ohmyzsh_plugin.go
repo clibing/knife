@@ -40,26 +40,26 @@ func (v *OhmyzshPlugin) Install(value *Package) bool {
 	}
 
 	log.Printf("[%s]配置文件", value.Name)
-	file, err := os.Open(profile) // 打开文件
+	currentFile, err := os.Open(profile) // 打开文件
 	if err != nil {
 		log.Printf("[%s]打开配置文件异常%s", value.Name, err)
 		return false
 	}
-	defer file.Close() // 确保文件在函数结束时关闭
+	defer currentFile.Close() // 确保文件在函数结束时关闭
+	// 创建新的Scanner
+	scanner := bufio.NewScanner(currentFile)
 
-	target := fmt.Sprintf("%s.%d", profile, time.Now().Unix())
-	upgrade, err := os.Create(target)
+	newFile := fmt.Sprintf("%s.%d", profile, time.Now().Unix())
+	target, err := os.Create(newFile)
 	if err != nil {
-		log.Printf("[%s]创建临时配置文件[%s], 发生异常%s", value.Name, target, err)
+		log.Printf("[%s]创建临时配置文件[%s], 发生异常%s", value.Name, newFile, err)
 		return false
 	}
-	defer upgrade.Close() // 升级配置文件 结束时关闭
+	defer target.Close() // 升级配置文件 结束时关闭
 
 	// 创建新的Writer
-	writer := bufio.NewWriter(upgrade)
+	writer := bufio.NewWriter(target)
 
-	// 创建新的Scanner
-	scanner := bufio.NewScanner(file)
 
 	// 逐行扫描
 	for scanner.Scan() {
@@ -71,6 +71,7 @@ func (v *OhmyzshPlugin) Install(value *Package) bool {
 		}
 		writer.WriteString(line + "\n")
 	}
+	writer.Flush()
 
 	if err := scanner.Err(); err != nil {
 		log.Printf("[%s]逐行扫描配置文件异常%s", value.Name, err)
@@ -108,6 +109,8 @@ func (v *OhmyzshPlugin) Before(value *Package, overwrite bool) bool {
 	has, _ := ExistPath(value.Name, homeDir, ".oh-my-zsh")
 	if overwrite {
 		log.Printf("[%s]强制安装", value.Name)
+		ExecuteCommand(value.Name, "rm", []string{"-rf", fmt.Sprintf("%s/%s", homeDir, ".oh-my-zsh/custom/plugins/zsh-syntax-highlighting")}, false)
+		ExecuteCommand(value.Name, "rm", []string{"-rf", fmt.Sprintf("%s/%s", homeDir, ".oh-my-zsh/custom/plugins/zsh-autosuggestions")}, false)
 		return true
 	}
 	return has

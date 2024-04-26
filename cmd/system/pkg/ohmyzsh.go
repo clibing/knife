@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -48,7 +49,12 @@ func (v *Ohmyzsh) Before(value *Package, overwrite bool) bool {
 	has, _ := ExistPath(value.Name, homeDir, ".oh-my-zsh")
 	if overwrite {
 		log.Printf("[%s]强制安装", value.Name)
+		ExecuteCommand(value.Name, "rm", []string{"-rf", "/tmp/ohmyzsh.sh"}, false)
+		ExecuteCommand(value.Name, "rm", []string{"-rf", fmt.Sprintf("%s/.oh-my-zsh", homeDir)}, false)
 		return true
+	}
+	if has {
+		log.Printf("[%s]已安装", value.Name)
 	}
 	return !has
 }
