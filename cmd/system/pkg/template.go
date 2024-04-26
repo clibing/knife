@@ -21,3 +21,7 @@ func (v *Template) After(value *Package) {
 func (v *Template) GetPackage() *Package {
 	return &Package{}
 }
+
+func (v *Template) Key() string {
+	return "template"
+}

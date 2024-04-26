@@ -27,10 +27,14 @@ func (v *GitflowControl) After(value *Package) {
 	log.Printf("[%s]安装完成\n", value.Name)
 }
 
+func (v *GitflowControl) Key() string {
+	return "gitflow-control"
+}
+
 func (v *GitflowControl) GetPackage() *Package {
 	gopath := os.Getenv("GOPATH")
 	return &Package{
-		Name:        "gitflow-control",
+		Name:        v.Key(),
 		Bin:         "gitflow-control",
 		Version:     "latest",
 		Env:         []*Env{},
