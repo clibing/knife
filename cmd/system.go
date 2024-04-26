@@ -109,7 +109,7 @@ func init() {
 var systemCmd = &cobra.Command{
 	Use:     "system",
 	Aliases: []string{"sys"},
-	Short:   `系统工具: arch, monitor, upgrade, maven, cron, beautify, rename, macos, ohmyzsh`,
+	Short:   `系统工具: arch, monitor, upgrade, maven, cron, beautify, rename, install, ohmyzsh`,
 	Run: func(c *cobra.Command, args []string) {
 		c.Help()
 	},
