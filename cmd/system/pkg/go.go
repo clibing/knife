@@ -15,8 +15,12 @@ func (v *Go) Install(value *Package) bool {
 	has, e := CheckCommand(value.Name, value.Bin)
 	if !has {
 		log.Printf("[%s]暂未安装, has: %t, err: %s\n", value.Name, has, e)
-
 	}
+	if !has {
+		log.Printf("[%s]安装%s\n", value.Name, value.Bin)
+		InstallByBrew(value.Name, value.Bin)
+	}
+
 	result := FilterAppendEnv(value.Name, value.Env)
 	status, e := SettingEnv(value.Name, result, value.Target)
 	if e != nil {
@@ -63,7 +67,7 @@ func (v *Go) GetPackage() *Package {
 
 	return &Package{
 		Name:    v.Key(),
-		Bin:     "go",
+		Bin:     "golang",
 		Version: "latest",
 		Env: []*Env{
 			{
@@ -88,7 +92,6 @@ func (v *Go) GetPackage() *Package {
 		Source:      []string{},
 	}
 }
-
 
 func (v *Go) Key() string {
 	return "Go"
