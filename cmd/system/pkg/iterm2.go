@@ -11,13 +11,13 @@ func (v *ITerm2) Install(value *Package) bool {
 	url := value.Source[0]
 	err := ExecuteCommand(value.Name, "curl", []string{"-fsSL", "-o", tmp, url}, false)
 	if err != nil {
-		log.Printf("[%s]下载文件异常", value.Name)
+		log.Printf("[%s]下载文件异常\n", value.Name)
 		return false
 	}
 
 	err = ExecuteCommand(value.Name, "unzip", []string{tmp, "-d", value.Target}, false)
 	if err != nil {
-		log.Printf("[%s]解药到%s失败", value.Name, err.Error())
+		log.Printf("[%s]解药到%s失败\n", value.Name, err.Error())
 		return false
 	}
 	return true
@@ -30,10 +30,10 @@ func (v *ITerm2) Upgrade(value *Package) bool {
 func (v *ITerm2) Before(value *Package, overwrite bool) bool {
 	has, e := ExistApplications(value.Name, value.Bin)
 	if e != nil {
-		log.Printf("[%s]检查应用异常: %s", value.Name, e.Error())
+		log.Printf("[%s]检查应用异常: %s\n", value.Name, e.Error())
 	}
 	if overwrite {
-		log.Printf("[%s]强制安装", value.Name)
+		log.Printf("[%s]强制安装\n", value.Name)
 		return true
 	}
 	// 不存在需要执行安装

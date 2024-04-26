@@ -316,7 +316,7 @@ let g:miniBufExplModSelTarget = 1
 	`
 	err := os.WriteFile(value.Target, []byte(content), os.ModePerm)
 	if err != nil {
-		log.Printf("[%s]创建.vimrc失败%s", value.Name, err.Error())
+		log.Printf("[%s]创建.vimrc失败%s\n", value.Name, err.Error())
 		return false
 	}
 	return true
@@ -334,13 +334,13 @@ func (v *Vim) Upgrade(value *Package) bool {
  */
 func (v *Vim) Before(value *Package, overwrite bool) bool {
 	if overwrite {
-		log.Printf("[%s]配置文件，强制安装: %s", value.Name, value.Target)
+		log.Printf("[%s]配置文件，强制安装: %s\n", value.Name, value.Target)
 		return true
 	}
 	_, e := os.Stat(value.Target)
 	// 不存在
 	if os.IsNotExist(e) {
-		log.Printf("[%s]配置文件，安装目录为: %s", value.Name, value.Target)
+		log.Printf("[%s]配置文件，安装目录为: %s\n", value.Name, value.Target)
 		return true
 	}
 	log.Printf("[%s]配置文件:[%s], 已经存在\n", value.Name, value.Target)

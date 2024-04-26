@@ -46,7 +46,7 @@ func ExecuteCommand(prefix, bin string, value []string, pipe bool) (err error) {
 			for {
 				tmp := make([]byte, 1024)
 				n, err := out.Read(tmp)
-				log.Printf("[%s]%s", prefix, string(tmp[:n]))
+				log.Printf("[%s]%s\n", prefix, string(tmp[:n]))
 				if err != nil {
 					break
 				}
@@ -92,7 +92,7 @@ func GetHomeDir(prefix string) (homeDir string, e error) {
 	var u *user.User
 	u, e = user.Current()
 	if e != nil {
-		log.Printf("[%s]获取当前用户名异常, %s", prefix, e)
+		log.Printf("[%s]获取当前用户名异常, %s\n", prefix, e)
 	}
 	homeDir = u.HomeDir
 	return
@@ -130,7 +130,7 @@ func FilterAppendEnv(prefix string, envs []*Env) (export []string) {
  */
 func SettingEnv(prefix string, value []string, target string) (result bool, err error) {
 	if len(value) == 0 {
-		log.Printf("[%s]不需要追加配置", prefix)
+		log.Printf("[%s]不需要追加配置\n", prefix)
 		result = true
 		return
 	}
@@ -138,17 +138,17 @@ func SettingEnv(prefix string, value []string, target string) (result bool, err 
 	if len(target) > 0 {
 		pd, err = os.OpenFile(target, os.O_RDWR|os.O_APPEND, os.ModePerm)
 		if err != nil {
-			log.Printf("[%s]打开配置文件异常: %s", prefix, err.Error())
+			log.Printf("[%s]打开配置文件异常: %s\n", prefix, err.Error())
 			return
 		}
 		defer pd.Close()
 		pd.Seek(0, io.SeekEnd)
 
 		for _, line := range value {
-			log.Printf("[%s]追加配置 %s", prefix, line)
+			log.Printf("[%s]追加配置 %s\n", prefix, line)
 			_, e := pd.WriteString(line + "\n")
 			if e != nil {
-				log.Printf("[%s]写入配置异常 %s", prefix, e)
+				log.Printf("[%s]写入配置异常 %s\n", prefix, e)
 				break
 			}
 		}

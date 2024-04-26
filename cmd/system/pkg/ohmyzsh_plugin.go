@@ -26,23 +26,23 @@ type Plugin struct {
 func (v *OhmyzshPlugin) Install(value *Package) bool {
 	var err error
 	for _, plugin := range v.Plugin {
-		log.Printf("[%s]安装插件:%s", value.Name, plugin.Name)
+		log.Printf("[%s]安装插件:%s\n", value.Name, plugin.Name)
 		err = ExecuteCommand(value.Name, "git", []string{"clone", plugin.Source, plugin.Target}, false)
 		if err != nil {
-			log.Printf("[%s]安装插件[%s]失败%s", value.Name, plugin.Name, err)
+			log.Printf("[%s]安装插件[%s]失败%s\n", value.Name, plugin.Name, err)
 			return false
 		}
 	}
 
 	profile, e := GetCurrentProfile(value.Name)
 	if e != nil {
-		log.Printf("[%s]读取配置文件异常%s", value.Name, e)
+		log.Printf("[%s]读取配置文件异常%s\n", value.Name, e)
 	}
 
-	log.Printf("[%s]配置文件", value.Name)
+	log.Printf("[%s]配置文件\n", value.Name)
 	source, err := os.Open(profile) // 打开文件
 	if err != nil {
-		log.Printf("[%s]打开配置文件异常%s", value.Name, err)
+		log.Printf("[%s]打开配置文件异常%s\n", value.Name, err)
 		return false
 	}
 	defer source.Close() // 确保文件在函数结束时关闭
@@ -52,7 +52,7 @@ func (v *OhmyzshPlugin) Install(value *Package) bool {
 	newFile := fmt.Sprintf("%s.%d", profile, time.Now().Unix())
 	target, err := os.Create(newFile)
 	if err != nil {
-		log.Printf("[%s]创建临时配置文件[%s], 发生异常%s", value.Name, newFile, err)
+		log.Printf("[%s]创建临时配置文件[%s], 发生异常%s\n", value.Name, newFile, err)
 		return false
 	}
 	defer target.Close() // 升级配置文件 结束时关闭
@@ -75,11 +75,11 @@ func (v *OhmyzshPlugin) Install(value *Package) bool {
 	source.Close()
 
 	if err := scanner.Err(); err != nil {
-		log.Printf("[%s]逐行扫描配置文件异常%s", value.Name, err)
+		log.Printf("[%s]逐行扫描配置文件异常%s\n", value.Name, err)
 		return false
 	}
 	backupFile := fmt.Sprintf("%s.backup.%d", profile, time.Now().Unix())
-	log.Printf("[%s]备份配置文件%s", value.Name, backupFile)
+	log.Printf("[%s]备份配置文件%s\n", value.Name, backupFile)
 	ExecuteCommand(value.Name, "mv", []string{profile, backupFile}, false)
 	ExecuteCommand(value.Name, "mv", []string{newFile, profile}, false)
 
@@ -114,7 +114,7 @@ func (v *OhmyzshPlugin) Before(value *Package, overwrite bool) bool {
 	homeDir, _ := GetHomeDir(value.Name)
 	has, _ := ExistPath(value.Name, homeDir, ".oh-my-zsh")
 	if overwrite {
-		log.Printf("[%s]强制安装", value.Name)
+		log.Printf("[%s]强制安装\n", value.Name)
 		ExecuteCommand(value.Name, "rm", []string{"-rf", fmt.Sprintf("%s/%s", homeDir, ".oh-my-zsh/custom/plugins/zsh-syntax-highlighting")}, false)
 		ExecuteCommand(value.Name, "rm", []string{"-rf", fmt.Sprintf("%s/%s", homeDir, ".oh-my-zsh/custom/plugins/zsh-autosuggestions")}, false)
 		return true

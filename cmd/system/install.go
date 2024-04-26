@@ -65,7 +65,7 @@ func init() {
 	add([]pkg.Application{
 		&pkg.Brew{},
 		&pkg.Vim{},
-		&pkg.Go{},
+		&pkg.Golang{},
 		pkg.NewOhmyzshPlugin(),
 
 		&pkg.GitflowControl{},
