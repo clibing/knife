@@ -94,5 +94,5 @@ func (v *Golang) GetPackage() *Package {
 }
 
 func (v *Golang) Key() string {
-	return "Go"
+	return "golang"
 }

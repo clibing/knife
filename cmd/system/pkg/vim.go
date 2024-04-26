@@ -367,5 +367,5 @@ func (v *Vim) GetPackage() *Package {
 }
 
 func (v *Vim) Key() string {
-	return "Vim"
+	return "vim"
 }

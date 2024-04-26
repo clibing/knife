@@ -3,6 +3,7 @@ package system
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 
 	"github.com/clibing/knife/cmd/system/pkg"
@@ -17,14 +18,21 @@ var macOSCmd = &cobra.Command{
 	Short: "install 初始化一些软件",
 	Long: `安装macoOS初始化
 
-主要应用于macos系统
+1. 主要应用于macos系统
 
 需要先安装 Command Line Tools (CLT) 工具， 链接：https://developer.apple.com/download/all
 
 01. 安装.vimrc规范文件
 02. 安装homebrew
 03. 安装golang
-04. 安装iterm2终端.`,
+04. 安装iterm2终端
+
+2. 安装golang, vim
+knife system install -s golang -s vim
+
+3. 强制配置vim
+knife system install -o -s vim
+`,
 
 	Run: func(c *cobra.Command, arg []string) {
 		overwrite, _ := c.Flags().GetBool("overwrite")
@@ -78,8 +86,10 @@ func init() {
 	for key := range App {
 		help = append(help, key)
 	}
+	sort.Strings(help)
+
 	macOSCmd.Flags().BoolP("overwrite", "o", false, "是否覆盖安装")
-	macOSCmd.Flags().StringSliceP("select", "s", nil, fmt.Sprintf("可选择: %s", strings.Join(help, " ")))
+	macOSCmd.Flags().StringSliceP("select", "s", nil, fmt.Sprintf("可选择:[ %s ]", strings.Join(help, " | ")))
 }
 
 func NewMacOSCmd() *cobra.Command {

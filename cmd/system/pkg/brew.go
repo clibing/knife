@@ -109,5 +109,5 @@ func (v *Brew) GetPackage() *Package {
 }
 
 func (v *Brew) Key() string {
-	return "Homebrew"
+	return "homebrew"
 }
