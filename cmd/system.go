@@ -38,8 +38,7 @@ var installCmd = &cobra.Command{
 1. 默认安装
 knife install 
 2. 指定目录安装
-knife install -p /usr/local/bin
-.`,
+knife install -p /usr/local/bin.`,
 	Run: func(_ *cobra.Command, _ []string) {
 		binPath, err := exec.LookPath(os.Args[0])
 		if err != nil {
@@ -70,15 +69,6 @@ knife install -p /usr/local/bin
 	},
 }
 
-var systemCmd = &cobra.Command{
-	Use:     "system",
-	Aliases: []string{"sys"},
-	Short:   `系统工具: arch, monitor, upgrade, maven, cron, beautify, rename`,
-	Run: func(c *cobra.Command, args []string) {
-		c.Help()
-	},
-}
-
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
 	Use:   "version",
@@ -98,6 +88,8 @@ func init() {
 		system.NewCronCmd(),
 		system.NewBeautifyCmd(),
 		system.NewRenameCmd(),
+		system.NewMacOSCmd(),
+		system.NewOhmyzshCmd(),
 	)
 
 	// 转换器
@@ -112,4 +104,13 @@ func init() {
 
 	// 系统版本
 	rootCmd.AddCommand(versionCmd)
+}
+
+var systemCmd = &cobra.Command{
+	Use:     "system",
+	Aliases: []string{"sys"},
+	Short:   `系统工具: arch, monitor, upgrade, maven, cron, beautify, rename, macos, ohmyzsh`,
+	Run: func(c *cobra.Command, args []string) {
+		c.Help()
+	},
 }

@@ -129,7 +129,7 @@ var staticCmd = &cobra.Command{
 			storagePath = strings.TrimPrefix(storagePath, "/")
 
 			key := r.FormValue("token")
-			if _, ok := code[key]; !ok {
+			if _, ok := code[key]; !ok && len(token) > 0 {
 				w.WriteHeader(http.StatusBadRequest)
 				w.Write(CreateErrMsg(400, "验证中间token不存在"))
 				return
@@ -273,7 +273,7 @@ func init() {
 	staticCmd.Flags().StringVarP(&path, "path", "p", "", "静态资源目录, 默认为当前目录")
 	staticCmd.Flags().IntVarP(&port, "port", "", 0, "端口, 默认会随机")
 	staticCmd.Flags().StringP("token", "t", "", "上传开启凭证, 当为空时，不启用")
-	staticCmd.Flags().StringP("maxMemory", "m", "32M", "设置内存大小")
+	staticCmd.Flags().StringP("maxMemory", "m", "", "设置内存大小")
 	staticCmd.Flags().BoolP("found", "f", false, "自动发现局域网内的静态服务器")
 }
 
@@ -330,8 +330,4 @@ func foundStaticServer(staticServerPort int) {
 	}
 	data, _ := json.Marshal(msg)
 	broadConn.Write(data)
-
-	for {
-
-	}
 }
