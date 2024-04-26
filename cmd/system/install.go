@@ -68,6 +68,8 @@ func init() {
 		&pkg.Go{},
 		pkg.NewOhmyzshPlugin(),
 
+		&pkg.GitflowControl{},
+
 		&pkg.ITerm2{},
 	},
 	)
