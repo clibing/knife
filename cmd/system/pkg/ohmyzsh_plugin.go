@@ -40,14 +40,14 @@ func (v *OhmyzshPlugin) Install(value *Package) bool {
 	}
 
 	log.Printf("[%s]配置文件", value.Name)
-	currentFile, err := os.Open(profile) // 打开文件
+	source, err := os.Open(profile) // 打开文件
 	if err != nil {
 		log.Printf("[%s]打开配置文件异常%s", value.Name, err)
 		return false
 	}
-	defer currentFile.Close() // 确保文件在函数结束时关闭
+	defer source.Close() // 确保文件在函数结束时关闭
 	// 创建新的Scanner
-	scanner := bufio.NewScanner(currentFile)
+	scanner := bufio.NewScanner(source)
 
 	newFile := fmt.Sprintf("%s.%d", profile, time.Now().Unix())
 	target, err := os.Create(newFile)
@@ -71,12 +71,15 @@ func (v *OhmyzshPlugin) Install(value *Package) bool {
 		writer.WriteString(line + "\n")
 	}
 	writer.Flush()
+	target.Close()
+	source.Close()
 
 	if err := scanner.Err(); err != nil {
 		log.Printf("[%s]逐行扫描配置文件异常%s", value.Name, err)
 		return false
 	}
 	backupFile := fmt.Sprintf("%s.backup.%d", profile, time.Now().Unix())
+	log.Printf("[%s]备份配置文件%s", value.Name, backupFile)
 	ExecuteCommand(value.Name, "mv", []string{profile, backupFile}, false)
 	ExecuteCommand(value.Name, "mv", []string{newFile, profile}, false)
 
