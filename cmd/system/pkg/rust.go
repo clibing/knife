@@ -5,9 +5,24 @@ type Rust struct {
 }
 
 func (v *Rust) Install(value *Package) bool {
-	ExecuteCommand(value.Name, "curl", []string{"-o", value.Shell, "--proto", "'=https'", "--tlsv1.2", "-sSf", value.Source[0]}, false)
-	ExecuteCommand(value.Name, "chmod", []string{"+x", value.Shell}, false)
-	ExecuteCommand(value.Name, "sh", []string{value.Shell}, false)
+	e := ExecuteCommand(value.Name, "curl", []string{"-fsSL", value.Source[0], "-o", value.Shell}, false)
+	if e != nil {
+		v.Log.Println("下载Rust安装脚本: %s", e)
+		return false
+	}
+
+	e = ExecuteCommand(value.Name, "chmod", []string{"+x", value.Shell}, false)
+	if e != nil {
+		v.Log.Println("授权安装脚本可执行: %s", e)
+		return false
+	}
+
+	e = ExecuteCommand(value.Name, "sh", []string{value.Shell}, false)
+	if e != nil {
+		v.Log.Println("安装错误: %s", e)
+		return false
+	}
+
 	return true
 }
 
@@ -17,8 +32,16 @@ func (v *Rust) Upgrade(value *Package) bool {
 
 func (v *Rust) Before(value *Package, overwrite bool) bool {
 	has, _ := CheckCommand(value.Name, "rustup")
-	ExecuteCommand(value.Name, "rm", []string{"-rf", "/tmp/rust-install.sh"}, false)
-	return has
+	// if e != nil {
+	// 	v.Log.Println("Check rustup failed: %s", e)
+	// 	return
+	// }
+	e := ExecuteCommand(value.Name, "rm", []string{"-rf", value.Shell}, false)
+	if e != nil {
+		v.Log.Println("删除文件: %s发生错误: %s", value.Shell, e)
+		return false
+	}
+	return !has
 }
 
 func (v *Rust) After(value *Package) {

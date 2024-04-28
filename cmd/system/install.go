@@ -63,6 +63,8 @@ func execute(overwrite bool, run pkg.Application) {
 	check := run.Before(pd, overwrite)
 	if check {
 		run.Install(pd)
+	} else {
+		log.Printf("[%s] 安装前置检查未通过，暂不安装", run.Key())
 	}
 	run.Upgrade(pd)
 	run.After(pd)
@@ -77,6 +79,8 @@ func init() {
 		pkg.NewOhmyzshPlugin(),
 
 		pkg.NewGitflowControl(),
+
+		pkg.NewRust(),
 
 		pkg.NewITerm2(),
 	},
