@@ -8,6 +8,7 @@ all: clean
 
 only: clean
 	go build -trimpath -o "dist/knife_darwin_amd64" -ldflags	"-X 'main.version=${BUILD_VERSION}' -X 'main.buildDate=${BUILD_DATE}' -X 'main.commitID=${COMMIT_SHA1}'" 
+	echo "警告: 只编译，不安装，需要手动拷贝或者安装"
 
 single: clean
 	go build -trimpath -o "dist/knife" -ldflags	"-X 'main.version=${BUILD_VERSION}' -X 'main.buildDate=${BUILD_DATE}' -X 'main.commitID=${COMMIT_SHA1}'" 
