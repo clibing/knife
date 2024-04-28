@@ -1,6 +1,7 @@
 package pkg
 
 type Template struct {
+	Log
 }
 
 func (v *Template) Install(value *Package) bool {
@@ -24,4 +25,11 @@ func (v *Template) GetPackage() *Package {
 
 func (v *Template) Key() string {
 	return "template"
+}
+
+func NewTemplate() *Template {
+	tmp := &Template{}
+	l := Log{Key: tmp.Key()}
+	tmp.Log = l
+	return tmp
 }
