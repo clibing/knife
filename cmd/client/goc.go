@@ -61,7 +61,7 @@ var gocCmd = &cobra.Command{
 		parameters = append(parameters, output)
 
 		fmt.Println("......")
-		e = utils.ExecGit(parameters...)
+		e = utils.ExecGitV2(parameters...)
 		fmt.Println("......")
 
 		if e != nil {
