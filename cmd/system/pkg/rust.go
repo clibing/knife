@@ -1,5 +1,7 @@
 package pkg
 
+import "fmt"
+
 type Rust struct {
 	Log
 }
@@ -27,6 +29,13 @@ func (v *Rust) Install(value *Package) bool {
 }
 
 func (v *Rust) Upgrade(value *Package) bool {
+	homeDir, e := GetCurrentProfile(value.Name)
+	if e != nil {
+		return false
+	}
+	bin := fmt.Sprintf("%s/.cargo/bin/rustup", homeDir)
+	ExecuteCommand(value.Name, bin, []string{"update"}, false)
+
 	return true
 }
 
