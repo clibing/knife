@@ -60,18 +60,14 @@ var gocCmd = &cobra.Command{
 
 		parameters = append(parameters, output)
 
-		fmt.Println("......")
 		e = utils.ExecGitV2(parameters...)
-		fmt.Println("......")
-
 		if e != nil {
 			fmt.Println("faild :", e)
 			return
 		}
 
 		time.Sleep(3 * time.Second)
-
-		fmt.Printf("cmd   : git clone %s %s\n", source, output)
+		fmt.Printf("\ndetail: git clone %s %s\n", source, output)
 	},
 }
 
