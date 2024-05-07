@@ -273,7 +273,7 @@ func init() {
 	staticCmd.Flags().StringVarP(&path, "path", "p", "", "静态资源目录, 默认为当前目录")
 	staticCmd.Flags().IntVarP(&port, "port", "", 0, "端口, 默认会随机")
 	staticCmd.Flags().StringP("token", "t", "", "上传开启凭证, 当为空时，不启用")
-	staticCmd.Flags().StringP("maxMemory", "m", "", "设置内存大小")
+	staticCmd.Flags().StringP("maxMemory", "m", "", "设置内存大小, 默认不限制")
 	staticCmd.Flags().BoolP("found", "f", false, "自动发现局域网内的静态服务器")
 }
 
