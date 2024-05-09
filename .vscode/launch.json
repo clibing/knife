@@ -153,6 +153,14 @@
         "mode": "auto",
         "program": "${workspaceFolder}/main.go",
         "args": ["client", "goc", "--source", "https://github.com/drakkan/sftpgo.git"]
+      },
+      {
+        "name": "sign otp",
+        "type": "go",
+        "request": "launch",
+        "mode": "auto",
+        "program": "${workspaceFolder}/main.go",
+        "args": ["sign", "otp", "--input", "4S62BZNFXXSZLCRO"]
       }
     ]
 }

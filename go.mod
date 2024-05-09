@@ -13,6 +13,7 @@ require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/gomarkdown/markdown v0.0.0-20230716120725-531d2d74bc12
 	github.com/olekukonko/tablewriter v0.0.5
+	github.com/pquerna/otp v1.4.0
 	github.com/redis/go-redis/v9 v9.1.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/shirou/gopsutil v3.21.11+incompatible
@@ -23,6 +24,7 @@ require (
 	github.com/srwiley/oksvg v0.0.0-20221011165216-be6e8873101c
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef
 	github.com/tidwall/pretty v1.2.1
+	github.com/xlzd/gotp v0.1.0
 	moul.io/http2curl v1.0.0
 	vimagination.zapto.org/json2xml v1.0.0
 )
@@ -33,6 +35,7 @@ require (
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/bitly/go-simplejson v0.5.1 // indirect
+	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
 	github.com/bytedance/sonic v1.11.3 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
