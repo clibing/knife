@@ -2,17 +2,16 @@ package image
 
 import (
 	"fmt"
-	"image/color"
-	"log"
+	"image/png"
+	"os"
 
-	qrcode "github.com/skip2/go-qrcode"
+	// 	"github.com/skip2/go-qrcode"
+	"github.com/boombuler/barcode"
+	"github.com/boombuler/barcode/qr"
+
+	"github.com/tuotoo/qrcode"
+
 	"github.com/spf13/cobra"
-)
-
-var (
-	size, level   int
-	fileName      string
-	disableBorder bool
 )
 
 // qrcodeCmd represents the qrcode command
@@ -32,42 +31,56 @@ var qrcodeCmd = &cobra.Command{
    knife qrcode -d -l 2 -s 512 -f /tmp/512.png "https://clibing.com"
 
 .`,
-	Run: func(_ *cobra.Command, args []string) {
-		if len(args) != 1 {
-			log.Fatal("请输入二维码的内容")
+	Run: func(c *cobra.Command, args []string) {
+		decode, _ := c.Flags().GetBool("decode")
+		if decode {
+			input, _ := c.Flags().GetString("input")
+			fmt.Println("input:", input)
+			fi, err := os.Open(input)
+			if err != nil {
+				fmt.Println("打开文件异常", err.Error())
+				return
+			}
+			defer fi.Close()
+			matrix, err := qrcode.Decode(fi)
+			if err != nil {
+				fmt.Println("解析二维码内容失败", err.Error())
+				return
+			}
+			fmt.Println(matrix.Content)
 			return
-		}
-		recoveryLevel := qrcode.Medium
-		if level == 2 {
-			recoveryLevel = qrcode.High
-		} else if level == 3 {
-			recoveryLevel = qrcode.Highest
 		}
 
-		q, err := qrcode.New(args[0], recoveryLevel)
-		if err != nil {
-			log.Fatalf("创建二维码基础参数异常 %s", err)
-			return
-		}
-		q.BackgroundColor = color.White
-		q.ForegroundColor = color.Black
-		q.DisableBorder = disableBorder
+		output, _ := c.Flags().GetString("output")
+		width, _ := c.Flags().GetInt("width")
+		height, _ := c.Flags().GetInt("height")
 
-		err = q.WriteFile(size, fileName)
-		if err != nil {
-			log.Fatalf("生成二维码异常 %s", err)
-			return
-		}
-		fmt.Println("二维码生成成功, ", fileName)
+		// Create the barcode
+		qrCode, _ := qr.Encode(args[0], qr.M, qr.Auto)
+
+		// Scale the barcode to 200x200 pixels
+		qrCode, _ = barcode.Scale(qrCode, width, height)
+
+		// create the output file
+		file, _ := os.Create(output)
+		defer file.Close()
+
+		// encode the barcode as png
+		png.Encode(file, qrCode)
+
+		fmt.Println("二维码生成成功, ", output)
 	},
 }
 
 func init() {
-	qrcodeCmd.Flags().IntVarP(&size, "size", "s", 256, "二维码的size")
-	qrcodeCmd.Flags().StringVarP(&fileName, "fileName", "f", "./output.png", "输出二维码图片完整路径")
+	qrcodeCmd.Flags().StringP("key", "k", "", "二维码内容")
+	qrcodeCmd.Flags().IntP("width", "W", 256, "二维码宽度")
+	qrcodeCmd.Flags().IntP("height", "H", 256, "二维码高度")
+	qrcodeCmd.Flags().StringP("output", "o", "./output.png", "输出二维码图片完整路径")
 
-	qrcodeCmd.Flags().IntVarP(&level, "level", "l", 1, "生成图片质量，默认是1(15%), 2(25%), 3(30%)")
-	qrcodeCmd.Flags().BoolVarP(&disableBorder, "disableBorder", "d", false, "是否禁用二维码边框, 默认不禁用")
+	qrcodeCmd.Flags().BoolP("decode", "d", false, "识别二维码内容")
+	qrcodeCmd.Flags().StringP("input", "i", "", "二维码图片源地址")
+
 }
 
 func NewQrcodeCmd() *cobra.Command {
