@@ -119,8 +119,8 @@ func handleDirList(fs webdav.FileSystem, w http.ResponseWriter, req *http.Reques
 func init() {
 	webdavCmd.Flags().StringP("path", "p", "./", "静态文件路径")
 	webdavCmd.Flags().IntP("port", "", 0, "端口, 默认会随机")
-	webdavCmd.Flags().StringP("username", "u", "guest", "webdav basic auth username")
-	webdavCmd.Flags().StringP("password", "P", "guest", "webdav basic auth password")
+	webdavCmd.Flags().StringP("username", "u", "clibing", "webdav basic auth username")
+	webdavCmd.Flags().StringP("password", "P", "", "webdav basic auth password")
 	webdavCmd.Flags().BoolP("readonly", "r", false, "webdav启用只读模式")
 }
 
