@@ -25,6 +25,8 @@ var convertCmd = &cobra.Command{
 1. 将svg转换为png，并指定生成的图片100x100
     knife image convert -t 0 -i 1.svg -o 1.png -w 100 -h 100
 
+imagemagick: https://www.charry.org/docs/linux/ImageMagick/ImageMagick.html
+
 一个在线的转换: https://svgtopng.com/zh/.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		_type, _ := cmd.Flags().GetInt("type")
@@ -52,6 +54,7 @@ func init() {
     0: svg->png, 默认输入input.svg 输出output.png;
     1: png->jpg, 默认输入input.png 输出output.jpg;
     2: jpg->png, 默认输入input.jpg 输出output.png;
+    3: png->ico, 默认输入input.jpg 输出output.ico;  output_w_h.ico
 	`)
 }
 

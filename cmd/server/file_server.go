@@ -17,11 +17,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	port int
-	path string
-)
-
 // 用户发现时携带的UA
 const USER_AGENT = "clibing/knife"
 
@@ -61,6 +56,9 @@ var staticCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		found, _ := cmd.Flags().GetBool("found")
+		port, _ := cmd.Flags().GetInt("port")
+		path, _ := cmd.Flags().GetString("path")
+
 		if found {
 			if port == 0 {
 				fmt.Println("暂未设置静态服务端口.")
@@ -198,6 +196,7 @@ var staticCmd = &cobra.Command{
 		fs := http.FileServer(http.Dir(path))
 		// http 处理器
 		http.Handle("/", http.StripPrefix("/", fs))
+
 		// 获取端口
 		value := fmt.Sprintf(":%d", port)
 		// 建立监听
@@ -209,7 +208,7 @@ var staticCmd = &cobra.Command{
 
 		// 获取 本地ip地址
 		ip, _ := utils.GetLocalIp()
-		port := listener.Addr().(*net.TCPAddr).Port
+		port = listener.Addr().(*net.TCPAddr).Port
 		// 发现服务
 		go discovery(ip, port)
 
@@ -270,8 +269,8 @@ func SendIpAndPort(localIp, remoteIp string, localPort, remotePort int) {
 }
 
 func init() {
-	staticCmd.Flags().StringVarP(&path, "path", "p", "", "静态资源目录, 默认为当前目录")
-	staticCmd.Flags().IntVarP(&port, "port", "", 0, "端口, 默认会随机")
+	staticCmd.Flags().StringP("path", "p", "", "静态资源目录, 默认为当前目录")
+	staticCmd.Flags().IntP("port", "", 0, "端口, 默认会随机")
 	staticCmd.Flags().StringP("token", "t", "", "上传开启凭证, 当为空时，不启用")
 	staticCmd.Flags().StringP("maxMemory", "m", "", "设置内存大小, 默认不限制")
 	staticCmd.Flags().BoolP("found", "f", false, "自动发现局域网内的静态服务器")

@@ -13,6 +13,7 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/ghodss/yaml v1.0.0
 	github.com/gomarkdown/markdown v0.0.0-20230716120725-531d2d74bc12
+	github.com/h2non/filetype v1.1.3
 	github.com/makiuchi-d/gozxing v0.1.1
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pquerna/otp v1.4.0
@@ -26,6 +27,7 @@ require (
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef
 	github.com/tidwall/pretty v1.2.1
 	github.com/tuotoo/qrcode v0.0.0-20220425170535-52ccc2bebf5d
+	gopkg.in/gographics/imagick.v3 v3.6.0
 	moul.io/http2curl v1.0.0
 	vimagination.zapto.org/json2xml v1.0.0
 )
