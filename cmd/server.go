@@ -15,7 +15,7 @@ var serverCmd = &cobra.Command{
 
 func init() {
 	// 增加二维码处理器
-	serverCmd.AddCommand(server.NewFileServer(), server.NewWebdavServer())
+	serverCmd.AddCommand(server.NewFileServer(), server.NewWebdavServer(), server.NewHttpServer())
 
 	// 转换器
 	rootCmd.AddCommand(serverCmd)
