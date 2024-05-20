@@ -23,6 +23,7 @@ knife server http --port=8080 --uri=/ 返回 json: '{\"code\":200, \"ts\":\"now(
 		uri, _ := cmd.Flags().GetString("uri")
 
 		http.HandleFunc(uri, func(w http.ResponseWriter, r *http.Request) {
+			fmt.Println("请求的url:", r.URL)
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte(fmt.Sprintf("{\"code\":200, \"message\":\"%d\"}", time.Now().UnixMilli())))
 		})
