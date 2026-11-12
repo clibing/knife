@@ -13,8 +13,6 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.3
 	github.com/ghodss/yaml v1.0.0
 	github.com/gomarkdown/markdown v0.0.0-20230716120725-531d2d74bc12
-	github.com/h2non/filetype v1.1.3
-	github.com/makiuchi-d/gozxing v0.1.1
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pquerna/otp v1.4.0
 	github.com/redis/go-redis/v9 v9.1.0
@@ -27,7 +25,7 @@ require (
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef
 	github.com/tidwall/pretty v1.2.1
 	github.com/tuotoo/qrcode v0.0.0-20220425170535-52ccc2bebf5d
-	gopkg.in/gographics/imagick.v3 v3.6.0
+	golang.org/x/net v0.22.0
 	moul.io/http2curl v1.0.0
 	vimagination.zapto.org/json2xml v1.0.0
 )
@@ -89,14 +87,11 @@ require (
 	golang.org/x/arch v0.7.0 // indirect
 	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410 // indirect
-	golang.org/x/net v0.22.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/term v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
-	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
@@ -107,5 +102,4 @@ require (
 	github.com/go-basic/uuid v1.0.0
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )
