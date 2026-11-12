@@ -31,7 +31,7 @@ func NewDebug(c *cobra.Command) *Debug {
 	}
 	if d.EnableDebug() {
 		fmt.Println("🟣 Enable debug")
-		d.Mode = RELEASE
+		d.Mode = DEVELOP
 	}
 	return d
 }

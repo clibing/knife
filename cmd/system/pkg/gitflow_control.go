@@ -12,7 +12,7 @@ type GitflowControl struct {
 
 func (v *GitflowControl) Install(value *Package) bool {
 	ExecuteCommand(value.Name, "knife", []string{"client", "goc", "-s", value.Source[0]}, false)
-	ExecuteCommand(value.Name, "sh", []string{"cd", value.Target, "&&", "make", "single"}, false)
+	ExecuteCommand(value.Name, "sh", []string{"-c", fmt.Sprintf("cd %s && make single", value.Target)}, false)
 	return true
 }
 

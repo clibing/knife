@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/clibing/go-common/pkg/util"
@@ -256,7 +257,7 @@ func discovery(ip string, port int) {
 }
 
 func SendIpAndPort(localIp, remoteIp string, localPort, remotePort int) {
-	conn, err := net.Dial("udp", fmt.Sprintf("%s:%d", remoteIp, remotePort))
+	conn, err := net.Dial("udp", net.JoinHostPort(remoteIp, strconv.Itoa(remotePort)))
 	if err != nil {
 		return
 	}
