@@ -55,6 +55,11 @@ var qrcodeCmd = &cobra.Command{
 		width, _ := c.Flags().GetInt("width")
 		height, _ := c.Flags().GetInt("height")
 
+		if len(args) == 0 {
+			fmt.Println("缺少二维码内容, 请传入位置参数, 如: knife image qrcode \"https://clibing.com\"")
+			return
+		}
+
 		// Create the barcode
 		qrCode, _ := qr.Encode(args[0], qr.M, qr.Auto)
 
@@ -79,7 +84,7 @@ func init() {
 	qrcodeCmd.Flags().StringP("output", "o", "./output.png", "输出二维码图片完整路径")
 
 	qrcodeCmd.Flags().BoolP("decode", "d", false, "识别二维码内容")
-	qrcodeCmd.Flags().StringP("input", "i", "", "二维码图片源地址")
+	qrcodeCmd.Flags().StringP("input", "i", "", "待识别二维码图片源地址， 与--decode配置使用")
 
 }
 
